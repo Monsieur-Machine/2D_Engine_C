@@ -1,0 +1,85 @@
+#ifndef ECS_H
+#define ECS_H
+
+#include <stdarg.h>
+#include <stddef.h>
+#include "linked_list.h"
+
+typedef enum component_type_t {
+    TRANSFORM_COMPONENT,
+    SPRITE_COMPONENT,
+    ANIMATION_SYSTEM,
+    PLAYER_SYSTEM
+} component_type_t;
+
+typedef struct transform_component_data_t transform_component_data_t;
+typedef struct sprite_component_data_t sprite_component_data_t;
+typedef struct animation_system_data_t animation_system_data_t;
+typedef struct player_system_data_t player_system_data_t;
+
+typedef struct component_t component_t;
+
+typedef void (*component_init_t)(component_t *component, va_list args);
+typedef void (*component_update_t)(component_t *component);
+typedef void (*component_draw_t)(component_t *component);
+
+typedef void (*component_deleter_t)(component_t *component);
+
+typedef struct component_t {
+    component_type_t component_type;
+
+    component_init_t component_init;
+    component_update_t component_update;
+    component_draw_t component_draw;
+
+    union {
+        transform_component_data_t *transform_component_data;
+        sprite_component_data_t *sprite_component_data;
+        animation_system_data_t *animation_system_data;
+        player_system_data_t *player_system_data;
+    } component_data;
+
+    component_deleter_t component_deleter;
+
+    struct entity_t *entity;
+} component_t;
+
+component_t *create_component(component_type_t component_type);
+
+void destroy_component(component_t *component);
+
+typedef struct entity_t {
+    unsigned int id;
+    size_t draw_priority;
+    linked_list_t components;
+} entity_t;
+
+entity_t *create_entity(const unsigned int id);
+
+void add_component(entity_t *entity, component_t *component, ...);
+
+component_t *get_component(entity_t *entity, component_type_t component_type);
+
+void update_entity(entity_t *entity);
+
+void draw_entity(entity_t *entity);
+
+void destroy_entity(entity_t *entity);
+
+typedef struct entity_manager_t {
+    linked_list_t entities;
+} entity_manager_t;
+
+void entity_manager_init(entity_manager_t *entity_manager);
+
+void entity_manager_add_entity(entity_manager_t *entity_manager, entity_t *entity);
+
+void entity_manager_update(entity_manager_t *entity_manager);
+
+void entity_manager_draw(entity_manager_t *entity_manager);
+
+void entity_manager_remove_entity(entity_manager_t *entity_manager, const unsigned int id);
+
+void entity_manager_clear(entity_manager_t *entity_manager);
+
+#endif // ECS_H

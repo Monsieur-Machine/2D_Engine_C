@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "Default",
+            "includePath": [
+                "src/**/headers",
+                "core/**/headers"
+            ]
+        }
+    ],
+    "version": 4
+}
