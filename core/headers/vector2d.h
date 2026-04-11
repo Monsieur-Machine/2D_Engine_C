@@ -1,7 +1,7 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 *   All of the functions declared in this file and          *
 *   defined in vector2d.c are from the SDL2 source code.    *
-*   They are just renamed.                                  *
+*   They are just modified for float and renamed.           *
 *    => https://github.com/libsdl-org/SDL                   *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -37,6 +37,7 @@ typedef struct rect_t {
 #define EPSILON 0.000001f
 
 __attribute__((const)) float fabsf(float x);
+
 
 #define is_equal_to_zero(X) (fabsf(X) <= EPSILON)
 

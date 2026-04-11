@@ -9,9 +9,11 @@ typedef enum component_type_t {
     TRANSFORM_COMPONENT,
     SPRITE_COMPONENT,
     ANIMATION_SYSTEM,
-    PLAYER_SYSTEM
+    PLAYER_SYSTEM,
+    // Add new components types here
 } component_type_t;
 
+// Structs forwarding
 typedef struct transform_component_data_t transform_component_data_t;
 typedef struct sprite_component_data_t sprite_component_data_t;
 typedef struct animation_system_data_t animation_system_data_t;
@@ -19,10 +21,13 @@ typedef struct player_system_data_t player_system_data_t;
 
 typedef struct component_t component_t;
 
+// Component init function. It is called when component added to entity. This function is necessary.
 typedef void (*component_init_t)(component_t *component, va_list args);
+// Component update function. It is called in the main loop to update the component. This function is necessary.
 typedef void (*component_update_t)(component_t *component);
+// Component draw function. It is called in the main loop to draw the component on screen. This function is not necessary.
 typedef void (*component_draw_t)(component_t *component);
-
+// Component deleter function. It is called when the component is removed. It should free the data in the component data but not the component data itself.
 typedef void (*component_deleter_t)(component_t *component);
 
 typedef struct component_t {

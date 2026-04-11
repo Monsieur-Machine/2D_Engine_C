@@ -29,7 +29,7 @@ int main(void)
 
 int main(void)
 {
-    dclear(C_WHITE);
+    display_clear(COLOR_WHITE);
 
     texture_manager_t texture_manager;
     texture_manager_init(&texture_manager);
@@ -57,7 +57,7 @@ int main(void)
 
     texture_manager_clear(&texture_manager);
 
-    dupdate();
+    display_update();
     getkey();
 
     return 1;
@@ -72,7 +72,7 @@ int main(void)
 
 int main(void)
 {
-    dclear(C_WHITE);
+    display_clear(COLOR_WHITE);
 
     linked_list_t linked_list;
     linked_list_init(&linked_list, sizeof(int), NULL);
@@ -272,7 +272,7 @@ int main(void)
     linked_list_clear(&linked_list);
 
   Exit:
-    dupdate();
+    display_update();
     getkey();
 
     return 1;

@@ -18,16 +18,16 @@ void player_system_init(component_t *component, va_list args __attribute__((unus
 }
 
 // Only for this file
-static void player_system_get_inputs(player_system_data_t *system_data)
+static inline void player_system_get_inputs(player_system_data_t *system_data)
 {
     system_data->last_state = system_data->state;
 
     system_data->state &= 0xF0; // 11110000
 
-    system_data->state |= game.keys[KEY_UP] * PLAYER_RUNNING_UP;
-    system_data->state |= game.keys[KEY_DOWN] * PLAYER_RUNNING_DOWN;
-    system_data->state |= game.keys[KEY_LEFT] * PLAYER_RUNNING_LEFT;
-    system_data->state |= game.keys[KEY_RIGHT] * PLAYER_RUNNING_RIGHT;
+    system_data->state |= game.events.keys[KEY_UP] * PLAYER_RUNNING_UP;
+    system_data->state |= game.events.keys[KEY_DOWN] * PLAYER_RUNNING_DOWN;
+    system_data->state |= game.events.keys[KEY_LEFT] * PLAYER_RUNNING_LEFT;
+    system_data->state |= game.events.keys[KEY_RIGHT] * PLAYER_RUNNING_RIGHT;
 
     // Special cases
     if(system_data->state & PLAYER_RUNNING_UP && system_data->state & PLAYER_RUNNING_DOWN)    system_data->state &= 0xFC; // 11111100
@@ -35,7 +35,7 @@ static void player_system_get_inputs(player_system_data_t *system_data)
 }
 
 // Only for this file
-static void player_system_set_velocity(player_system_data_t *system_data)
+static inline void player_system_set_velocity(player_system_data_t *system_data)
 {
     transform_component_data_t *transform_component_data = system_data->transform_component_data;
 
@@ -52,7 +52,7 @@ static void player_system_set_velocity(player_system_data_t *system_data)
 }
 
 // Only for this file
-static void player_system_set_animation(player_system_data_t *system_data)
+static inline void player_system_set_animation(player_system_data_t *system_data)
 {
     sprite_component_data_t *sprite_component_data = system_data->sprite_component_data;
     animation_system_data_t *animation_system_data = system_data->animation_system_data;

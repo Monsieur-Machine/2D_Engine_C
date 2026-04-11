@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <keycodes.h>
+#include "events.h"
 #include "texture_manager.h"
 #include "ecs.h"
 
@@ -16,7 +16,7 @@
  * @param delta_time_ms     Frame time
 */
 typedef struct game_t {
-    bool keys[MAX_KEYCODES];
+    events_t events;
     texture_manager_t texture_manager;
     entity_manager_t entity_manager;
 
@@ -24,34 +24,22 @@ typedef struct game_t {
     double delta_time_ms;
 } game_t;
 
-/**
- * @brief Global game instance
-*/
+// Global game instance
 extern game_t game;
 
-/**
- * @brief Initialise game
-*/
+// Initialise game
 void game_init(void);
 
-/**
- * @brief Handle event like inputs
-*/
+// Handle event like inputs
 void game_handle_event(void);
 
-/**
- * @brief Update game
-*/
+// Update game
 void game_update(void);
 
-/**
- * @brief Render game
-*/
+// Render game
 void game_render(void);
 
-/**
- * @brief Free game instance
-*/
+// Free game instance
 void game_exit(void);
 
 #endif // GAME_H

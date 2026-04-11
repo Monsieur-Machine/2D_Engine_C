@@ -7,7 +7,7 @@
             "type": "shell",
             "command": "make",
             "args": [
-                "-j$(nproc)"
+//                "-j$(nproc)"
             ],
             "group": "build",
             "presentation": {

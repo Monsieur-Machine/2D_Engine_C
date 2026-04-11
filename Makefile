@@ -3,6 +3,9 @@ SHELL = /bin/bash
 # Build folder
 BUILD_DIR = build
 
+# Core output target name
+CORE_OUTPUT := libCore.so
+
 # Source output target name
 SOURCE_OUTPUT := 2D_Engine
 
@@ -16,18 +19,15 @@ Q :=
 endif
 
 # Colors
-GREEN  := \033[0;32m
-YELLOW := \033[1;33m
-RESET  := \033[0m
+GREEN  := \033[32m
+YELLOW := \033[33m
+RESET  := \033[m
 
 # Default targets
 #all: build_core build_src compress_assets end
-all: build_src
+all: build_core build_src
 
-# Current file nb to process
-CURRENT_FILE := 0
-
-# Sub-Makefiles
+# Sub Makefiles
 SOURCE_DIR = src
 CORE_DIR = core
 ASSETS_DIR = assets
@@ -35,9 +35,6 @@ ASSETS_DIR = assets
 include $(CORE_DIR)/Makefile
 include $(SOURCE_DIR)/Makefile
 include $(ASSETS_DIR)/Makefile
-
-count_build:
-	$(eval export TOTAL_FILES := $(shell echo $$(($$(make -n $(OBJECTS) 2>/dev/null | grep -c "Building") + 1))))
 
 # Print ending message
 end:

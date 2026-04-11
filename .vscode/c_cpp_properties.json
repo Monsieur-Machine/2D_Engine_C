@@ -4,7 +4,7 @@
             "name": "Default",
             "includePath": [
                 "src/**/headers",
-                "core/**/headers"
+                "core/headers"
             ]
         }
     ],

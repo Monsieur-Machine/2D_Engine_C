@@ -265,7 +265,7 @@ elem_t *linked_list_get_elem_if(const linked_list_t *linked_list, const conditio
 void *linked_list_get_if(const linked_list_t *linked_list, const condition_t condition, ...);
 
 /**
- * @brief Remove element(s) that the condition verify, do nothing on error.
+ * @brief Remove every elements that the condition verify, do nothing on error.
  *
  * @param linked_list   Pointer to an linked list
  * @param condition     Condition to verify
@@ -276,10 +276,10 @@ void linked_list_remove_if(linked_list_t *linked_list, const condition_t conditi
 /**
  * @brief Apply an action to every elements in the list.
  * Useful for changing a value in every single element data.
- * The action can be anything that dont destroy the element.
+ * The action can be anything that doesn't destroy the element.
  *
  * @param linked_list   Pointer to an linked list
- * @param action        action to apply
+ * @param action        Action to apply
  * @param ...           Argument to pass to the action
 */
 void linked_list_for_each(const linked_list_t *linked_list, const action_t action, ...);

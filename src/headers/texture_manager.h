@@ -46,17 +46,6 @@ typedef struct texture_manager_t {
    @texture_manager     Pointer to a texture manager */
 void texture_manager_init(texture_manager_t *);
 
-/* texture_manager_load_builtin_textures(): Load textures declared in "textures.h"
-
-   @texture_manager     Pointer to a texture manager */
-void texture_manager_load_builtin_textures(texture_manager_t *);
-
-/* texture_manager_load_builtin_texture(): Load texture declared in "textures.h" wich have "name"
-
-   @texture_manager     Pointer to a texture manager
-   @name                Name of the texture to load */
-texture_t *texture_manager_load_builtin_texture(texture_manager_t *, const char*);
-
 /* texture_manager_add_texture(): Add a texture in the texture manager
 
    @texture_manager     Pointer to a texture manager

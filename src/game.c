@@ -6,8 +6,9 @@
 
 void game_init(void)
 {
+    display_init();
+
     texture_manager_init(&game.texture_manager);
-    texture_manager_load_builtin_textures(&game.texture_manager);
 
     entity_manager_init(&game.entity_manager);
 
@@ -32,9 +33,9 @@ void game_handle_event(void)
     while(pollevent(&event))
     {
         if(event.type == KEYEV_DOWN)
-            game.keys[event.key.keysym.scancode] = true;
+            game.events.keys[event.key.keysym.scancode] = true;
         else if(event.type == KEYEV_UP)
-            game.keys[event.key.keysym.scancode] = false;
+            game.events.keys[event.key.keysym.scancode] = false;
 
         if(event.type == SDL_QUIT)
             game.is_running = false;
@@ -58,15 +59,17 @@ void game_update(void)
 
 void game_render(void)
 {
-    dclear();
+    display_clear();
 
     entity_manager_draw(&game.entity_manager);
 
-    dupdate();
+    display_update();
 }
 
 void game_exit(void)
 {
     entity_manager_clear(&game.entity_manager);
     texture_manager_clear(&game.texture_manager);
+
+    display_exit();
 }
