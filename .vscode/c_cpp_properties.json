@@ -4,7 +4,8 @@
             "name": "Default",
             "includePath": [
                 "src/**/headers",
-                "core/src/headers"
+                "SDL2_Core/src/headers",
+                "Casio_Core/src/headers"
             ]
         }
     ],
