@@ -2,20 +2,16 @@
 #include "transform_component.h"
 #include "game.h"
 
-// Args : rect_t bounds, double speed
+// Args : frect_t bounds, double speed
 void transform_component_init(component_t *component, va_list args)
 {
     transform_component_data_t *const component_data = component->component_data.transform_component_data;
 
-    rect_t bounds  = va_arg(args, rect_t);
-    float speed = (float)va_arg(args, double);
+    component_data->bounds = va_arg(args, frect_t);
+    component_data->speed = (float)va_arg(args, double);
 
-    component_data->bounds = bounds;
-
-    component_data->velocity.x = 0;
-    component_data->velocity.y = 0;
-
-    component_data->speed = speed;
+    component_data->velocity.x = 0.0f;
+    component_data->velocity.y = 0.0f;
 }
 
 void transform_component_update(component_t *component)

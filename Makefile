@@ -3,9 +3,6 @@ SHELL = /bin/bash
 # Build folder
 BUILD_DIR = build
 
-# Core output target name
-CORE_OUTPUT := libCore.so
-
 # Source output target name
 SOURCE_OUTPUT := 2D_Engine
 
@@ -24,21 +21,17 @@ YELLOW := \033[33m
 RESET  := \033[m
 
 # Default targets
-#all: build_core build_src compress_assets end
+#all: build_core build_src compress_assets
 all: build_core build_src
 
 # Sub Makefiles
 SOURCE_DIR = src
-CORE_DIR = core
+CORE_DIR = core/src
 ASSETS_DIR = assets
 
 include $(CORE_DIR)/Makefile
 include $(SOURCE_DIR)/Makefile
 include $(ASSETS_DIR)/Makefile
-
-# Print ending message
-end:
-	@echo "Built target $(OUTPUT)"
 
 # Clean
 .PHONY: clean
@@ -49,5 +42,5 @@ clean:
 # Run executable
 .PHONY: run
 run:
-	$(Q)./$(OUTPUT)
+	$(Q)LD_LIBRARY_PATH=$(shell pwd)/build/ ./$(BUILD_DIR)/$(SOURCE_OUTPUT)
 

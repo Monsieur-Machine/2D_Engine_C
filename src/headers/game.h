@@ -21,7 +21,7 @@ typedef struct game_t {
     entity_manager_t entity_manager;
 
     bool is_running;
-    double delta_time_ms;
+    float delta_time_ms;
 } game_t;
 
 // Global game instance

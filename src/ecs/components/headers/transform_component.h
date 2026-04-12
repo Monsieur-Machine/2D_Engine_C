@@ -5,8 +5,8 @@
 #include "vector2d.h"
 
 typedef struct transform_component_data_t {
-    rect_t bounds;
-    vector2d_t velocity;
+    frect_t bounds;
+    fvector2d_t velocity;
     float speed;
 } transform_component_data_t;
 

@@ -16,7 +16,7 @@ void game_init(void)
 
     entity_manager_add_entity(&game.entity_manager, player);
 
-    rect_t player_bounds = {10.0f, 10.0f, 32.0f, 32.0f};
+    frect_t player_bounds = {10.0f, 10.0f, 32.0f, 32.0f};
 
     add_component(player, create_component(TRANSFORM_COMPONENT), player_bounds, PLAYER_DEFAULT_SPEED);
     add_component(player, create_component(SPRITE_COMPONENT), "player_idle_sheet");
@@ -32,12 +32,12 @@ void game_handle_event(void)
 
     while(pollevent(&event))
     {
-        if(event.type == KEYEV_DOWN)
+        if(event.type == EVENT_KEY_DOWN)
             game.events.keys[event.key.keysym.scancode] = true;
-        else if(event.type == KEYEV_UP)
+        else if(event.type == EVENT_KEY_UP)
             game.events.keys[event.key.keysym.scancode] = false;
 
-        if(event.type == SDL_QUIT)
+        if(event.type == EVENT_QUIT)
             game.is_running = false;
     }
 }
@@ -46,7 +46,7 @@ static inline void update_time(void)
 {
     clock_t last_clock_state = clock();
     clock_t start_clock = clock();
-    game.delta_time_ms = (double)(start_clock - last_clock_state) * 1000.0f / CLOCKS_PER_SEC;
+    game.delta_time_ms = (float)(start_clock - last_clock_state) * 1000.0f / CLOCKS_PER_SEC;
     last_clock_state = start_clock;
 }
 
