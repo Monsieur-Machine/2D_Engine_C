@@ -1,3 +1,7 @@
-[submodule "core"]
+[submodule "SDL2_Core"]
 	path = core
 	url = https://gitea.skadubpc.net/ulysse/2D_Engine_SDL2_Core.git
+
+[submodule "Casio_Core"]
+	path = core
+	url = https://gitea.skadubpc.net/ulysse/2D_Engine_Casio_Core.git
