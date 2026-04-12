@@ -42,5 +42,5 @@ clean:
 # Run executable
 .PHONY: run
 run:
-	$(Q)LD_LIBRARY_PATH=$(shell pwd)/build/ ./$(BUILD_DIR)/$(SOURCE_OUTPUT)
+	$(Q)./$(BUILD_DIR)/$(SOURCE_OUTPUT)
 

@@ -33,10 +33,9 @@ count_src_build:
 	$(eval export TOTAL_SRC_FILES := $(shell echo $$(($$(make -n $(SOURCE_OBJECTS) 2>/dev/null | grep -c "Building") + 1))))
 
 # Link game target
-# The ignore unresolved symbols in shared libs is ugly but works if the core changes.
 $(BUILD_DIR)/$(SOURCE_OUTPUT): $(SOURCE_OBJECTS) $(BUILD_DIR)/libCore.so
 	@echo -e "[100%] $(YELLOW)Linking $(SOURCE_OUTPUT)$(RESET)"
-	$(Q)$(SRC_CC) $(SRC_LDFLAGS) $(SOURCE_OBJECTS) -L./$(BUILD_DIR) -lCore -Wl,-unresolved-symbols=ignore-in-shared-libs -o $@
+	$(Q)$(SRC_CC) $(SOURCE_OBJECTS) -L./$(BUILD_DIR) $(SRC_LDFLAGS) -lCore -Wl,-rpath,$(BUILD_DIR) -o $@
 
 # Build .o files
 $(BUILD_DIR)/$(SOURCE_DIR)/%.o: $(SOURCE_DIR)/%.c
