@@ -23,12 +23,12 @@ CURRENT_SRC_FILE := 0
 # Build src target
 build_src: src_setup count_src_build $(BUILD_DIR)/$(SOURCE_OUTPUT) src_end
 
-# Source build directories and 
+# Source build directories
 src_setup:
 	@echo "Building Source (2/3)"
 	$(Q)mkdir -p $(dir $(SOURCE_OBJECTS))
 
-# Count
+# Count nb of files to build
 count_src_build:
 	$(eval export TOTAL_SRC_FILES := $(shell echo $$(($$(make -n $(SOURCE_OBJECTS) 2>/dev/null | grep -c "Building") + 1))))
 

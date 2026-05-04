@@ -7,7 +7,7 @@ BUILD_DIR = build
 SOURCE_OUTPUT := 2D_Engine
 
 # Assets output
-ASSETS_OUTPUT := game.data
+ASSET_OUTPUT := game.data
 
 # Verbosity
 Q := @
@@ -21,8 +21,7 @@ YELLOW := \033[33m
 RESET  := \033[m
 
 # Default targets
-#all: build_core build_src compress_assets
-all: build_core build_src
+all: build_core build_src compress_assets
 
 # Sub Makefiles
 SOURCE_DIR = src
