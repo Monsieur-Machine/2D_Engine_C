@@ -1,4 +1,4 @@
-SHELL = /bin/bash
+SHELL = /usr/bin/env bash
 
 # Build folder
 BUILD_DIR = build
@@ -26,7 +26,7 @@ all: build_core build_src
 
 # Sub Makefiles
 SOURCE_DIR = src
-CORE_DIR = SDL2_Core/src
+CORE_DIR = core/src
 ASSETS_DIR = assets
 
 include $(CORE_DIR)/Makefile
