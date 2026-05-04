@@ -1,13 +1,12 @@
 # Assets files
 ASSETS := \
   assets/tileset/tileset.png \
-  assets/player-sheets/player_idle_sheet.png \
-  assets/player-sheets/player_walk_sheet.png \
-  assets/player-sheets/player_run_sheet.png \
-  assets/props-sheets/barred_door_sheet.png \
-  assets/props-sheets/lever_sheet.png \
-  assets/props-sheets/small_chest_sheet.png \
-  assets/props-sheets/big_chest_sheet.png \
+  assets/player_sheets/player_idle_sheet.png \
+  assets/player_sheets/player_run_sheet.png \
+  assets/player_sheets/player_death_sheet.png \
+  assets/enemy_sheets/enemy_idle_sheet.png \
+  assets/enemy_sheets/enemy_run_sheet.png \
+  assets/enemy_sheets/enemy_death_sheet.png \
   assets/maps/map_test.json
 
 # Deduce assets lz4
