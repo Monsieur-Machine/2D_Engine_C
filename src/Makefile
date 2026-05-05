@@ -11,7 +11,7 @@ SOURCES := \
 # Compiler and flags
 SRC_CC = gcc
 SRC_CFLAGS = -Wall -Wextra -std=c17 -g
-SRC_INCLUDE_DIRS = $(SOURCE_DIR)/headers $(SOURCE_DIR)/ecs/headers $(SOURCE_DIR)/ecs/components/headers $(CORE_DIR)/headers
+SRC_INCLUDE_DIRS = $(SOURCE_DIR)/headers $(SOURCE_DIR)/ecs/headers $(SOURCE_DIR)/ecs/components/headers $(CORE_DIR)/$(CORE_SRC_DIR)/headers
 SRC_LDFLAGS =
 
 # Deduce objects
