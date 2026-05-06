@@ -25,7 +25,7 @@ all: build_core build_src compress_assets
 
 # Sub Makefiles
 SOURCE_DIR = src
-CORE_DIR = core
+CORE_DIR = core/src
 ASSETS_DIR = assets
 
 include $(CORE_DIR)/Makefile
