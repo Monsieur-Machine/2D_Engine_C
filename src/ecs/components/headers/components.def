@@ -1,0 +1,11 @@
+// COMPONENT(NAME(STRING),     PREFIX(STRING),      DRAW(MACRO))
+#define DRAW(PREFIX) PREFIX##_draw
+#define NO_DRAW(...) NULL
+
+COMPONENT(TRANSFORM_COMPONENT, transform_component, NO_DRAW)
+COMPONENT(SPRITE_COMPONENT,    sprite_component,    DRAW)
+COMPONENT(ANIMATION_SYSTEM,    animation_system,    NO_DRAW)
+COMPONENT(PLAYER_SYSTEM,       player_system,       NO_DRAW)
+// Add new components definition here
+
+#undef COMPONENT

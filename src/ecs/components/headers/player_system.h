@@ -2,6 +2,9 @@
 #define PLAYER_SYSTEM_H
 
 #include "ecs.h"
+#include "transform_component.h"
+#include "sprite_component.h"
+#include "animation_system.h"
 
 #define PLAYER_DEFAULT_SPEED 80.0f // px / s
 #define PLAYER_DEFAULT_IDLE_ANIMATION_SPEED 250.0f // ms / frame

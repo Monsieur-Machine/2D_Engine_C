@@ -6,19 +6,11 @@
 #include "linked_list.h"
 
 typedef enum component_type_t {
-    TRANSFORM_COMPONENT,
-    SPRITE_COMPONENT,
-    ANIMATION_SYSTEM,
-    PLAYER_SYSTEM,
-    // Add new components types here
+#define COMPONENT(NAME, PREFIX, DRAW) NAME,
+#include "components.def"
 } component_type_t;
 
-// Structs forwarding
-typedef struct transform_component_data_t transform_component_data_t;
-typedef struct sprite_component_data_t sprite_component_data_t;
-typedef struct animation_system_data_t animation_system_data_t;
-typedef struct player_system_data_t player_system_data_t;
-
+// Component forwarding
 typedef struct component_t component_t;
 
 // Component init function. It is called when component added to entity. This function is necessary.
@@ -37,12 +29,7 @@ typedef struct component_t {
     component_update_t component_update;
     component_draw_t component_draw;
 
-    union {
-        transform_component_data_t *transform_component_data;
-        sprite_component_data_t *sprite_component_data;
-        animation_system_data_t *animation_system_data;
-        player_system_data_t *player_system_data;
-    } component_data;
+    void *component_data;
 
     component_deleter_t component_deleter;
 

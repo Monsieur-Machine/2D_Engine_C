@@ -5,9 +5,9 @@
 // Args : size_t nb_frames, size_t actual_frame, float frame_delay_ms, bool play, bool loop, bool reverse
 void animation_system_init(component_t *component, va_list args)
 {
-    animation_system_data_t *system_data = component->component_data.animation_system_data;
+    animation_system_data_t *system_data = component->component_data;
 
-    system_data->sprite_component_data = get_component(component->entity, SPRITE_COMPONENT)->component_data.sprite_component_data;
+    system_data->sprite_component_data = get_component(component->entity, SPRITE_COMPONENT)->component_data;
 
     system_data->nb_frames = va_arg(args, size_t);
     system_data->actual_frame_nb= va_arg(args, size_t);
@@ -25,7 +25,7 @@ void animation_system_init(component_t *component, va_list args)
 
 void animation_system_update(component_t *component)
 {
-    animation_system_data_t *system_data = component->component_data.animation_system_data;
+    animation_system_data_t *system_data = component->component_data;
 
     if(system_data->play)
     {
@@ -77,8 +77,10 @@ void animation_system_update(component_t *component)
 
 inline void animation_system_destroy(component_t *component)
 {
-    linked_list_clear(&component->component_data.animation_system_data->frames);
-    free(component->component_data.animation_system_data);
+    animation_system_data_t *system_data = component->component_data;
+
+    linked_list_clear(&system_data->frames);
+    free(system_data);
 }
 
 void animation_system_create_frames_clips(animation_system_data_t *system_data)

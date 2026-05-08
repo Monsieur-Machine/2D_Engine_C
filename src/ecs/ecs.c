@@ -10,53 +10,19 @@ component_t *create_component(component_type_t component_type)
 
     switch(component_type)
     {
-      case TRANSFORM_COMPONENT:
-        component->component_init = transform_component_init;
-        component->component_update = transform_component_update;
-        component->component_draw = NULL;
-
-        component->component_data.transform_component_data = malloc(sizeof(transform_component_data_t));
-        if(!component->component_data.transform_component_data) return NULL;
-
-        component->component_deleter = transform_component_destroy;
+#define COMPONENT(NAME, PREFIX, DRAW) \
+      case NAME: \
+        component->component_init = PREFIX##_init; \
+        component->component_update = PREFIX##_update; \
+        component->component_draw = DRAW(PREFIX); \
+        component->component_data = malloc(sizeof(PREFIX##_data_t)); \
+        if(!component->component_data){ free(component); return NULL; } \
+        component->component_deleter = PREFIX##_destroy; \
         break;
-
-      case SPRITE_COMPONENT:
-        component->component_init = sprite_component_init;
-        component->component_update = sprite_component_update;
-        component->component_draw = sprite_component_draw;
-
-        component->component_data.sprite_component_data = malloc(sizeof(sprite_component_data_t));
-        if(!component->component_data.sprite_component_data) return NULL;
-
-        component->component_deleter = sprite_component_destroy;
-        break;
-
-      case ANIMATION_SYSTEM:
-        component->component_init = animation_system_init;
-        component->component_update = animation_system_update;
-        component->component_draw = NULL;
-
-        component->component_data.animation_system_data = malloc(sizeof(animation_system_data_t));
-        if(!component->component_data.animation_system_data) return NULL;
-
-        component->component_deleter = animation_system_destroy;
-        break;
-
-      case PLAYER_SYSTEM:
-        component->component_init = player_system_init;
-        component->component_update = player_system_update;
-        component->component_draw = NULL;
-
-        component->component_data.player_system_data = malloc(sizeof(player_system_data_t));
-        if(!component->component_data.player_system_data) return NULL;
-
-        component->component_deleter = player_system_destroy;
-        break;
-
-      // Add new components attributions here
+#include "components.def"
 
       default:
+        free(component);
         return NULL;
     }
 

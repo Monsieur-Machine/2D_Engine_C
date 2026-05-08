@@ -8,9 +8,9 @@
 // No args
 void player_system_init(component_t *component, va_list args __attribute__((unused)))
 {
-    player_system_data_t *system_data = component->component_data.player_system_data;
+    player_system_data_t *system_data = component->component_data;
 
-    system_data->animation_system_data = get_component(component->entity, ANIMATION_SYSTEM)->component_data.animation_system_data;
+    system_data->animation_system_data = get_component(component->entity, ANIMATION_SYSTEM)->component_data;
     system_data->sprite_component_data = system_data->animation_system_data->sprite_component_data;
     system_data->transform_component_data = system_data->sprite_component_data->transform_component_data;
 
@@ -75,7 +75,7 @@ static inline void player_system_set_animation(player_system_data_t *system_data
 
 void player_system_update(component_t *component)
 {
-    player_system_data_t *system_data = component->component_data.player_system_data;
+    player_system_data_t *system_data = component->component_data;
 
     player_system_get_inputs(system_data);
     player_system_set_velocity(system_data);
@@ -84,5 +84,5 @@ void player_system_update(component_t *component)
 
 void player_system_destroy(component_t *component)
 {
-    free(component->component_data.player_system_data);
+    free(component->component_data);
 }
