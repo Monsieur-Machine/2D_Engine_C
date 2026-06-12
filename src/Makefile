@@ -10,7 +10,16 @@ SOURCES := \
 
 # Compiler and flags
 SRC_CC = gcc
-SRC_CFLAGS = -Wall -Wextra -std=c17 -g
+#SRC_CFLAGS = -std=c17 -pedantic -O3 # RELEASE
+SRC_CFLAGS = -std=c17 --pedantic -O0 -g \
+	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
+    -Wformat=2 -Wswitch-default -Wswitch-enum -Wcast-align \
+    -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \
+    -Wstrict-prototypes -Winline -Wundef -Wnested-externs \
+    -Wcast-qual -Wshadow -Wunreachable-code -Wlogical-op \
+    -Wfloat-equal -Wstrict-aliasing=2 -Wredundant-decls \
+    -Wold-style-definition # DEVELOPEMENT
+
 SRC_INCLUDE_DIRS = $(SOURCE_DIR)/headers $(SOURCE_DIR)/ecs/headers $(SOURCE_DIR)/ecs/components/headers $(CORE_DIR)/$(CORE_SRC_DIR)/headers
 SRC_LDFLAGS =
 

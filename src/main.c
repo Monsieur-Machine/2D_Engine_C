@@ -29,7 +29,7 @@ int main(void)
 
 int main(void)
 {
-    display_clear(COLOR_WHITE);
+    display_clear(C_BLACK);
 
     texture_manager_t texture_manager;
     texture_manager_init(&texture_manager);
@@ -72,7 +72,7 @@ int main(void)
 
 int main(void)
 {
-    display_clear(COLOR_WHITE);
+    display_clear(C_BLACK);
 
     linked_list_t linked_list;
     linked_list_init(&linked_list, sizeof(int), NULL);

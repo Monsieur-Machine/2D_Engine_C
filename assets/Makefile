@@ -20,8 +20,7 @@ asset_setup:
 # Compress assets into tar file
 $(BUILD_DIR)/$(ASSET_OUTPUT): $(ASSETS:%=$(ASSETS_DIR)/%)
 	@echo -e "[100%] $(YELLOW)Compressing $(ASSET_OUTPUT)$(RESET)"
-	$(Q)tar -cf $(BUILD_DIR)/$(ASSETS_DIR)/assets.tar $^
-	$(Q)lz4 --favor-decSpeed -fqtz $(BUILD_DIR)/$(ASSETS_DIR)/assets.tar $@
+	$(Q)tar -cf $@ $^
 
 # Print ending message
 assets_end: $(BUILD_DIR)/$(SOURCE_OUTPUT)
