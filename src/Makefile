@@ -21,7 +21,7 @@ SRC_CFLAGS = -std=c17 --pedantic -O0 -g \
     -Wold-style-definition # DEVELOPEMENT
 
 SRC_INCLUDE_DIRS = $(SOURCE_DIR)/headers $(SOURCE_DIR)/ecs/headers $(SOURCE_DIR)/ecs/components/headers $(CORE_DIR)/$(CORE_SRC_DIR)/headers
-SRC_LDFLAGS =
+SRC_LDFLAGS = -lCore -Wl,-rpath,$(BUILD_DIR)
 
 # Deduce objects
 SOURCE_OBJECTS = $(SOURCES:%.c=$(BUILD_DIR)/$(SOURCE_DIR)/%.o)
@@ -44,7 +44,7 @@ count_src_build:
 # Link game target
 $(BUILD_DIR)/$(SOURCE_OUTPUT): $(SOURCE_OBJECTS) $(BUILD_DIR)/libCore.so
 	@echo -e "[100%] $(YELLOW)Linking $(SOURCE_OUTPUT)$(RESET)"
-	$(Q)$(SRC_CC) $(SOURCE_OBJECTS) -L./$(BUILD_DIR) $(SRC_LDFLAGS) -lCore -Wl,-rpath,$(BUILD_DIR) -o $@
+	$(Q)$(SRC_CC) $(SOURCE_OBJECTS) -L./$(BUILD_DIR) -o $@ $(SRC_LDFLAGS)
 
 # Build .o files
 $(BUILD_DIR)/$(SOURCE_DIR)/%.o: $(SOURCE_DIR)/%.c
