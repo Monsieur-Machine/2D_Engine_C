@@ -1,0 +1,5 @@
+# Headers
+-Isrc/headers
+-Isrc/ecs/headers
+-Isrc/ecs/components/headers
+-Icore/src/headers
