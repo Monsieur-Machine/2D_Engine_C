@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <stdbool.h>
+
 #include "events.h"
 #include "texture_manager.h"
 #include "ecs.h"
