@@ -30,7 +30,7 @@ SOURCE_OBJECTS = $(SOURCES:%.c=$(BUILD_DIR)/$(SOURCE_DIR)/%.o)
 CURRENT_SRC_FILE := 0
 
 # Build src target
-build_src: src_setup count_src_build $(BUILD_DIR)/$(SOURCE_OUTPUT) src_end
+build_src: src_setup count_src_build src_end
 
 # Source build directories
 src_setup:
@@ -54,7 +54,7 @@ $(BUILD_DIR)/$(SOURCE_DIR)/%.o: $(SOURCE_DIR)/%.c
 	$(Q)$(SRC_CC) $(SRC_CFLAGS) $(SRC_INCLUDE_DIRS:%=-I%) -MMD -MP -c $< -o $@
 
 # Print ending message
-src_end:
+src_end: $(BUILD_DIR)/$(SOURCE_OUTPUT)
 	@echo "Built target $(SOURCE_OUTPUT)"
 
 # Source files dependencies
