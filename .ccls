@@ -4,3 +4,4 @@ gcc
 -Isrc/ecs/headers
 -Isrc/ecs/components/headers
 -Icore/src/headers
+-Iassets/asset_builder/src/headers

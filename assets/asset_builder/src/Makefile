@@ -1,11 +1,12 @@
 # Source files
 ASSET_BUILDER_SOURCES := \
-  main.c
+  main.c \
+  asset_file.c
 
 # Compiler and flags
 ASSET_BUILDER_CC = gcc
 #ASSET_BUILDER_CFLAGS = -std=c17 -pedantic -O3 # RELEASE
-ASSET_BUILDER_CFLAGS = -std=c17 --pedantic -O0 -g \
+ASSET_BUILDER_CFLAGS = -std=c17 --pedantic -O0 -g $(shell pkg-config --cflags libpng) \
 	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
     -Wformat=2 -Wswitch-default -Wswitch-enum -Wcast-align \
     -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \
@@ -15,7 +16,7 @@ ASSET_BUILDER_CFLAGS = -std=c17 --pedantic -O0 -g \
     -Wold-style-definition # DEVELOPEMENT
 
 ASSET_BUILDER_INCLUDE_DIRS = $(ASSET_BUILDER_DIR)/headers
-ASSET_BUILDER_LDFLAGS =
+ASSET_BUILDER_LDFLAGS = $(shell pkg-config --libs libpng)
 
 # Deduce objects
 ASSET_BUILDER_OBJECTS = $(ASSET_BUILDER_SOURCES:%.c=$(BUILD_DIR)/$(ASSET_BUILDER_DIR)/%.o)
@@ -24,7 +25,7 @@ ASSET_BUILDER_OBJECTS = $(ASSET_BUILDER_SOURCES:%.c=$(BUILD_DIR)/$(ASSET_BUILDER
 CURRENT_ASSET_BUILDER_FILE := 0
 
 # Build asset builder target
-build_asset_builder: asset_builder_setup count_asset_builder_build $(BUILD_DIR)/$(ASSET_BUILDER_DIR)/$(ASSET_BUILDER_OUTPUT) asset_builder_end
+build_asset_builder: asset_builder_setup count_asset_builder_build asset_builder_end
 
 # Source build directories
 asset_builder_setup:
@@ -48,7 +49,7 @@ $(BUILD_DIR)/$(ASSET_BUILDER_DIR)/%.o: $(ASSET_BUILDER_DIR)/%.c
 	$(Q)$(SRC_CC) $(SRC_CFLAGS) $(ASSET_BUILDER_INCLUDE_DIRS:%=-I%) -MMD -MP -c $< -o $@
 
 # Print ending message
-asset_builder_end:
+asset_builder_end: $(BUILD_DIR)/$(ASSET_BUILDER_DIR)/$(ASSET_BUILDER_OUTPUT)
 	@echo "Built target $(ASSET_BUILDER_OUTPUT)"
 
 # Source files dependencies
