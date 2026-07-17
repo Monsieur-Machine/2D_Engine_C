@@ -6,6 +6,9 @@ BUILD_DIR = build
 # Source output target name
 SOURCE_OUTPUT := 2D_Engine
 
+# Core output target name
+CORE_OUTPUT := libcore.a
+
 # Assets output
 ASSET_OUTPUT := game.data
 
