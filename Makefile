@@ -40,6 +40,5 @@ clean:
 
 # Run executable
 .PHONY: run
-run:
+run: all
 	$(Q)./$(BUILD_DIR)/$(SOURCE_OUTPUT)
-
