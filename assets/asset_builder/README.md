@@ -9,3 +9,8 @@
 | Asset end index   | int (32 bits)                       |
 | ...               |                                     |
 | Asset data        | depend on assets content and number |
+
+## PNG
+
+Convert RGBA to RGB with #FF00FF as the transparent color.
+If alpha null then the color of the pixel will be replaced with this.
