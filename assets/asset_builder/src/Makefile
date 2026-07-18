@@ -43,7 +43,7 @@ $(BUILD_DIR)/$(ASSET_BUILDER_DIR)/$(ASSET_BUILDER_OUTPUT): $(ASSET_BUILDER_OBJEC
 
 # Build .o files
 $(BUILD_DIR)/$(ASSET_BUILDER_DIR)/%.o: $(ASSET_BUILDER_DIR)/%.c
-	$(eval CURRENT_SRC_FILE := $(shell echo $$(($(CURRENT_SRC_FILE)+1))))
+	$(eval CURRENT_ASSET_BUILDER_FILE := $(shell echo $$(($(CURRENT_ASSET_BUILDER_FILE)+1))))
 	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_ASSET_BUILDER_FILE)*100/$(TOTAL_ASSET_BUILDER_FILES)))))
 	@echo -e "[$(PERCENTAGE)%] $(GREEN)Building C object $@$(RESET)"
 	$(Q)$(SRC_CC) $(SRC_CFLAGS) $(ASSET_BUILDER_INCLUDE_DIRS:%=-I%) -MMD -MP -c $< -o $@
