@@ -57,10 +57,11 @@
         },
         {
             "label": "Run",
-            "detail": "Run executable",
+            "detail": "Build executable and run.",
             "type": "shell",
             "command": "make",
             "args": [
+                "-j$(nproc)",
                 "run"
             ],
             "group": "build",
