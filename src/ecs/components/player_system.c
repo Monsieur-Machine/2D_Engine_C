@@ -44,7 +44,7 @@ static inline void player_system_set_velocity(player_system_data_t *system_data)
     transform_component_data->velocity.y =
         (float)((system_data->state & PLAYER_RUNNING_DOWN) >> 1) - (float)(system_data->state & PLAYER_RUNNING_UP);
 
-    if(is_not_zero(transform_component_data->velocity.x) && is_not_zero(transform_component_data->velocity.y))
+    if(f_is_not_zero(transform_component_data->velocity.x) && f_is_not_zero(transform_component_data->velocity.y))
     {
         transform_component_data->velocity.x *= 0.707106781186548f;
         transform_component_data->velocity.y *= 0.707106781186548f;

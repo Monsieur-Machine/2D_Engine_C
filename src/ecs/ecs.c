@@ -125,7 +125,7 @@ inline void entity_manager_add_entity(entity_manager_t *entity_manager, entity_t
 // No args
 static inline void action_update_entity(elem_t *elem, va_list args __attribute__((unused)))
 {
-    update_entity(elem->data);
+    update_entity((entity_t *)elem->data);
 }
 
 inline void entity_manager_update(entity_manager_t *entity_manager)
@@ -137,7 +137,7 @@ inline void entity_manager_update(entity_manager_t *entity_manager)
 // No args
 static inline void action_draw_entity(elem_t *elem, va_list args __attribute__((unused)))
 {
-    draw_entity(elem->data);
+    draw_entity((entity_t *)elem->data);
 }
 
 inline void entity_manager_draw(entity_manager_t *entity_manager)
