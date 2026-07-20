@@ -5,8 +5,8 @@ ASSET_BUILDER_SOURCES := \
 
 # Compiler and flags
 ASSET_BUILDER_CC = gcc
-#ASSET_BUILDER_CFLAGS = -std=c17 -pedantic -O3 # RELEASE
-ASSET_BUILDER_CFLAGS = -std=c17 --pedantic -O0 -g $(shell pkg-config --cflags libpng) \
+ASSET_BUILDER_CFLAGS = -std=c17 -pedantic -O3 $(shell pkg-config --cflags libpng) # RELEASE
+#ASSET_BUILDER_CFLAGS = -std=c17 --pedantic -O0 -g $(shell pkg-config --cflags libpng) \
 	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
     -Wformat=2 -Wswitch-default -Wswitch-enum -Wcast-align \
     -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \

@@ -10,36 +10,56 @@ void print_error(const char *content)
 
 int main(int argc, char *argv[])
 {
+    int exit_status = EXIT_SUCCESS;
+
     // Verify arguments minimum number.
     if(argc < 3)
     {
-        printf("\033[33musage\033[m: asset_builder output_file input_file [input_file_2 ...]");
-        return -1;
+        puts("\033[33musage\033[m: asset_builder output_file input_file [input_file_2 ...]");
+        exit_status = EXIT_FAILURE;
+        goto end;
     }
 
-    for(size_t i = 0; i < (size_t)argc; i++)
-        puts(argv[i]);
+    // Header size and content.
+    asset_file_header_t asset_file_header;
+    asset_file_header.assets_number = argc - 2;
+    asset_file_header.header_size = sizeof(uint32_t) + sizeof(size_t) * 2 * asset_file_header.assets_number;
+    asset_file_header.assets_header_def = malloc(asset_file_header.assets_number * sizeof(asset_header_def_t));
 
-    // Create and open output file.
-    FILE *output_asset = fopen(argv[1], "wb");
+    // Set assets name.
+    for(size_t i = 0; i < asset_file_header.assets_number; i++)
+    {
+        const char *file_name = argv[i + 2];
 
-    if(!output_asset)
+        const char *file_name_last_slash = strrchr(file_name, '/');
+        const char *file_base_name = file_name_last_slash ? file_name_last_slash + 1 : file_name;
+
+        const char *file_name_dot = strrchr(file_name, '.');
+        const char *file_name_ext = file_name_dot ? file_name_dot + 1 : file_name;
+
+        size_t asset_name_length = strlen(file_base_name) - strlen(file_name_ext) - 1;
+
+        asset_file_header.assets_header_def[i].name = malloc(asset_name_length);
+        strncpy(asset_file_header.assets_header_def[i].name, file_base_name, asset_name_length);
+
+        // Update header size.
+        asset_file_header.header_size += asset_name_length;
+    }
+
+    // Parse input files to create header structure and fill output file.
+    FILE *output_asset_file = fopen(argv[1], "wb");
+
+    if(!output_asset_file)
     {
         print_error("could not create output file.");
-        return -1;
+        exit_status = EXIT_FAILURE;
+        goto end;
     }
-
-    // Parse input files to create header structure.
-    asset_file_header_t asset_file_header;
-
-    asset_file_header.assets_number = argc - 2;
-    asset_file_header.assets_def = malloc(asset_file_header.assets_number * sizeof(asset_def_t));
-    asset_file_header.header_size = sizeof(uint32_t) + sizeof(uint32_t) * 2 * asset_file_header.assets_number;
 
     for(size_t i = 0; i < asset_file_header.assets_number; i++)
     {
-        // Fill asset_def.
-        int ret = parse_file_for_header(argv[i + 2], &asset_file_header.assets_def[i]);
+        int ret = parse_file_for_header(argv[i + 2], &asset_file_header.assets_header_def[i]);
+
         if(ret)
         {
             switch(ret)
@@ -76,24 +96,68 @@ int main(int argc, char *argv[])
                 print_error("unknown error");
                 return -1;
             }
+
+            exit_status = EXIT_FAILURE;
+            goto end;
         }
-        asset_file_header.header_size += strlen(asset_file_header.assets_def[i].name);
+
+        // Calculate absolute position of assets in the file.
+        if(i) asset_file_header.assets_header_def[i].start = asset_file_header.assets_header_def[i - 1].end + 1;
+        else  asset_file_header.assets_header_def[0].start = asset_file_header.header_size + 1;
+        asset_file_header.assets_header_def[i].end += asset_file_header.assets_header_def[i].start;
     }
 
-    asset_file_header.assets_def[0].start = asset_file_header.header_size + 1;
-    asset_file_header.assets_def[0].end += asset_file_header.assets_def[0].start;
-
-    for(size_t i = 1; i < asset_file_header.assets_number; i++)
+    if(write_header_to_file(&asset_file_header, output_asset_file))
     {
-        // Adjust start and end.
-        asset_file_header.assets_def[i].start = asset_file_header.assets_def[i - 1].end + 1;
-        asset_file_header.assets_def[i].end += asset_file_header.assets_def[i].start;
+        print_error("can't write to output file.");
+        exit_status = EXIT_FAILURE;
+        goto end;
     }
 
     for(size_t i = 0; i < asset_file_header.assets_number; i++)
     {
-        printf("%s : %d - %d\n", asset_file_header.assets_def[i].name, asset_file_header.assets_def[i].start, asset_file_header.assets_def[i].end);
+        int ret = parse_file_for_content_and_write(argv[i + 2], output_asset_file);
+
+        if(ret)
+        {
+            switch(ret)
+            {
+              case -3:
+                print_error("failed to open file.");
+                return -1;
+
+              case -4:
+                print_error("file not valid.");
+                return -1;
+
+              case -5:
+                print_error("memory allocation failed.");
+                return -1;
+
+              case -6:
+                print_error("png bit depth not supported.");
+                return -1;
+
+              case -7:
+                print_error("png color type not supported.");
+                return -1;
+
+              case -8:
+                print_error("failed writing to output file.");
+                return -1;
+
+              default:
+                print_error("unknown error");
+                return -1;
+            }
+
+            exit_status = EXIT_FAILURE;
+            goto end;
+        }
     }
 
-    return 0;
+end:
+    if(output_asset_file) fclose(output_asset_file);
+
+    return exit_status;
 }
