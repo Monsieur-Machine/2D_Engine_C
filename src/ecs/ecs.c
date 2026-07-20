@@ -157,7 +157,7 @@ inline void entity_manager_remove_entity(entity_manager_t *entity_manager, unsig
     linked_list_remove_if(&entity_manager->entities, condition_is_entity_name, id);
 }
 
-inline void entity_manager_clear(entity_manager_t *entity_manager)
+inline void entity_manager_exit(entity_manager_t *entity_manager)
 {
     linked_list_clear(&entity_manager->entities);
 }

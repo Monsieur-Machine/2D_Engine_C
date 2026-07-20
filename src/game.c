@@ -68,8 +68,8 @@ void game_render(void)
 
 void game_exit(void)
 {
+    entity_manager_exit(&game.entity_manager);
     asset_manager_exit(&game.asset_manager);
-    entity_manager_clear(&game.entity_manager);
 
     display_exit();
 }

@@ -72,6 +72,6 @@ void entity_manager_draw(entity_manager_t *entity_manager);
 
 void entity_manager_remove_entity(entity_manager_t *entity_manager, const unsigned int id);
 
-void entity_manager_clear(entity_manager_t *entity_manager);
+void entity_manager_exit(entity_manager_t *entity_manager);
 
 #endif // ECS_H
