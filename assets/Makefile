@@ -2,7 +2,7 @@ ASSETS := \
   player_sheets/player_idle_sheet.png \
   player_sheets/player_walk_sheet.png
 
-ASSETS := $(ASSETS:%=$(ASSETS_DIR)/%)
+ASSETS := $(addprefix $(ASSETS_DIR)/,$(ASSETS))
 
 ASSET_BUILDER_DIR = $(ASSETS_DIR)/asset_builder/src
 
