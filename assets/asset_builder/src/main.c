@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     // Header size and content.
     asset_file_header_t asset_file_header;
     asset_file_header.assets_number = argc - 2;
-    asset_file_header.header_size = sizeof(uint32_t) + sizeof(size_t) * 2 * asset_file_header.assets_number;
+    asset_file_header.header_size = sizeof(size_t) + sizeof(size_t) * asset_file_header.assets_number;
     asset_file_header.assets_header_def = malloc(asset_file_header.assets_number * sizeof(asset_header_def_t));
 
     // Set assets name.
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
         strncpy(asset_file_header.assets_header_def[i].name, file_base_name, asset_name_length);
 
         // Update header size.
-        asset_file_header.header_size += asset_name_length;
+        asset_file_header.header_size += asset_name_length + 1;
     }
 
     // Parse input files to create header structure and fill output file.
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 
         // Calculate absolute position of assets in the file.
         if(i) asset_file_header.assets_header_def[i].start = asset_file_header.assets_header_def[i - 1].end + 1;
-        else  asset_file_header.assets_header_def[0].start = asset_file_header.header_size + 1;
+        else  asset_file_header.assets_header_def[0].start = asset_file_header.header_size;
         asset_file_header.assets_header_def[i].end += asset_file_header.assets_header_def[i].start;
     }
 
