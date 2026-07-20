@@ -216,12 +216,19 @@ int parse_png_for_content(const char *input_file_name, FILE *output_file)
     {
         for(size_t j = 0; j < row_length; j += 4)
         {
-            if(!pixels[i * row_length + j + 3])
+            if(pixels[i * row_length + j + 3] < 128)
             {
                 pixels[i * row_length + j]     = 0xFF;
                 pixels[i * row_length + j + 1] = 0x00;
                 pixels[i * row_length + j + 2] = 0xFF;
             }
+            else if(pixels[i * row_length + j + 3] < 255)
+            {
+                pixels[i * row_length + j]     = 0x80;
+                pixels[i * row_length + j + 1] = 0x00;
+                pixels[i * row_length + j + 2] = 0x80;
+            }
+
 
             ret = fwrite(&pixels[i * row_length + j], sizeof(png_byte), 3, output_file);
             if(ret != 3)
