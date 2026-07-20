@@ -2,7 +2,6 @@
 #define ASSET_FILE_H
 
 #include <stdint.h>
-#include <stddef.h>
 #include <stdio.h>
 
 typedef struct asset_header_def_t {

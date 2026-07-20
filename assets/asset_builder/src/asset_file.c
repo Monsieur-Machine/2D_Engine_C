@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <png.h>
-#include <stdlib.h>
+#include "errors.h"
 
 int parse_png_for_header(const char *input_file_name, asset_header_def_t *asset_header_def);
 int parse_png_for_content(const char *input_file_name, FILE *output_file);
@@ -14,7 +14,7 @@ int parse_file_for_header(const char *input_file_name, asset_header_def_t *asset
 
     if(!file_name_dot)
     {
-        return -1;  // no extension
+        return NO_EXTENSION;
     }
 
     const char *file_name_ext = file_name_dot + 1;
@@ -23,38 +23,40 @@ int parse_file_for_header(const char *input_file_name, asset_header_def_t *asset
     {
         return parse_png_for_header(input_file_name, asset_header_def);
     }
-    else
-    {
-        return -2;  // extension not supported
-    }
 
-    return 0;
+    return EXTENSION_UNSUPPORTED;
 }
 
 int write_header_to_file(asset_file_header_t *asset_file_header, FILE *output_file)
 {
     size_t ret = fwrite(&asset_file_header->assets_number, sizeof(size_t), 1, output_file);
     if(ret != 1)
-        return -8;  // failed writing output file
+        return WRITE_FAILED;
 
     for(size_t i = 0; i < asset_file_header->assets_number; i++)
     {
         size_t name_length = strlen(asset_file_header->assets_header_def[i].name) + 1;
         ret = fwrite(asset_file_header->assets_header_def[i].name, sizeof(unsigned char), name_length, output_file);
         if(ret != name_length)
-            return -8;  // failed writing output file
+            return WRITE_FAILED;
 
         ret = fwrite(&asset_file_header->assets_header_def[i].start, sizeof(size_t), 1, output_file);
         if(ret != 1)
-            return -8;  // failed writing output file
+            return WRITE_FAILED;
     }
 
-    return 0;
+    return NO_ERROR;
 }
 
 int parse_file_for_content_and_write(const char *input_file_name, FILE *output_file)
 {
     const char *file_name_dot = strrchr(input_file_name, '.');
+
+    if(!file_name_dot)
+    {
+        return NO_EXTENSION;
+    }
+
     const char *file_name_ext = file_name_dot + 1;
 
     if(!strcmp(file_name_ext, "png"))
@@ -62,7 +64,7 @@ int parse_file_for_content_and_write(const char *input_file_name, FILE *output_f
         return parse_png_for_content(input_file_name, output_file);
     }
 
-    return 0;
+    return EXTENSION_UNSUPPORTED;
 }
 
 // File specific functions.
@@ -72,7 +74,7 @@ int parse_png_for_header(const char *file_name, asset_header_def_t *asset_header
 
     if(!input_file)
     {
-        return -3;  // failed to open file
+        return OPEN_FAILED;
     }
 
     // Check png autenticity.
@@ -81,7 +83,7 @@ int parse_png_for_header(const char *file_name, asset_header_def_t *asset_header
     if(!png_check_sig(sig, 8))
     {
         fclose(input_file);
-        return -4;   // bad signature
+        return BAD_SIGNATURE;
     }
 
     // PNG structs.
@@ -89,7 +91,7 @@ int parse_png_for_header(const char *file_name, asset_header_def_t *asset_header
     if(!png_ptr)
     {
         fclose(input_file);
-        return -5;   // out of memory
+        return MEMORY_ALLOC_FAILED;
     }
 
     png_infop info_ptr = png_create_info_struct(png_ptr);
@@ -97,7 +99,7 @@ int parse_png_for_header(const char *file_name, asset_header_def_t *asset_header
     {
         png_destroy_read_struct(&png_ptr, NULL, NULL);
         fclose(input_file);
-        return -5;   // out of memory
+        return MEMORY_ALLOC_FAILED;
     }
 
     // Fill structs and load data.
@@ -115,7 +117,7 @@ int parse_png_for_header(const char *file_name, asset_header_def_t *asset_header
     {
         png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
         fclose(input_file);
-        return -6;  // png bit depth not supported
+        return PNG_BIT_DEPTH_UNSUPPORTED;
     }
 
     switch(color_type)
@@ -127,7 +129,7 @@ int parse_png_for_header(const char *file_name, asset_header_def_t *asset_header
       default:
         png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
         fclose(input_file);
-        return -7;  // png color type not supported
+        return PNG_COLOR_TYPE_UNSUPPORTED;
     }
 
     // Fill asset def.
@@ -137,7 +139,7 @@ int parse_png_for_header(const char *file_name, asset_header_def_t *asset_header
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     fclose(input_file);
 
-    return 0;
+    return NO_ERROR;
 }
 
 int parse_png_for_content(const char *input_file_name, FILE *output_file)
@@ -147,7 +149,7 @@ int parse_png_for_content(const char *input_file_name, FILE *output_file)
     if(!input_file)
     {
         fclose(input_file);
-        return -3;  // failed to open file
+        return OPEN_FAILED;
     }
 
     // Check png autenticity.
@@ -156,7 +158,7 @@ int parse_png_for_content(const char *input_file_name, FILE *output_file)
     if(!png_check_sig(sig, 8))
     {
         fclose(input_file);
-        return -4;   // bad signature
+        return BAD_SIGNATURE;
     }
 
     // PNG structs.
@@ -164,7 +166,7 @@ int parse_png_for_content(const char *input_file_name, FILE *output_file)
     if(!png_ptr)
     {
         fclose(input_file);
-        return -5;   // out of memory
+        return MEMORY_ALLOC_FAILED;
     }
 
     png_infop info_ptr = png_create_info_struct(png_ptr);
@@ -172,7 +174,7 @@ int parse_png_for_content(const char *input_file_name, FILE *output_file)
     {
         png_destroy_read_struct(&png_ptr, NULL, NULL);
         fclose(input_file);
-        return -5;   // out of memory
+        return MEMORY_ALLOC_FAILED;
     }
 
     // Fill structs and load data.
@@ -190,7 +192,7 @@ int parse_png_for_content(const char *input_file_name, FILE *output_file)
     {
         png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
         fclose(input_file);
-        return -8;   // failed writing to output file
+        return WRITE_FAILED;
     }
 
     ret = fwrite(&height, sizeof(size_t), 1, output_file);
@@ -198,7 +200,7 @@ int parse_png_for_content(const char *input_file_name, FILE *output_file)
     {
         png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
         fclose(input_file);
-        return -8;   // failed writing to output file
+        return WRITE_FAILED;
     }
 
     // Prepare storage.
@@ -226,7 +228,7 @@ int parse_png_for_content(const char *input_file_name, FILE *output_file)
             {
                 png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
                 fclose(input_file);
-                return -8;   // failed writing to output file
+                return WRITE_FAILED;
             }
         }
     }
@@ -234,5 +236,5 @@ int parse_png_for_content(const char *input_file_name, FILE *output_file)
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     fclose(input_file);
 
-    return 0;
+    return NO_ERROR;
 }

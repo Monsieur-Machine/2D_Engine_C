@@ -2,22 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include "asset_file.h"
-
-void print_error(const char *content)
-{
-    printf("\033[31merror\033[m: %s\n", content);
-}
+#include "errors.h"
 
 int main(int argc, char *argv[])
 {
-    int exit_status = EXIT_SUCCESS;
-
     // Verify arguments minimum number.
     if(argc < 3)
     {
         puts("\033[33musage\033[m: asset_builder output_file input_file [input_file_2 ...]");
-        exit_status = EXIT_FAILURE;
-        goto end;
+        return EXIT_FAILURE;
     }
 
     // Header size and content.
@@ -52,8 +45,7 @@ int main(int argc, char *argv[])
     if(!output_asset_file)
     {
         print_error("could not create output file.");
-        exit_status = EXIT_FAILURE;
-        goto end;
+        return EXIT_FAILURE;
     }
 
     for(size_t i = 0; i < asset_file_header.assets_number; i++)
@@ -64,41 +56,33 @@ int main(int argc, char *argv[])
         {
             switch(ret)
             {
-              case -1:
-                print_error("file does not have an extension.");
-                return -1;
+              case NO_EXTENSION:
+                print_error("file does not have an extension."); break;
 
-              case -2:
-                print_error("extension not yet supported.");
-                return -1;
+              case EXTENSION_UNSUPPORTED:
+                print_error("extension not yet supported."); break;
 
-              case -3:
-                print_error("failed to open file.");
-                return -1;
+              case OPEN_FAILED:
+                print_error("failed to open file."); break;
 
-              case -4:
-                print_error("file not valid.");
-                return -1;
+              case BAD_SIGNATURE:
+                print_error("file not valid."); break;
 
-              case -5:
-                print_error("memory allocation failed.");
-                return -1;
+              case MEMORY_ALLOC_FAILED:
+                print_error("memory allocation failed."); break;
 
-              case -6:
-                print_error("png bit depth not supported.");
-                return -1;
+              case PNG_BIT_DEPTH_UNSUPPORTED:
+                print_error("png bit depth not supported."); break;
 
-              case -7:
-                print_error("png color type not supported.");
-                return -1;
+              case PNG_COLOR_TYPE_UNSUPPORTED:
+                print_error("png color type not supported."); break;
 
               default:
-                print_error("unknown error");
-                return -1;
+                print_error("unknown error"); break;
             }
 
-            exit_status = EXIT_FAILURE;
-            goto end;
+            fclose(output_asset_file);
+            return EXIT_FAILURE;
         }
 
         // Calculate absolute position of assets in the file.
@@ -110,8 +94,8 @@ int main(int argc, char *argv[])
     if(write_header_to_file(&asset_file_header, output_asset_file))
     {
         print_error("can't write to output file.");
-        exit_status = EXIT_FAILURE;
-        goto end;
+        fclose(output_asset_file);
+        return EXIT_FAILURE;
     }
 
     for(size_t i = 0; i < asset_file_header.assets_number; i++)
@@ -122,42 +106,38 @@ int main(int argc, char *argv[])
         {
             switch(ret)
             {
-              case -3:
-                print_error("failed to open file.");
-                return -1;
+              case NO_EXTENSION:
+                print_error("file does not have an extension."); break;
 
-              case -4:
-                print_error("file not valid.");
-                return -1;
+              case EXTENSION_UNSUPPORTED:
+                print_error("extension not yet supported."); break;
 
-              case -5:
-                print_error("memory allocation failed.");
-                return -1;
+              case OPEN_FAILED:
+                print_error("failed to open file."); break;
 
-              case -6:
-                print_error("png bit depth not supported.");
-                return -1;
+              case WRITE_FAILED:
+                print_error("failed to write to output file."); break;
 
-              case -7:
-                print_error("png color type not supported.");
-                return -1;
+              case BAD_SIGNATURE:
+                print_error("file not valid."); break;
 
-              case -8:
-                print_error("failed writing to output file.");
-                return -1;
+              case MEMORY_ALLOC_FAILED:
+                print_error("memory allocation failed."); break;
+
+              case PNG_BIT_DEPTH_UNSUPPORTED:
+                print_error("png bit depth not supported."); break;
+
+              case PNG_COLOR_TYPE_UNSUPPORTED:
+                print_error("png color type not supported."); break;
 
               default:
-                print_error("unknown error");
-                return -1;
+                print_error("unknown error"); break;
             }
 
-            exit_status = EXIT_FAILURE;
-            goto end;
+            fclose(output_asset_file);
+            return EXIT_FAILURE;
         }
     }
 
-end:
-    if(output_asset_file) fclose(output_asset_file);
-
-    return exit_status;
+    return EXIT_SUCCESS;
 }
