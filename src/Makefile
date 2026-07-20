@@ -43,7 +43,7 @@ count_src_build:
 
 # Link game target
 $(SOURCE_OUTPUT): $(SOURCE_OBJECTS) $(CORE_OUTPUT)
-	@echo -e "[100%] $(YELLOW)Linking $(SOURCE_OUTPUT)$(RESET)"
+	@echo -e "[100%] $(YELLOW)Linking $(notdir $(SOURCE_OUTPUT))$(RESET)"
 	$(Q)$(SRC_CC) $(SOURCE_OBJECTS) -L./$(BUILD_DIR) $(CORE_OUTPUT) $(CORE_DEPS_FLAGS) -o $@ $(SRC_LDFLAGS)
 
 # Build .o files

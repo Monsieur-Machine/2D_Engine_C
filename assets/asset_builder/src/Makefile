@@ -39,7 +39,7 @@ count_asset_builder_build:
 
 # Link asset builder target
 $(ASSET_BUILDER_OUTPUT): $(ASSET_BUILDER_OBJECTS)
-	@echo -e "[100%] $(YELLOW)Linking $(ASSET_BUILDER_OUTPUT)$(RESET)"
+	@echo -e "[100%] $(YELLOW)Linking $(notdir $(ASSET_BUILDER_OUTPUT))$(RESET)"
 	$(Q)$(SRC_CC) $(ASSET_BUILDER_OBJECTS) -o $@ $(ASSET_BUILDER_LDFLAGS)
 
 # Build .o files
