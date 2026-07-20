@@ -34,7 +34,7 @@ build_src: src_setup count_src_build src_end
 
 # Source build directories
 src_setup:
-	@echo "Building Source"
+	@echo "Building $(notdir $(SOURCE_OUTPUT))"
 	$(Q)mkdir -p $(dir $(SOURCE_OBJECTS))
 
 # Count nb of files to build
@@ -42,9 +42,9 @@ count_src_build:
 	$(eval export TOTAL_SRC_FILES := $(shell echo $$(($$(make -n $(SOURCE_OBJECTS) 2>/dev/null | grep -c "Building") + 1))))
 
 # Link game target
-$(BUILD_DIR)/$(SOURCE_OUTPUT): $(SOURCE_OBJECTS) $(BUILD_DIR)/$(CORE_OUTPUT)
+$(SOURCE_OUTPUT): $(SOURCE_OBJECTS) $(CORE_OUTPUT)
 	@echo -e "[100%] $(YELLOW)Linking $(SOURCE_OUTPUT)$(RESET)"
-	$(Q)$(SRC_CC) $(SOURCE_OBJECTS) -L./$(BUILD_DIR) $(BUILD_DIR)/$(CORE_OUTPUT) $(CORE_DEPS_FLAGS) -o $@ $(SRC_LDFLAGS)
+	$(Q)$(SRC_CC) $(SOURCE_OBJECTS) -L./$(BUILD_DIR) $(CORE_OUTPUT) $(CORE_DEPS_FLAGS) -o $@ $(SRC_LDFLAGS)
 
 # Build .o files
 $(BUILD_DIR)/$(SOURCE_DIR)/%.o: $(SOURCE_DIR)/%.c
@@ -54,8 +54,8 @@ $(BUILD_DIR)/$(SOURCE_DIR)/%.o: $(SOURCE_DIR)/%.c
 	$(Q)$(SRC_CC) $(SRC_CFLAGS) $(SRC_INCLUDE_DIRS:%=-I%) -MMD -MP -c $< -o $@
 
 # Print ending message
-src_end: $(BUILD_DIR)/$(SOURCE_OUTPUT)
-	@echo "Built target $(SOURCE_OUTPUT)"
+src_end: $(SOURCE_OUTPUT)
+	@echo "Built target $(notdir $(SOURCE_OUTPUT))"
 
 # Source files dependencies
 -include $(SOURCE_OBJECTS:.o=.d)

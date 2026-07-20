@@ -6,18 +6,17 @@ ASSETS := $(ASSETS:%=$(ASSETS_DIR)/%)
 
 ASSET_BUILDER_DIR = $(ASSETS_DIR)/asset_builder/src
 
-ASSET_BUILDER_OUTPUT = asset_builder
+ASSET_BUILDER_OUTPUT = $(BUILD_DIR)/$(ASSETS_DIR)/asset_builder/asset_builder
 
-build_assets: setup_asset asset_end
+build_assets: setup_asset build_asset_builder asset_end
 
 include $(ASSET_BUILDER_DIR)/Makefile
 
 setup_asset:
-	@echo "Building $(ASSET_OUTPUT)"
-	$(Q)mkdir -p $(dir $(ASSETS))
+	@echo "Building $(notdir $(ASSET_OUTPUT))"
 
-$(BUILD_DIR)/$(ASSET_OUTPUT): build_asset_builder
-	$(Q)$(BUILD_DIR)/$(ASSET_BUILDER_DIR)/$(ASSET_BUILDER_OUTPUT) $@ $(ASSETS)
+$(ASSET_OUTPUT): $(ASSET_BUILDER_OUTPUT)
+	$(Q)$^ $@ $(ASSETS)
 
-asset_end: $(BUILD_DIR)/$(ASSET_OUTPUT)
-	@echo "Built target $(ASSET_OUTPUT)"
+asset_end: $(ASSET_OUTPUT)
+	@echo "Built target $(notdir $(ASSET_OUTPUT))"
