@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #include "events.h"
-#include "texture_manager.h"
+#include "asset_manager.h"
 #include "ecs.h"
 
 /**
@@ -19,7 +19,7 @@
 */
 typedef struct game_t {
     events_t events;
-    texture_manager_t texture_manager;
+    asset_manager_t asset_manager;
     entity_manager_t entity_manager;
 
     bool is_running;

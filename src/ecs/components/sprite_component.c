@@ -27,7 +27,7 @@ inline void sprite_component_update(component_t *component)
 inline void sprite_component_draw(component_t *component)
 {
     sprite_component_data_t *component_data = component->component_data;
-    draw_texture(component_data->texture, &component_data->src_rect, &component_data->dst_rect, component_data->flip);
+    asset_manager_draw_texture(component_data->texture, &component_data->src_rect, &component_data->dst_rect, component_data->flip);
 }
 
 inline void sprite_component_destroy(component_t *component)
@@ -37,5 +37,5 @@ inline void sprite_component_destroy(component_t *component)
 
 inline void sprite_component_set_texture(sprite_component_data_t *component_data, const char *name)
 {
-    component_data->texture = texture_manager_get_texture(&game.texture_manager, name);
+    component_data->texture = asset_manager_get_texture(&game.asset_manager, name);
 }

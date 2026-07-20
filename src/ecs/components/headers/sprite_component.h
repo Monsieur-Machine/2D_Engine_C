@@ -3,7 +3,7 @@
 
 #include "ecs.h"
 #include "transform_component.h"
-#include "texture_manager.h"
+#include "asset_manager.h"
 
 typedef struct sprite_component_data_t {
     transform_component_data_t *transform_component_data;

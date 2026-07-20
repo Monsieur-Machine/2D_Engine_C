@@ -8,9 +8,8 @@
 void game_init(void)
 {
     display_init();
-    asset_manager_init();
 
-    texture_manager_init(&game.texture_manager);
+    asset_manager_init(&game.asset_manager);
     entity_manager_init(&game.entity_manager);
 
     entity_t *player = create_entity(0);
@@ -69,9 +68,8 @@ void game_render(void)
 
 void game_exit(void)
 {
+    asset_manager_exit(&game.asset_manager);
     entity_manager_clear(&game.entity_manager);
-    texture_manager_clear(&game.texture_manager);
 
-    asset_manager_exit();
     display_exit();
 }
