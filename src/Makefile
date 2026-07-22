@@ -11,7 +11,7 @@ SOURCES := \
 # Compiler and flags
 SRC_CC = gcc
 #SRC_CFLAGS = --std=c17 --pedantic -O3 # RELEASE
-SRC_CFLAGS = --std=c17 --pedantic -O1 -g \
+SRC_CFLAGS = --std=c17 --pedantic -O0 -g \
 	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
     -Wformat=2 -Wswitch-default -Wswitch-enum -Wcast-align \
     -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \
