@@ -106,8 +106,9 @@ void animation_system_create_frames_clips(animation_system_data_t *system_data)
 
 inline void animation_system_change_animation(animation_system_data_t *system_data, const char *name, size_t nb_frames)
 {
-    system_data->nb_frames = nb_frames;
     sprite_component_set_texture(system_data->sprite_component_data, name);
-    animation_system_create_frames_clips(system_data);
     system_data->sprite_component_data->src_rect = *(rect_t *)system_data->actual_frame->data;
+
+    system_data->nb_frames = nb_frames;
+    animation_system_create_frames_clips(system_data);
 }
