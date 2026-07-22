@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
         }
 
         // Calculate absolute position of assets in the file.
-        if(i) asset_file_header.assets_header_def[i].start = asset_file_header.assets_header_def[i - 1].end + 1;
+        if(i) asset_file_header.assets_header_def[i].start = asset_file_header.assets_header_def[i - 1].end;
         else  asset_file_header.assets_header_def[0].start = asset_file_header.header_size;
         asset_file_header.assets_header_def[i].end += asset_file_header.assets_header_def[i].start;
     }

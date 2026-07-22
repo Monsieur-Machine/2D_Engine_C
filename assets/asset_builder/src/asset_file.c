@@ -134,7 +134,7 @@ int parse_png_for_header(const char *file_name, asset_header_def_t *asset_header
 
     // Fill asset def.
     asset_header_def->start = 0;
-    asset_header_def->end = height * width * 3;
+    asset_header_def->end = height * width * sizeof(uint16_t) + sizeof(size_t) * 2;
 
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     fclose(input_file);
@@ -216,28 +216,33 @@ int parse_png_for_content(const char *input_file_name, FILE *output_file)
     {
         for(size_t j = 0; j < row_length; j += 4)
         {
-            if(pixels[i * row_length + j + 3] < 128)
+            uint8_t r, g, b;
+
+            if(pixels[i * row_length + j + 3])
             {
-                pixels[i * row_length + j]     = 0xFF;
-                pixels[i * row_length + j + 1] = 0x00;
-                pixels[i * row_length + j + 2] = 0xFF;
+                r = pixels[i * row_length + j] >> 3;
+                g = pixels[i * row_length + j + 1] >> 2;
+                b = pixels[i * row_length + j + 2] >> 3;
             }
-            else if(pixels[i * row_length + j + 3] < 255)
+            else
             {
-                pixels[i * row_length + j]     = 0x80;
-                pixels[i * row_length + j + 1] = 0x00;
-                pixels[i * row_length + j + 2] = 0x80;
+                r = 0x1F;
+                g = 0x00;
+                b = 0x1F;
             }
 
+            uint16_t pixel = ((r) << 11) | ((g) << 6) | b;
 
-            ret = fwrite(&pixels[i * row_length + j], sizeof(png_byte), 3, output_file);
-            if(ret != 3)
+//            printf("\033[48;2;%d;%d;%dm ", r << 3, g << 2, b << 3);
+
+            if(fwrite(&pixel, sizeof(uint16_t), 1, output_file) != 1)
             {
                 png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
                 fclose(input_file);
                 return WRITE_FAILED;
             }
         }
+//        puts("\033[m");
     }
 
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
