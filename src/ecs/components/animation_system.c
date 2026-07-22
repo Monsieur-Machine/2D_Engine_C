@@ -42,14 +42,14 @@ void animation_system_update(component_t *component)
                     system_data->actual_frame = system_data->actual_frame->prev;
                     system_data->actual_frame_nb--;
                 }
-                else if(!system_data->loop)
-                {
-                    system_data->play = false;
-                }
-                else
+                else if(system_data->loop)
                 {
                     system_data->actual_frame = system_data->frames.last;
                     system_data->actual_frame_nb = system_data->frames.size - 1;
+                }
+                else
+                {
+                    system_data->play = false;
                 }
             }
             else
@@ -59,14 +59,14 @@ void animation_system_update(component_t *component)
                     system_data->actual_frame = system_data->actual_frame->next;
                     system_data->actual_frame_nb++;
                 }
-                else if(!system_data->loop)
-                {
-                    system_data->play = false;
-                }
-                else
+                else if(system_data->loop)
                 {
                     system_data->actual_frame = system_data->frames.first;
                     system_data->actual_frame_nb = 0;
+                }
+                else
+                {
+                    system_data->play = false;
                 }
             }
         }
