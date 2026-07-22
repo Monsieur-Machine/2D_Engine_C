@@ -15,6 +15,9 @@ void player_system_init(component_t *component, va_list args __attribute__((unus
     system_data->transform_component_data = system_data->sprite_component_data->transform_component_data;
 
     system_data->state = PLAYER_IDLE;
+
+    asset_manager_load_asset(&game.asset_manager, "player_idle_sheet", ASSET_TEXTURE);
+    asset_manager_load_asset(&game.asset_manager, "player_walk_sheet", ASSET_TEXTURE);
 }
 
 // Only for this file
@@ -84,5 +87,7 @@ void player_system_update(component_t *component)
 
 void player_system_destroy(component_t *component)
 {
+    asset_manager_let_go_asset(&game.asset_manager, "player_idle_sheet");
+    asset_manager_let_go_asset(&game.asset_manager, "player_walk_sheet");
     free(component->component_data);
 }
