@@ -3,7 +3,7 @@ gcc
 -Isrc/headers
 -Isrc/ecs/headers
 -Isrc/ecs/components/headers
--ISDL_Core/src/headers
--INCurses_Core/src/headers
+-ISDL2_Core/src/headers
+#-INCurses_Core/src/headers
 -Iassets/asset_builder/src/headers
 -DASSET_FILE_NAME="$(make print-ASSET_OUTPUT)"
