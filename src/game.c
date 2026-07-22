@@ -44,7 +44,7 @@ void game_handle_event(void)
 
 static inline void update_time(void)
 {
-    clock_t last_clock_state = clock();
+    static clock_t last_clock_state = 0;
     clock_t start_clock = clock();
     game.delta_time_ms = (float)(start_clock - last_clock_state) * 1000.0f / CLOCKS_PER_SEC;
     last_clock_state = start_clock;
