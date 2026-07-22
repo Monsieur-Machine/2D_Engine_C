@@ -18,12 +18,12 @@
  * @param delta_time_ms     Frame time
 */
 typedef struct game_t {
-    events_t events;
     asset_manager_t asset_manager;
     entity_manager_t entity_manager;
+    events_t events;
 
-    bool is_running;
     float delta_time_ms;
+    bool is_running;
 } game_t;
 
 // Global game instance

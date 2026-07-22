@@ -23,8 +23,6 @@ typedef void (*component_draw_t)(component_t *component);
 typedef void (*component_deleter_t)(component_t *component);
 
 typedef struct component_t {
-    component_type_t component_type;
-
     component_init_t component_init;
     component_update_t component_update;
     component_draw_t component_draw;
@@ -34,6 +32,9 @@ typedef struct component_t {
     component_deleter_t component_deleter;
 
     struct entity_t *entity;
+
+    component_type_t component_type;
+
 } component_t;
 
 component_t *create_component(component_type_t component_type);

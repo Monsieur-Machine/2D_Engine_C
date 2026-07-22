@@ -7,18 +7,18 @@
 typedef struct animation_system_data_t {
     sprite_component_data_t *sprite_component_data;
 
-    bool play       :1;
-    bool loop       :1;
-    bool reverse    :1;
-
-    float frame_delay_ms;
-    float frame_timer_ms;
-
     elem_t *actual_frame;
     size_t actual_frame_nb;
 
     size_t nb_frames;
     linked_list_t frames;
+
+    float frame_delay_ms;
+    float frame_timer_ms;
+
+    bool play       :1;
+    bool loop       :1;
+    bool reverse    :1;
 } animation_system_data_t;
 
 void animation_system_init(component_t *component, va_list args);
