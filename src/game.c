@@ -33,9 +33,9 @@ void game_handle_event(void)
     while(pollevent(&event))
     {
         if(event.type == EVENT_KEY_DOWN)
-            game.events.keys[event.key.keysym.scancode] = true;
+            game.events.keys[event.key] = true;
         else if(event.type == EVENT_KEY_UP)
-            game.events.keys[event.key.keysym.scancode] = false;
+            game.events.keys[event.key] = false;
 
         if(event.type == EVENT_QUIT)
             game.is_running = false;
