@@ -5,3 +5,4 @@ gcc
 -Isrc/ecs/components/headers
 -Icore/src/headers
 -Iassets/asset_builder/src/headers
+-DASSET_FILE_NAME="$(make print-ASSET_OUTPUT)"

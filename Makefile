@@ -45,3 +45,7 @@ clean:
 .PHONY: run
 run: all
 	$(Q)./$(SOURCE_OUTPUT)
+
+.PHONY: print-%
+print-%  :
+	@echo $($*)

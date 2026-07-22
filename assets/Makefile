@@ -1,6 +1,7 @@
 ASSETS := \
   player_sheets/player_idle_sheet.png \
-  player_sheets/player_walk_sheet.png
+  player_sheets/player_walk_sheet.png \
+  tileset/tileset.png
 
 ASSETS := $(addprefix $(ASSETS_DIR)/,$(ASSETS))
 
