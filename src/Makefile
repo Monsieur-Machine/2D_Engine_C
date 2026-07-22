@@ -10,7 +10,9 @@ SOURCES := \
 
 # Compiler and flags
 SRC_CC = gcc
-#SRC_CFLAGS = --std=c17 --pedantic -O3 # RELEASE
+ifeq ($(RELEASE), 1)
+SRC_CFLAGS = --std=c17 --pedantic -O3 # RELEASE
+else
 SRC_CFLAGS = --std=c17 --pedantic -O0 -g \
 	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
     -Wformat=2 -Wswitch-default -Wswitch-enum -Wcast-align \
@@ -19,6 +21,7 @@ SRC_CFLAGS = --std=c17 --pedantic -O0 -g \
     -Wcast-qual -Wshadow -Wunreachable-code -Wlogical-op \
     -Wfloat-equal -Wstrict-aliasing=2 -Wredundant-decls \
     -Wold-style-definition # DEVELOPEMENT
+endif
 
 SRC_INCLUDE_DIRS = $(SOURCE_DIR)/headers $(SOURCE_DIR)/ecs/headers $(SOURCE_DIR)/ecs/components/headers $(CORE_DIR)/headers
 SRC_INCLUDE_DIRS := $(addprefix -I, $(SRC_INCLUDE_DIRS))

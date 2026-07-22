@@ -21,7 +21,7 @@
         },
         {
             "label": "Clean",
-            "detail": "Clean build directory and executable",
+            "detail": "Clean build directory",
             "type": "shell",
             "command": "make",
             "args": [
@@ -57,12 +57,31 @@
         },
         {
             "label": "Run",
-            "detail": "Build executable and run.",
+            "detail": "Build project and run",
             "type": "shell",
             "command": "make",
             "args": [
                 "-j$(nproc)",
                 "run"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        },
+        {
+            "label": "Build Release",
+            "detail": "Build project in release mode",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "-j$(nproc)",
+                "RELEASE=1"
             ],
             "group": "build",
             "presentation": {

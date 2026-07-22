@@ -6,8 +6,10 @@ ASSET_BUILDER_SOURCES := \
 
 # Compiler and flags
 ASSET_BUILDER_CC = gcc
+ifeq ($(RELEASE), 1)
 ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O3 $(shell pkg-config --cflags libpng) # RELEASE
-#ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O1 -g $(shell pkg-config --cflags libpng) \
+else
+ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O1 -g $(shell pkg-config --cflags libpng) \
 	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
     -Wformat=2 -Wswitch-default -Wswitch-enum -Wcast-align \
     -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \
@@ -15,6 +17,7 @@ ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O3 $(shell pkg-config --cflags libp
     -Wcast-qual -Wshadow -Wunreachable-code -Wlogical-op \
     -Wfloat-equal -Wstrict-aliasing=2 -Wredundant-decls \
     -Wold-style-definition # DEVELOPEMENT
+endif
 
 ASSET_BUILDER_INCLUDE_DIRS = $(ASSET_BUILDER_DIR)/headers
 ASSET_BUILDER_INCLUDE_DIRS := $(addprefix -I, $(ASSET_BUILDER_INCLUDE_DIRS))
