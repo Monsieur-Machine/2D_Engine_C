@@ -28,7 +28,7 @@ all: build_core build_src build_assets
 
 # Sub Makefiles
 SOURCE_DIR = src
-CORE_DIR = core/src
+CORE_DIR = SDL_Core/src
 ASSETS_DIR = assets
 
 include $(CORE_DIR)/Makefile
