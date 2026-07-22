@@ -65,8 +65,8 @@ static inline void player_system_set_animation(player_system_data_t *system_data
 
     if((system_data->state & PLAYER_RUNNING) && !(system_data->last_state & PLAYER_RUNNING))
     {
-        animation_system_data->frame_delay_ms = PLAYER_DEFAULT_RUN_ANIMATION_SPEED;
-        animation_system_change_animation(animation_system_data, "player_run_sheet", 6);
+        animation_system_data->frame_delay_ms = PLAYER_DEFAULT_WALK_ANIMATION_SPEED;
+        animation_system_change_animation(animation_system_data, "player_walk_sheet", 4);
     }
     else if(!(system_data->state & PLAYER_RUNNING) && (system_data->last_state & PLAYER_RUNNING))
     {

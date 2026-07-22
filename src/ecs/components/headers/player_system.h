@@ -8,7 +8,7 @@
 
 #define PLAYER_DEFAULT_SPEED 80.0f // px / s
 #define PLAYER_DEFAULT_IDLE_ANIMATION_SPEED 250.0f // ms / frame
-#define PLAYER_DEFAULT_RUN_ANIMATION_SPEED  160.0f // ms / frame
+#define PLAYER_DEFAULT_WALK_ANIMATION_SPEED  160.0f // ms / frame
 
 typedef enum player_state_t {
     PLAYER_IDLE          = 0x00, // 00000000
