@@ -6,7 +6,7 @@
 #include "errors.h"
 
 int parse_png_for_header(const char *input_file_name, asset_header_def_t *asset_header_def);
-int parse_png_for_content(const char *input_file_name, FILE *output_file);
+int parse_png_for_content_and_write(const char *input_file_name, FILE *output_file);
 
 int parse_file_for_header(const char *input_file_name, asset_header_def_t *asset_header_def)
 {
@@ -29,19 +29,16 @@ int parse_file_for_header(const char *input_file_name, asset_header_def_t *asset
 
 int write_header_to_file(asset_file_header_t *asset_file_header, FILE *output_file)
 {
-    size_t ret = fwrite(&asset_file_header->assets_number, sizeof(size_t), 1, output_file);
-    if(ret != 1)
+    if(fwrite(&asset_file_header->assets_number, sizeof(size_t), 1, output_file) != 1)
         return WRITE_FAILED;
 
     for(size_t i = 0; i < asset_file_header->assets_number; i++)
     {
         size_t name_length = strlen(asset_file_header->assets_header_def[i].name) + 1;
-        ret = fwrite(asset_file_header->assets_header_def[i].name, sizeof(unsigned char), name_length, output_file);
-        if(ret != name_length)
+        if(fwrite(asset_file_header->assets_header_def[i].name, sizeof(unsigned char), name_length, output_file) != name_length)
             return WRITE_FAILED;
 
-        ret = fwrite(&asset_file_header->assets_header_def[i].start, sizeof(size_t), 1, output_file);
-        if(ret != 1)
+        if(fwrite(&asset_file_header->assets_header_def[i].start, sizeof(size_t), 1, output_file) != 1)
             return WRITE_FAILED;
     }
 
@@ -61,7 +58,7 @@ int parse_file_for_content_and_write(const char *input_file_name, FILE *output_f
 
     if(!strcmp(file_name_ext, "png"))
     {
-        return parse_png_for_content(input_file_name, output_file);
+        return parse_png_for_content_and_write(input_file_name, output_file);
     }
 
     return EXTENSION_UNSUPPORTED;
@@ -73,13 +70,16 @@ int parse_png_for_header(const char *file_name, asset_header_def_t *asset_header
     FILE *input_file = fopen(file_name, "rb");
 
     if(!input_file)
-    {
         return OPEN_FAILED;
-    }
 
     // Check png autenticity.
     unsigned char sig[8];
-    fread(sig, 1, 8, input_file);
+    if(fread(sig, sizeof(unsigned char), 8, input_file) != 8)
+    {
+        fclose(input_file);
+        return READ_FAILED;
+    }
+
     if(!png_check_sig(sig, 8))
     {
         fclose(input_file);
@@ -142,19 +142,23 @@ int parse_png_for_header(const char *file_name, asset_header_def_t *asset_header
     return NO_ERROR;
 }
 
-int parse_png_for_content(const char *input_file_name, FILE *output_file)
+int parse_png_for_content_and_write(const char *input_file_name, FILE *output_file)
 {
     FILE *input_file = fopen(input_file_name, "rb");
 
     if(!input_file)
     {
-        fclose(input_file);
         return OPEN_FAILED;
     }
 
     // Check png autenticity.
     unsigned char sig[8];
-    fread(sig, 1, 8, input_file);
+    if(fread(sig, sizeof(unsigned char), 8, input_file) != 8)
+    {
+        fclose(input_file);
+        return READ_FAILED;
+    }
+
     if(!png_check_sig(sig, 8))
     {
         fclose(input_file);
@@ -187,16 +191,14 @@ int parse_png_for_content(const char *input_file_name, FILE *output_file)
     size_t row_length = png_get_rowbytes(png_ptr, info_ptr);
 
     // Write image size.
-    size_t ret = fwrite(&width, sizeof(size_t), 1, output_file);
-    if(!ret)
+    if(fwrite(&width, sizeof(size_t), 1, output_file) != 1)
     {
         png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
         fclose(input_file);
         return WRITE_FAILED;
     }
 
-    ret = fwrite(&height, sizeof(size_t), 1, output_file);
-    if(!ret)
+    if(fwrite(&height, sizeof(size_t), 1, output_file) != 1)
     {
         png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
         fclose(input_file);

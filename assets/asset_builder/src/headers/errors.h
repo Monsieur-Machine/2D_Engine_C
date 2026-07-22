@@ -6,6 +6,7 @@ typedef enum error_t {
     NO_EXTENSION,
     EXTENSION_UNSUPPORTED,
     OPEN_FAILED,
+    READ_FAILED,
     WRITE_FAILED,
     BAD_SIGNATURE,
     MEMORY_ALLOC_FAILED,
@@ -16,5 +17,7 @@ typedef enum error_t {
 } error_t;
 
 void print_error(const char *content);
+
+void print_error_description(error_t error);
 
 #endif // ERROR_H
