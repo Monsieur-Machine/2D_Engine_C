@@ -10,8 +10,8 @@ SOURCES := \
 
 # Compiler and flags
 SRC_CC = gcc
-#SRC_CFLAGS = -std=c17 -pedantic -O3 # RELEASE
-SRC_CFLAGS = -std=c17 --pedantic -O0 -g \
+#SRC_CFLAGS = --std=c17 --pedantic -O3 # RELEASE
+SRC_CFLAGS = --std=c17 --pedantic -O1 -g \
 	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
     -Wformat=2 -Wswitch-default -Wswitch-enum -Wcast-align \
     -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \
@@ -20,7 +20,9 @@ SRC_CFLAGS = -std=c17 --pedantic -O0 -g \
     -Wfloat-equal -Wstrict-aliasing=2 -Wredundant-decls \
     -Wold-style-definition # DEVELOPEMENT
 
-SRC_INCLUDE_DIRS = $(SOURCE_DIR)/headers $(SOURCE_DIR)/ecs/headers $(SOURCE_DIR)/ecs/components/headers $(CORE_DIR)/$(CORE_SRC_DIR)/headers
+SRC_INCLUDE_DIRS = $(SOURCE_DIR)/headers $(SOURCE_DIR)/ecs/headers $(SOURCE_DIR)/ecs/components/headers $(CORE_DIR)/headers
+SRC_INCLUDE_DIRS := $(addprefix -I, $(SRC_INCLUDE_DIRS))
+
 SRC_LDFLAGS =
 
 # Deduce objects
@@ -44,14 +46,14 @@ count_src_build:
 # Link game target
 $(SOURCE_OUTPUT): $(SOURCE_OBJECTS) $(CORE_OUTPUT)
 	@echo -e "[100%] $(YELLOW)Linking $(notdir $(SOURCE_OUTPUT))$(RESET)"
-	$(Q)$(SRC_CC) $(SOURCE_OBJECTS) -L./$(BUILD_DIR) $(CORE_OUTPUT) $(CORE_DEPS_FLAGS) -o $@ $(SRC_LDFLAGS)
+	$(Q)$(SRC_CC) $(SOURCE_OBJECTS) -L./$(BUILD_DIR) $(CORE_OUTPUT) -o $@ $(SRC_LDFLAGS) $(CORE_DEPS_FLAGS)
 
 # Build .o files
 $(BUILD_DIR)/$(SOURCE_DIR)/%.o: $(SOURCE_DIR)/%.c
 	$(eval CURRENT_SRC_FILE := $(shell echo $$(($(CURRENT_SRC_FILE)+1))))
 	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_SRC_FILE)*100/$(TOTAL_SRC_FILES)))))
 	@echo -e "[$(PERCENTAGE)%] $(GREEN)Building C object $@$(RESET)"
-	$(Q)$(SRC_CC) $(SRC_CFLAGS) $(SRC_INCLUDE_DIRS:%=-I%) -MMD -MP -c $< -o $@
+	$(Q)$(SRC_CC) $(SRC_CFLAGS) $(SRC_INCLUDE_DIRS) -MMD -MP -c $< -o $@
 
 # Print ending message
 src_end: $(SOURCE_OUTPUT)

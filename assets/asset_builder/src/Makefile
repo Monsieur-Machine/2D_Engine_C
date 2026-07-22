@@ -6,8 +6,8 @@ ASSET_BUILDER_SOURCES := \
 
 # Compiler and flags
 ASSET_BUILDER_CC = gcc
-ASSET_BUILDER_CFLAGS = -std=c17 -pedantic -O3 $(shell pkg-config --cflags libpng) # RELEASE
-#ASSET_BUILDER_CFLAGS = -std=c17 --pedantic -O0 -g $(shell pkg-config --cflags libpng) \
+ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O3 $(shell pkg-config --cflags libpng) # RELEASE
+#ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O1 -g $(shell pkg-config --cflags libpng) \
 	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
     -Wformat=2 -Wswitch-default -Wswitch-enum -Wcast-align \
     -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \
@@ -17,6 +17,8 @@ ASSET_BUILDER_CFLAGS = -std=c17 -pedantic -O3 $(shell pkg-config --cflags libpng
     -Wold-style-definition # DEVELOPEMENT
 
 ASSET_BUILDER_INCLUDE_DIRS = $(ASSET_BUILDER_DIR)/headers
+ASSET_BUILDER_INCLUDE_DIRS := $(addprefix -I, $(ASSET_BUILDER_INCLUDE_DIRS))
+
 ASSET_BUILDER_LDFLAGS = $(shell pkg-config --libs libpng)
 
 # Deduce objects
@@ -47,7 +49,7 @@ $(BUILD_DIR)/$(ASSET_BUILDER_DIR)/%.o: $(ASSET_BUILDER_DIR)/%.c
 	$(eval CURRENT_ASSET_BUILDER_FILE := $(shell echo $$(($(CURRENT_ASSET_BUILDER_FILE)+1))))
 	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_ASSET_BUILDER_FILE)*100/$(TOTAL_ASSET_BUILDER_FILES)))))
 	@echo -e "[$(PERCENTAGE)%] $(GREEN)Building C object $@$(RESET)"
-	$(Q)$(SRC_CC) $(SRC_CFLAGS) $(ASSET_BUILDER_INCLUDE_DIRS:%=-I%) -MMD -MP -c $< -o $@
+	$(Q)$(SRC_CC) $(ASSET_BUILDER_CFLAGS) $(ASSET_BUILDER_INCLUDE_DIRS) -MMD -MP -c $< -o $@
 
 # Print ending message
 asset_builder_end: $(ASSET_BUILDER_OUTPUT)
