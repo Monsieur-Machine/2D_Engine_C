@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[])
 {
-    int exit_status = EXIT_SUCCESS;
+    int exit_status = EXIT_FAILURE;
 
     FILE *output_asset_file = NULL;
 
@@ -14,7 +14,6 @@ int main(int argc, char *argv[])
     if(argc < 3)
     {
         puts("\033[33musage\033[m: asset_builder output_file input_file [input_file_2 ...]");
-        exit_status = EXIT_FAILURE;
         goto end;
     }
 
@@ -26,7 +25,6 @@ int main(int argc, char *argv[])
     if(!asset_file_header.assets_header_def)
     {
         print_error("memory allocation failed.");
-        exit_status = EXIT_FAILURE;
         goto end;
 
     }
@@ -57,7 +55,6 @@ int main(int argc, char *argv[])
     if(!output_asset_file)
     {
         print_error("could not create output file.");
-        exit_status = EXIT_FAILURE;
         goto end;
     }
 
@@ -68,8 +65,6 @@ int main(int argc, char *argv[])
         if(ret)
         {
             print_error_description(ret);
-
-            exit_status = EXIT_FAILURE;
             goto end;
         }
 
@@ -82,7 +77,6 @@ int main(int argc, char *argv[])
     if(write_header_to_file(&asset_file_header, output_asset_file))
     {
         print_error("can't write to output file.");
-        exit_status = EXIT_FAILURE;
         goto end;
     }
 
@@ -93,11 +87,11 @@ int main(int argc, char *argv[])
         if(ret)
         {
             print_error_description(ret);
-
-            exit_status = EXIT_FAILURE;
             goto end;
         }
     }
+
+    exit_status = EXIT_SUCCESS;
 
 end:
     if(asset_file_header.assets_header_def)
