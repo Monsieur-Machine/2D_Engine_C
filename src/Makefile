@@ -1,12 +1,10 @@
 # Source files
 SOURCES := \
-  main.c \
   game.c \
-  ecs/ecs.c \
-  ecs/components/transform_component.c \
-  ecs/components/sprite_component.c \
-  ecs/components/animation_system.c \
-  ecs/components/player_system.c
+  components/transform_component.c \
+  components/sprite_component.c \
+  components/animation_system.c \
+  components/player_system.c
 
 # Compiler and flags
 SRC_CC = gcc
@@ -23,7 +21,7 @@ SRC_CFLAGS = --std=c17 --pedantic -O0 -g \
     -Wold-style-definition # DEVELOPEMENT
 endif
 
-SRC_INCLUDE_DIRS = $(SOURCE_DIR)/headers $(SOURCE_DIR)/ecs/headers $(SOURCE_DIR)/ecs/components/headers $(CORE_DIR)/headers
+SRC_INCLUDE_DIRS = $(SOURCE_DIR)/components/headers $(CORE_DIR)/headers
 SRC_INCLUDE_DIRS := $(addprefix -I, $(SRC_INCLUDE_DIRS))
 
 SRC_LDFLAGS =

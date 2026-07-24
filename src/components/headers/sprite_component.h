@@ -20,10 +20,8 @@ void sprite_component_init(component_t *, va_list);
 
 void sprite_component_update(component_t *);
 
-void sprite_component_draw(component_t *);
+int sprite_component_draw(component_t *);
 
 void sprite_component_destroy(component_t *);
-
-void sprite_component_set_texture(sprite_component_data_t *, const char *);
 
 #endif // SPRITE_COMPONENT_H

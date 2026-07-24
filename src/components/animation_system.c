@@ -1,6 +1,8 @@
-#include "memory_alloc.h"
 #include "animation_system.h"
+
 #include "game.h"
+#include "memory_alloc.h"
+#include "errors.h"
 
 // Args : size_t nb_frames, size_t actual_frame, float frame_delay_ms, bool play, bool loop, bool reverse
 void animation_system_init(component_t *component, va_list args)
@@ -8,6 +10,7 @@ void animation_system_init(component_t *component, va_list args)
     animation_system_data_t *system_data = component->component_data;
 
     system_data->sprite_component_data = get_component(component->entity, SPRITE_COMPONENT)->component_data;
+    if(!system_data->sprite_component_data) return;
 
     system_data->nb_frames = va_arg(args, size_t);
     system_data->actual_frame_nb= va_arg(args, size_t);
@@ -106,9 +109,10 @@ void animation_system_create_frames_clips(animation_system_data_t *system_data)
 
 inline void animation_system_change_animation(animation_system_data_t *system_data, const char *name, size_t nb_frames)
 {
-    sprite_component_set_texture(system_data->sprite_component_data, name);
-    system_data->sprite_component_data->src_rect = *(rect_t *)system_data->actual_frame->data;
+    system_data->sprite_component_data->texture = asset_manager_get_texture(&game.asset_manager, name);
 
     system_data->nb_frames = nb_frames;
     animation_system_create_frames_clips(system_data);
+
+    system_data->sprite_component_data->src_rect = *(rect_t *)system_data->actual_frame->data;
 }

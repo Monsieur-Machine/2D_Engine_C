@@ -7,11 +7,11 @@
 typedef struct animation_system_data_t {
     sprite_component_data_t *sprite_component_data;
 
-    elem_t *actual_frame;
-    size_t actual_frame_nb;
-
     size_t nb_frames;
     linked_list_t frames;
+
+    elem_t *actual_frame;
+    size_t actual_frame_nb;
 
     float frame_delay_ms;
     float frame_timer_ms;

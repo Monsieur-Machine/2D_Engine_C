@@ -4,13 +4,13 @@ SHELL = /usr/bin/env bash
 BUILD_DIR = build
 
 # Source output target name
-SOURCE_OUTPUT := $(BUILD_DIR)/2D_Engine
+SOURCE_OUTPUT = $(BUILD_DIR)/2D_Engine
 
 # Core output target name
-CORE_OUTPUT := $(BUILD_DIR)/libcore.a
+CORE_OUTPUT = $(BUILD_DIR)/libcore.a
 
 # Assets output
-ASSET_OUTPUT := $(BUILD_DIR)/game.data
+ASSET_OUTPUT = $(BUILD_DIR)/game.data
 
 # Verbosity
 Q := @
