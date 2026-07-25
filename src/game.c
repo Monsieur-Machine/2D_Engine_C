@@ -1,12 +1,10 @@
 #include "game.h"
 
-#include <time.h>
+#include <stdlib.h>
 #include "display.h"
 #include "asset_manager.h"
 #include "ecs.h"
 #include "components.h"
-
-#include <SDL2/SDL_timer.h>
 
 int game_init(void)
 {
