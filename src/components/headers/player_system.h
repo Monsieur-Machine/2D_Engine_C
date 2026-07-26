@@ -32,9 +32,9 @@ typedef struct player_system_data_t {
     player_state_t last_state;
 } player_system_data_t;
 
-void player_system_init(component_t *, va_list);
+int player_system_init(component_t *, va_list);
 
-void player_system_update(component_t *);
+int player_system_update(component_t *);
 
 void player_system_destroy(component_t *);
 

@@ -7,7 +7,7 @@
 #include "transform_component.h"
 
 // No args
-void player_system_init(component_t *component, va_list args __attribute__((unused)))
+int player_system_init(component_t *component, va_list args __attribute__((unused)))
 {
     player_system_data_t *system_data = component->component_data;
 
@@ -16,6 +16,8 @@ void player_system_init(component_t *component, va_list args __attribute__((unus
     system_data->transform_component_data = system_data->sprite_component_data->transform_component_data;
 
     system_data->state = PLAYER_IDLE;
+
+    return EXIT_SUCCESS;
 }
 
 // Only for this file
@@ -70,7 +72,7 @@ static inline void player_system_set_velocity(player_system_data_t *system_data)
 }
 
 // Only for this file
-static inline void player_system_set_animation_and_speed(player_system_data_t *system_data)
+static inline int player_system_set_animation_and_speed(player_system_data_t *system_data)
 {
     animation_system_data_t *animation_system_data = system_data->animation_system_data;
     sprite_component_data_t *sprite_component_data = system_data->sprite_component_data;
@@ -87,14 +89,14 @@ static inline void player_system_set_animation_and_speed(player_system_data_t *s
             transform_component_data->speed = PLAYER_DEFAULT_RUN_SPEED;
             animation_system_data->frame_delay_ms = PLAYER_DEFAULT_RUN_ANIMATION_SPEED;
             animation_system_data->actual_frame_nb = 0;
-            animation_system_change_animation(animation_system_data, "player_run_sheet", 8);
+            if(animation_system_change_animation(animation_system_data, "player_run_sheet", 8)) return EXIT_FAILURE;
         }
         else
         {
             transform_component_data->speed = PLAYER_DEFAULT_WALK_SPEED;
             animation_system_data->frame_delay_ms = PLAYER_DEFAULT_WALK_ANIMATION_SPEED;
             animation_system_data->actual_frame_nb = 0;
-            animation_system_change_animation(animation_system_data, "player_walk_sheet", 4);
+            if(animation_system_change_animation(animation_system_data, "player_walk_sheet", 4)) return EXIT_FAILURE;
         }
     }
     else if(!(system_data->state & PLAYER_MOVING) && (system_data->last_state & PLAYER_MOVING))
@@ -102,17 +104,21 @@ static inline void player_system_set_animation_and_speed(player_system_data_t *s
         animation_system_data->actual_frame_nb = 0;
         animation_system_data->frame_delay_ms = PLAYER_DEFAULT_IDLE_ANIMATION_SPEED;
         animation_system_data->actual_frame_nb = 0;
-        animation_system_change_animation(animation_system_data, "player_idle_sheet", 4);
+        if(animation_system_change_animation(animation_system_data, "player_idle_sheet", 4)) return EXIT_FAILURE;
     }
+
+    return EXIT_SUCCESS;
 }
 
-void player_system_update(component_t *component)
+int player_system_update(component_t *component)
 {
     player_system_data_t *system_data = component->component_data;
 
     player_system_get_inputs(system_data);
     player_system_set_velocity(system_data);
-    player_system_set_animation_and_speed(system_data);
+    if(player_system_set_animation_and_speed(system_data)) return EXIT_FAILURE;
+
+    return EXIT_SUCCESS;
 }
 
 void player_system_destroy(component_t *component)

@@ -17,7 +17,7 @@ int game_init(void)
 
     entity_t *player = create_entity(0);
 
-    entity_manager_add_entity(&game.entity_manager, player);
+    if(entity_manager_add_entity(&game.entity_manager, player)) return EXIT_FAILURE;
 
     frect_t player_bounds = {10.0f, 10.0f, 32.0f, 32.0f};
 
@@ -58,9 +58,15 @@ void game_handle_event(void)
     }
 }
 
-void game_update(void)
+int game_update(void)
 {
-    entity_manager_update(&game.entity_manager);
+    if(entity_manager_update(&game.entity_manager))
+    {
+        game.is_running = false;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
 
 int game_render(void)
@@ -76,7 +82,6 @@ int game_render(void)
         game.is_running = false;
         return EXIT_FAILURE;
     }
-
 
     display_update();
 

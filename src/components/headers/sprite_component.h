@@ -16,9 +16,9 @@ typedef struct sprite_component_data_t {
     bool flip;
 } sprite_component_data_t;
 
-void sprite_component_init(component_t *, va_list);
+int sprite_component_init(component_t *, va_list);
 
-void sprite_component_update(component_t *);
+int sprite_component_update(component_t *);
 
 int sprite_component_draw(component_t *);
 
