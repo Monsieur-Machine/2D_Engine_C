@@ -6,18 +6,21 @@
 #include "sprite_component.h"
 #include "animation_system.h"
 
-#define PLAYER_DEFAULT_SPEED 80.0f // px / s
+#define PLAYER_DEFAULT_WALK_SPEED 60.0f // px / s
+#define PLAYER_DEFAULT_RUN_SPEED 100.0f // px / s
 #define PLAYER_DEFAULT_IDLE_ANIMATION_SPEED 500.0f // ms / frame
 #define PLAYER_DEFAULT_WALK_ANIMATION_SPEED  160.0f // ms / frame
+#define PLAYER_DEFAULT_RUN_ANIMATION_SPEED  100.0f // ms / frame
 
 typedef enum player_state_t {
-    PLAYER_IDLE          = 0x00, // 00000000
-    PLAYER_RUNNING_UP    = 0x01, // 00000001
-    PLAYER_RUNNING_DOWN  = 0x02, // 00000010
-    PLAYER_RUNNING_LEFT  = 0x04, // 00000100
-    PLAYER_RUNNING_RIGHT = 0x08, // 00001000
-    PLAYER_RUNNING       = 0x0F, // 00001111
-    PLAYER_DEATH         = 0x80  // 10000000
+    PLAYER_IDLE         = 0x00, // 00000000
+    PLAYER_MOVING_UP    = 0x01, // 00000001
+    PLAYER_MOVING_DOWN  = 0x02, // 00000010
+    PLAYER_MOVING_LEFT  = 0x04, // 00000100
+    PLAYER_MOVING_RIGHT = 0x08, // 00001000
+    PLAYER_MOVING       = 0x0F, // 00001111
+    PLAYER_RUNNING      = 0x10, // 00010000
+    PLAYER_DEATH        = 0x80  // 10000000
 } player_state_t;
 
 typedef struct player_system_data_t {
