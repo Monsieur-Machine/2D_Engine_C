@@ -3,15 +3,23 @@
 #include "game.h"
 
 // Args : frect_t bounds, double speed
-int transform_component_init(component_t *component, va_list args)
+int transform_component_init(component_t *component)
 {
-    transform_component_data_t *const component_data = component->component_data;
+    transform_component_data_t *component_data = component->component_data;
 
-    component_data->bounds = va_arg(args, frect_t);
-    component_data->speed = (float)va_arg(args, double);
+    component_data->bounds = (frect_t) {
+        .x = 0.0f,
+        .y = 0.0f,
+        .w = 32.0f,
+        .h = 32.0f
+    };
 
-    component_data->velocity.x = 0.0f;
-    component_data->velocity.y = 0.0f;
+    component_data->velocity = (fvector2d_t) {
+        .x = 0.0f,
+        .y = 0.0f
+    };
+
+    component_data->speed = 0.0f;
 
     return EXIT_SUCCESS;
 }
@@ -26,7 +34,11 @@ int transform_component_update(component_t *component)
     return EXIT_SUCCESS;
 }
 
-inline void transform_component_destroy(component_t *component)
+inline int transform_component_destroy(component_t *component)
 {
-    free(component->component_data);
+    transform_component_data_t *component_data = component->component_data;
+
+    free(component_data);
+
+    return EXIT_SUCCESS;
 }

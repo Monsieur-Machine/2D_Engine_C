@@ -10,10 +10,10 @@ typedef struct transform_component_data_t {
     float speed;
 } transform_component_data_t;
 
-int transform_component_init(component_t *, va_list);
+int transform_component_init(component_t *component);
 
-int transform_component_update(component_t *);
+int transform_component_update(component_t *component);
 
-void transform_component_destroy(component_t *);
+int transform_component_destroy(component_t *component);
 
 #endif // TRANSFORM_COMPONENT_H

@@ -10,8 +10,8 @@ typedef struct animation_system_data_t {
     size_t nb_frames;
     linked_list_t frames;
 
-    elem_t *actual_frame;
-    size_t actual_frame_nb;
+    size_t current_frame_nb;
+    elem_t *current_frame;
 
     float frame_delay_ms;
     float frame_timer_ms;
@@ -21,14 +21,14 @@ typedef struct animation_system_data_t {
     bool reverse    :1;
 } animation_system_data_t;
 
-int animation_system_init(component_t *component, va_list args);
+int animation_system_init(component_t *component);
 
 int animation_system_update(component_t *component);
 
-void animation_system_destroy(component_t *component);
+int animation_system_destroy(component_t *component);
 
 int animation_system_create_frames_clips(animation_system_data_t *system_data);
 
-int animation_system_change_animation(animation_system_data_t *system_data, const char *name, size_t nb_frames);
+int animation_system_apply_changes(animation_system_data_t *system_data);
 
 #endif // SPRITE_COMPONENT_H

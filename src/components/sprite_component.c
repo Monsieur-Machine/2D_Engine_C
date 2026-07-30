@@ -3,20 +3,19 @@
 #include "game.h"
 
 // Arg : const char *name
-int sprite_component_init(component_t *component, va_list args)
+int sprite_component_init(component_t *component)
 {
     sprite_component_data_t *component_data = component->component_data;
 
-    component_data->transform_component_data = get_component(component->entity, TRANSFORM_COMPONENT)->component_data;
+    component_data->transform_component_data = entity_get_component(component->entity, TRANSFORM_COMPONENT)->component_data;
+    if(!component_data->transform_component_data) return EXIT_FAILURE;
 
-    frect_to_rect(&component_data->transform_component_data->bounds, &component_data->src_rect);
-    component_data->src_rect.x = 0;
-    component_data->src_rect.y = 0;
+    transform_component_data_t *transform_component_data = component_data->transform_component_data;
 
+    sprite_component_set_texture(component_data, "dummy_sheet");
+    frect_to_rect(&transform_component_data->bounds, &component_data->src_rect);
+    frect_to_rect(&transform_component_data->bounds, &component_data->dst_rect);
     component_data->flip = false;
-
-    component_data->texture = asset_manager_get_texture(&game.asset_manager, va_arg(args, const char *));
-    if(!component_data->texture) return EXIT_FAILURE;
 
     return EXIT_SUCCESS;
 }
@@ -37,7 +36,19 @@ inline int sprite_component_draw(component_t *component)
     return EXIT_SUCCESS;
 }
 
-inline void sprite_component_destroy(component_t *component)
+inline int sprite_component_destroy(component_t *component)
 {
-    free(component->component_data);
+    sprite_component_data_t *component_data = component->component_data;
+
+    free(component_data);
+
+    return EXIT_SUCCESS;
+}
+
+inline int sprite_component_set_texture(sprite_component_data_t *component_data, const char *texture_name)
+{
+    component_data->texture = asset_manager_get_texture(&game.asset_manager, texture_name);
+    if(!component_data->texture) return EXIT_FAILURE;
+
+    return EXIT_SUCCESS;
 }

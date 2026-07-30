@@ -5,6 +5,7 @@
 #include "asset_manager.h"
 #include "ecs.h"
 #include "components.h"
+#include "errors.h"
 
 int game_init(void)
 {
@@ -13,29 +14,23 @@ int game_init(void)
     if(display_init()) return EXIT_FAILURE;
 
     if(asset_manager_init(&game.asset_manager)) return EXIT_FAILURE;
+
+    if(asset_manager_load_asset(&game.asset_manager, "dummy_sheet",       ASSET_TEXTURE)) return EXIT_FAILURE;
+    if(asset_manager_load_asset(&game.asset_manager, "player_idle_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
+    if(asset_manager_load_asset(&game.asset_manager, "player_walk_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
+    if(asset_manager_load_asset(&game.asset_manager, "player_run_sheet",  ASSET_TEXTURE)) return EXIT_FAILURE;
+
     entity_manager_init(&game.entity_manager);
 
-    entity_t *player = create_entity(0);
-
-    if(entity_manager_add_entity(&game.entity_manager, player)) return EXIT_FAILURE;
+    entity_t *player = entity_manager_new_entity(&game.entity_manager, 0);
+    if(!player) return EXIT_FAILURE;
 
     frect_t player_bounds = {10.0f, 10.0f, 32.0f, 32.0f};
 
-    if(asset_manager_load_asset(&game.asset_manager, "player_idle_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
-    if(asset_manager_load_asset(&game.asset_manager, "player_walk_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
-    if(asset_manager_load_asset(&game.asset_manager, "player_run_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
-
-    component_t *component = create_component(TRANSFORM_COMPONENT); if(!component) return EXIT_FAILURE;
-    add_component(player, component, player_bounds, PLAYER_DEFAULT_WALK_SPEED);
-
-    component = create_component(SPRITE_COMPONENT);                 if(!component) return EXIT_FAILURE;
-    add_component(player, component, "player_idle_sheet");
-
-    component = create_component(ANIMATION_SYSTEM);                 if(!component) return EXIT_FAILURE;
-    add_component(player, component, 4, 0, PLAYER_DEFAULT_IDLE_ANIMATION_SPEED, true, true, false);
-
-    component = create_component(PLAYER_SYSTEM);                    if(!component) return EXIT_FAILURE;
-    add_component(player, component);
+    if(!entity_new_component(player, TRANSFORM_COMPONENT)) return EXIT_FAILURE;
+    if(!entity_new_component(player, SPRITE_COMPONENT)) return EXIT_FAILURE;
+    if(!entity_new_component(player, ANIMATION_SYSTEM)) return EXIT_FAILURE;
+    if(!entity_new_component(player, PLAYER_SYSTEM)) return EXIT_FAILURE;
 
     game.is_running = true;
 

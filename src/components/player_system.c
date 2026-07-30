@@ -7,15 +7,32 @@
 #include "transform_component.h"
 
 // No args
-int player_system_init(component_t *component, va_list args __attribute__((unused)))
+int player_system_init(component_t *component)
 {
     player_system_data_t *system_data = component->component_data;
 
-    system_data->animation_system_data = get_component(component->entity, ANIMATION_SYSTEM)->component_data;
+    system_data->animation_system_data = entity_get_component(component->entity, ANIMATION_SYSTEM)->component_data;
+    if(!system_data->animation_system_data) return EXIT_FAILURE;
     system_data->sprite_component_data = system_data->animation_system_data->sprite_component_data;
     system_data->transform_component_data = system_data->sprite_component_data->transform_component_data;
 
+    transform_component_data_t *transform_component_data = system_data->transform_component_data;
+    sprite_component_data_t *sprite_component_data = system_data->sprite_component_data;
+    animation_system_data_t *animation_system_data = system_data->animation_system_data;
+
+    transform_component_data->bounds.x = 10.0f;
+    transform_component_data->bounds.y = 10.0f;
+
+    sprite_component_set_texture(sprite_component_data, "player_idle_sheet");
+
+    animation_system_data->nb_frames = 4;
+    animation_system_data->frame_delay_ms = PLAYER_DEFAULT_IDLE_ANIMATION_SPEED;
+    animation_system_apply_changes(animation_system_data);
+    animation_system_data->loop = true;
+    animation_system_data->play = true;
+
     system_data->state = PLAYER_IDLE;
+    system_data->last_state = PLAYER_IDLE;
 
     return EXIT_SUCCESS;
 }
@@ -87,24 +104,34 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
         if(system_data->state & PLAYER_RUNNING)
         {
             transform_component_data->speed = PLAYER_DEFAULT_RUN_SPEED;
+
+            sprite_component_set_texture(sprite_component_data, "player_run_sheet");
+
+            animation_system_data->nb_frames = 8;
+            animation_system_data->current_frame_nb = 0;
             animation_system_data->frame_delay_ms = PLAYER_DEFAULT_RUN_ANIMATION_SPEED;
-            animation_system_data->actual_frame_nb = 0;
-            if(animation_system_change_animation(animation_system_data, "player_run_sheet", 8)) return EXIT_FAILURE;
+            if(animation_system_apply_changes(animation_system_data)) return EXIT_FAILURE;
         }
         else
         {
             transform_component_data->speed = PLAYER_DEFAULT_WALK_SPEED;
+
+            sprite_component_set_texture(sprite_component_data, "player_walk_sheet");
+
+            animation_system_data->nb_frames = 4;
+            animation_system_data->current_frame_nb = 0;
             animation_system_data->frame_delay_ms = PLAYER_DEFAULT_WALK_ANIMATION_SPEED;
-            animation_system_data->actual_frame_nb = 0;
-            if(animation_system_change_animation(animation_system_data, "player_walk_sheet", 4)) return EXIT_FAILURE;
+            if(animation_system_apply_changes(animation_system_data)) return EXIT_FAILURE;
         }
     }
     else if(!(system_data->state & PLAYER_MOVING) && (system_data->last_state & PLAYER_MOVING))
     {
-        animation_system_data->actual_frame_nb = 0;
+        sprite_component_set_texture(sprite_component_data, "player_idle_sheet");
+
+        animation_system_data->nb_frames = 4;
+        animation_system_data->current_frame_nb = 0;
         animation_system_data->frame_delay_ms = PLAYER_DEFAULT_IDLE_ANIMATION_SPEED;
-        animation_system_data->actual_frame_nb = 0;
-        if(animation_system_change_animation(animation_system_data, "player_idle_sheet", 4)) return EXIT_FAILURE;
+        if(animation_system_apply_changes(animation_system_data)) return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;
@@ -121,7 +148,11 @@ int player_system_update(component_t *component)
     return EXIT_SUCCESS;
 }
 
-void player_system_destroy(component_t *component)
+int player_system_destroy(component_t *component)
 {
-    free(component->component_data);
+    player_system_data_t *component_data = component->component_data;
+
+    free(component_data);
+
+    return EXIT_SUCCESS;
 }

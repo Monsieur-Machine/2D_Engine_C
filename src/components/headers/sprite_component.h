@@ -16,12 +16,14 @@ typedef struct sprite_component_data_t {
     bool flip;
 } sprite_component_data_t;
 
-int sprite_component_init(component_t *, va_list);
+int sprite_component_init(component_t *component);
 
-int sprite_component_update(component_t *);
+int sprite_component_update(component_t *component);
 
-int sprite_component_draw(component_t *);
+int sprite_component_draw(component_t *component);
 
-void sprite_component_destroy(component_t *);
+int sprite_component_destroy(component_t *component);
+
+int sprite_component_set_texture(sprite_component_data_t *component_data, const char *texture_name);
 
 #endif // SPRITE_COMPONENT_H
