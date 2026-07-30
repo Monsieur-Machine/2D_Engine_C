@@ -16,6 +16,9 @@ int player_system_init(component_t *component)
     system_data->sprite_component_data = system_data->animation_system_data->sprite_component_data;
     system_data->transform_component_data = system_data->sprite_component_data->transform_component_data;
 
+    system_data->state = PLAYER_IDLE;
+    system_data->last_state = PLAYER_IDLE;
+
     transform_component_data_t *transform_component_data = system_data->transform_component_data;
     sprite_component_data_t *sprite_component_data = system_data->sprite_component_data;
     animation_system_data_t *animation_system_data = system_data->animation_system_data;
@@ -30,9 +33,6 @@ int player_system_init(component_t *component)
     animation_system_apply_changes(animation_system_data);
     animation_system_data->loop = true;
     animation_system_data->play = true;
-
-    system_data->state = PLAYER_IDLE;
-    system_data->last_state = PLAYER_IDLE;
 
     return EXIT_SUCCESS;
 }

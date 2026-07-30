@@ -25,12 +25,10 @@ int game_init(void)
     entity_t *player = entity_manager_new_entity(&game.entity_manager, 0);
     if(!player) return EXIT_FAILURE;
 
-    frect_t player_bounds = {10.0f, 10.0f, 32.0f, 32.0f};
-
     if(!entity_new_component(player, TRANSFORM_COMPONENT)) return EXIT_FAILURE;
-    if(!entity_new_component(player, SPRITE_COMPONENT)) return EXIT_FAILURE;
-    if(!entity_new_component(player, ANIMATION_SYSTEM)) return EXIT_FAILURE;
-    if(!entity_new_component(player, PLAYER_SYSTEM)) return EXIT_FAILURE;
+    if(!entity_new_component(player, SPRITE_COMPONENT))    return EXIT_FAILURE;
+    if(!entity_new_component(player, ANIMATION_SYSTEM))    return EXIT_FAILURE;
+    if(!entity_new_component(player, PLAYER_SYSTEM))       return EXIT_FAILURE;
 
     game.is_running = true;
 
