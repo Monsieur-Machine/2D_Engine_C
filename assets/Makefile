@@ -1,4 +1,5 @@
 ASSETS := \
+  misc/dummy_sheet.png \
   player_sheets/player_idle_sheet.png \
   player_sheets/player_walk_sheet.png \
   player_sheets/player_run_sheet.png\
