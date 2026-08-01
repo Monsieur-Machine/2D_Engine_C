@@ -12,7 +12,7 @@ int sprite_component_init(component_t *component)
 
     transform_component_data_t *transform_component_data = component_data->transform_component_data;
 
-    sprite_component_set_texture(component_data, "dummy_sheet");
+    if(sprite_component_set_texture(component_data, "dummy_sheet")) return EXIT_FAILURE;
     frect_to_rect(&transform_component_data->bounds, &component_data->src_rect);
     frect_to_rect(&transform_component_data->bounds, &component_data->dst_rect);
     component_data->flip = false;

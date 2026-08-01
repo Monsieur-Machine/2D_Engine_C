@@ -105,7 +105,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
         {
             transform_component_data->speed = PLAYER_DEFAULT_RUN_SPEED;
 
-            sprite_component_set_texture(sprite_component_data, "player_run_sheet");
+            if(sprite_component_set_texture(sprite_component_data, "player_run_sheet")) return EXIT_FAILURE;
 
             animation_system_data->nb_frames = 8;
             animation_system_data->current_frame_nb = 0;
@@ -116,7 +116,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
         {
             transform_component_data->speed = PLAYER_DEFAULT_WALK_SPEED;
 
-            sprite_component_set_texture(sprite_component_data, "player_walk_sheet");
+            if(sprite_component_set_texture(sprite_component_data, "player_walk_sheet")) return EXIT_FAILURE;
 
             animation_system_data->nb_frames = 4;
             animation_system_data->current_frame_nb = 0;
@@ -126,7 +126,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
     }
     else if(!(system_data->state & PLAYER_MOVING) && (system_data->last_state & PLAYER_MOVING))
     {
-        sprite_component_set_texture(sprite_component_data, "player_idle_sheet");
+        if(sprite_component_set_texture(sprite_component_data, "player_idle_sheet")) return EXIT_FAILURE;
 
         animation_system_data->nb_frames = 4;
         animation_system_data->current_frame_nb = 0;
