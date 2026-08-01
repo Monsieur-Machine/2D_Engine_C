@@ -21,7 +21,7 @@
 
     "Entities": [
         {
-            "ID": 2034,
+            "ID": 1,
             "Components": [
                 {
                     "Type": "TransformComponent",
@@ -47,7 +47,7 @@
             ]
         },
         {
-            "ID": 345,
+            "ID": 2,
             "Components": [
                 {
                     "Type": "TransformComponent",
