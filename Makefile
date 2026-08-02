@@ -44,7 +44,7 @@ clean:
 # Run executable
 .PHONY: run
 run: all
-	$(Q)./$(SOURCE_OUTPUT)
+	$(Q)cd $(BUILD_DIR) && ./$(notdir $(SOURCE_OUTPUT))
 
 .PHONY: print-%
 print-%  :
