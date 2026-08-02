@@ -33,10 +33,7 @@ var customMapFormat = {
                     file.writeLine("");
                 }
 
-                if(i < map.layerCount - 1)
-                    file.writeLine("    ],");
-                else
-                    file.writeLine("    ]");
+                file.writeLine("    ],");
             }
         }
 

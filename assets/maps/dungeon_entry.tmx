@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="left-up" width="32" height="24" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="12">
  <editorsettings>
-  <export target="dungeon_entry_test.json" format="custom"/>
+  <export target="dungeon_entry.json" format="custom"/>
  </editorsettings>
  <tileset firstgid="1" source="../tileset/tileset.tsx"/>
  <tileset firstgid="2647" source="hiitboxes.tsx"/>
@@ -26,8 +26,17 @@
   </data>
  </layer>
  <layer id="12" name="HitBoxes" width="32" height="24">
+  <properties>
+   <property name="2" type="list">
+    <item value="room_1"/>
+    <item type="list">
+     <item type="int" value="15"/>
+     <item type="int" value="22"/>
+    </item>
+   </property>
+  </properties>
   <data encoding="base64" compression="zlib">
-   eJwL52JgCB/Fo3gUj+JRjBNHYMHEyFHLblLlqekGcv1GDTeQawYt/D8QdpOaDmhlN660QKs0P4pH8SimPQYATccjMQ==
+   eJwL52JgCB/Fo3gUj+IhhiOhmB52RWDBxMhRy25S5anpBnL9Rg03kGsGLfw/EHaTmg5oZTeutECrND+KR/Eopj0GAGrPIzU=
   </data>
  </layer>
 </map>
