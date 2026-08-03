@@ -42,7 +42,7 @@ int transform_component_draw(component_t *component)
 {
     transform_component_data_t *component_data = component->component_data;
 
-    if(display_draw_frect(&component_data->bounds, C_BLUE)) return EXIT_FAILURE;
+    if(display_draw_frect(&component_data->bounds, C_BLUE, 128)) return EXIT_FAILURE;
 
     return EXIT_SUCCESS;
 }
