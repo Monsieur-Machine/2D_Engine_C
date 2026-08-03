@@ -42,17 +42,7 @@ int transform_component_draw(component_t *component)
 {
     transform_component_data_t *component_data = component->component_data;
 
-    if(!SDL_SetRenderDrawColor(renderer, C_BLUE))
-    {
-        error_printf("Failed to change renderer draw color : %s", SDL_GetError());
-        return EXIT_FAILURE;
-    }
-
-    if(!SDL_RenderRect(renderer, &component_data->bounds))
-    {
-        error_printf("Failed to draw rectangle to renderer : %s", SDL_GetError());
-        return EXIT_FAILURE;
-    }
+    if(display_draw_frect(&component_data->bounds, C_BLUE)) return EXIT_FAILURE;
 
     return EXIT_SUCCESS;
 }

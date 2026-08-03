@@ -1,5 +1,6 @@
 #include "memory_alloc.h"
 #include "sprite_component.h"
+#include "display.h"
 #include "game.h"
 
 // Arg : const char *name
@@ -36,7 +37,7 @@ inline int sprite_component_update(component_t *component)
 inline int sprite_component_draw(component_t *component)
 {
     sprite_component_data_t *component_data = component->component_data;
-    if(asset_manager_draw_texture(component_data->texture, &component_data->src_rect, &component_data->dst_rect, component_data->flip)) return EXIT_FAILURE;
+    if(display_draw_texture(component_data->texture, &component_data->src_rect, &component_data->dst_rect, component_data->flip)) return EXIT_FAILURE;
 
     return EXIT_SUCCESS;
 }
