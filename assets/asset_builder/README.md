@@ -15,6 +15,8 @@
 Convert RGBA to RGB with #FF00FF as the transparent color.
 If alpha null then the color of the pixel will be replaced with this.
 
+Image data is in RGB 565.
+
 ### Image asset data structure
 
 |    Description    |               Length                |
