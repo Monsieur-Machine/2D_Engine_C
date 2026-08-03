@@ -11,7 +11,7 @@ SRC_CC = gcc
 ifeq ($(RELEASE), 1)
 SRC_CFLAGS = --std=c17 --pedantic -O3 # RELEASE
 else
-SRC_CFLAGS = --std=c17 --pedantic -O0 -g \
+SRC_CFLAGS = --std=c17 --pedantic -O0 -g -DDEBUG=2 \
 	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
     -Wformat=2 -Wswitch-default -Wswitch-enum -Wcast-align \
     -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \

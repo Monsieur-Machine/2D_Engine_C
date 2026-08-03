@@ -2,7 +2,12 @@
 #define DRAW(PREFIX) PREFIX##_draw
 #define NO_DRAW(...) NULL
 
+#if DEBUG >= 2
+COMPONENT(TRANSFORM_COMPONENT, transform_component, DRAW)
+#else
 COMPONENT(TRANSFORM_COMPONENT, transform_component, NO_DRAW)
+#endif // DEBUG >= 2
+
 COMPONENT(SPRITE_COMPONENT,    sprite_component,    DRAW)
 COMPONENT(ANIMATION_SYSTEM,    animation_system,    NO_DRAW)
 COMPONENT(PLAYER_SYSTEM,       player_system,       NO_DRAW)

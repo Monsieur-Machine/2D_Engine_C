@@ -34,6 +34,30 @@ int transform_component_update(component_t *component)
     return EXIT_SUCCESS;
 }
 
+#if DEBUG >= 2
+#include "display.h"
+#include "errors.h"
+
+int transform_component_draw(component_t *component)
+{
+    transform_component_data_t *component_data = component->component_data;
+
+    if(!SDL_SetRenderDrawColor(renderer, C_BLUE))
+    {
+        error_printf("Failed to change renderer draw color : %s", SDL_GetError());
+        return EXIT_FAILURE;
+    }
+
+    if(!SDL_RenderRect(renderer, &component_data->bounds))
+    {
+        error_printf("Failed to draw rectangle to renderer : %s", SDL_GetError());
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}
+#endif // DEBUG >= 2
+
 inline int transform_component_destroy(component_t *component)
 {
     transform_component_data_t *component_data = component->component_data;
