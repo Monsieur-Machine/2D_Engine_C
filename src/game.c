@@ -94,10 +94,6 @@ int game_exit(void)
 {
     entity_manager_exit(&game.entity_manager);
 
-    if(asset_manager_let_go_asset(&game.asset_manager, "player_idle_sheet")) return EXIT_FAILURE;
-    if(asset_manager_let_go_asset(&game.asset_manager, "player_walk_sheet")) return EXIT_FAILURE;
-    if(asset_manager_let_go_asset(&game.asset_manager, "player_run_sheet")) return EXIT_FAILURE;
-
     if(asset_manager_exit(&game.asset_manager)) return EXIT_FAILURE;
 
     display_exit();

@@ -85,7 +85,7 @@ inline int animation_system_destroy(component_t *component)
 {
     animation_system_data_t *system_data = component->component_data;
 
-    if(linked_list_clear(&system_data->frames)) return EXIT_FAILURE;
+    if(linked_list_exit(&system_data->frames)) return EXIT_FAILURE;
 
     free(system_data);
 
