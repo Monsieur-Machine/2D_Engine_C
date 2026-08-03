@@ -5,7 +5,7 @@
 #include "game.h"
 
 // Arg : const char *name
-int sprite_component_init(component_t *component)
+inline int sprite_component_init(component_t *component)
 {
     sprite_component_data_t *component_data = component->component_data;
 

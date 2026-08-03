@@ -1,6 +1,7 @@
 #ifndef HITBOX_COMPONENT_H
 #define HITBOX_COMPONENT_H
 
+#include <stdbool.h>
 #include "ecs.h"
 #include "transform_component.h"
 #include "vector2d.h"
@@ -10,6 +11,7 @@ typedef struct hitbox_component_data_t {
     fvector2d_t position;
     fvector2d_t scale;
     frect_t bounds;
+    bool activated;
 } hitbox_component_data_t;
 
 int hitbox_component_init(component_t *component);

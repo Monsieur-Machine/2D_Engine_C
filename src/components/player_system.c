@@ -7,7 +7,7 @@
 #include "transform_component.h"
 
 // No args
-int player_system_init(component_t *component)
+inline int player_system_init(component_t *component)
 {
     player_system_data_t *system_data = component->component_data;
 
@@ -126,7 +126,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
     return EXIT_SUCCESS;
 }
 
-int player_system_update(component_t *component)
+inline int player_system_update(component_t *component)
 {
     player_system_data_t *system_data = component->component_data;
 
@@ -137,7 +137,7 @@ int player_system_update(component_t *component)
     return EXIT_SUCCESS;
 }
 
-int player_system_destroy(component_t *component)
+inline int player_system_destroy(component_t *component)
 {
     player_system_data_t *component_data = component->component_data;
 

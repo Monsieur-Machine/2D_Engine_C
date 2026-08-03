@@ -1,6 +1,7 @@
 #ifndef ANIMATION_SYSTEM_H
 #define ANIMATION_SYSTEM_H
 
+#include <stdbool.h>
 #include "ecs.h"
 #include "sprite_component.h"
 

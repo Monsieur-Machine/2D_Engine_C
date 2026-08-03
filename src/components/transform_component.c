@@ -25,7 +25,7 @@ int transform_component_init(component_t *component)
     return EXIT_SUCCESS;
 }
 
-int transform_component_update(component_t *component)
+inline int transform_component_update(component_t *component)
 {
     transform_component_data_t *component_data = component->component_data;
 
@@ -39,7 +39,7 @@ int transform_component_update(component_t *component)
 #include "display.h"
 #include "errors.h"
 
-int transform_component_draw(component_t *component)
+inline int transform_component_draw(component_t *component)
 {
     transform_component_data_t *component_data = component->component_data;
 
