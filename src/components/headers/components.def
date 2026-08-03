@@ -4,8 +4,10 @@
 
 #if DEBUG >= 2
 COMPONENT(TRANSFORM_COMPONENT, transform_component, DRAW)
+COMPONENT(HITBOX_COMPONENT,    hitbox_component,    DRAW)
 #else
 COMPONENT(TRANSFORM_COMPONENT, transform_component, NO_DRAW)
+COMPONENT(HITBOX_COMPONENT,    hitbox_component,    NO_DRAW)
 #endif // DEBUG >= 2
 
 COMPONENT(SPRITE_COMPONENT,    sprite_component,    DRAW)

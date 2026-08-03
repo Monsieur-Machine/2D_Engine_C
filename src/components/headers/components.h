@@ -2,6 +2,7 @@
 #define COMPONENTS_H
 
 #include "transform_component.h"
+#include "hitbox_component.h"
 #include "sprite_component.h"
 #include "animation_system.h"
 #include "player_system.h"
