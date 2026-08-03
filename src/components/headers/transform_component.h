@@ -6,8 +6,6 @@
 
 typedef struct transform_component_data_t {
     frect_t bounds;
-    fvector2d_t velocity;
-    float speed;
 } transform_component_data_t;
 
 int transform_component_init(component_t *component);

@@ -2,7 +2,7 @@
 #define PLAYER_SYSTEM_H
 
 #include "ecs.h"
-#include "transform_component.h"
+#include "physics_system.h"
 #include "sprite_component.h"
 #include "animation_system.h"
 
@@ -24,7 +24,7 @@ typedef enum player_state_t {
 } player_state_t;
 
 typedef struct player_system_data_t {
-    transform_component_data_t *transform_component_data;
+    physics_system_data_t *physics_system_data;
     sprite_component_data_t *sprite_component_data;
     animation_system_data_t *animation_system_data;
 

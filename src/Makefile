@@ -3,6 +3,7 @@ SOURCES := \
   game.c \
   components/transform_component.c \
   components/hitbox_component.c \
+  components/physics_system.c \
   components/sprite_component.c \
   components/animation_system.c \
   components/player_system.c

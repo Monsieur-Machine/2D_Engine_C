@@ -49,6 +49,7 @@ int game_init(void)
         .y = 0.5f
     };
 
+    if(!entity_new_component(player, PHYSICS_SYSTEM))   return EXIT_FAILURE;
     if(!entity_new_component(player, SPRITE_COMPONENT)) return EXIT_FAILURE;
     if(!entity_new_component(player, ANIMATION_SYSTEM)) return EXIT_FAILURE;
     if(!entity_new_component(player, PLAYER_SYSTEM))    return EXIT_FAILURE;

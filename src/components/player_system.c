@@ -4,7 +4,7 @@
 #include "memory_alloc.h"
 #include "animation_system.h"
 #include "sprite_component.h"
-#include "transform_component.h"
+#include "physics_system.h"
 
 // No args
 inline int player_system_init(component_t *component)
@@ -14,7 +14,8 @@ inline int player_system_init(component_t *component)
     system_data->animation_system_data = entity_get_component(component->entity, ANIMATION_SYSTEM)->component_data;
     if(!system_data->animation_system_data) return EXIT_FAILURE;
     system_data->sprite_component_data = system_data->animation_system_data->sprite_component_data;
-    system_data->transform_component_data = system_data->sprite_component_data->transform_component_data;
+    system_data->physics_system_data = entity_get_component(component->entity, PHYSICS_SYSTEM)->component_data;
+    if(!system_data->physics_system_data) return EXIT_FAILURE;
 
     system_data->state = PLAYER_MOVING;
 
@@ -60,19 +61,19 @@ static inline void player_system_get_inputs(player_system_data_t *system_data)
 // Only for this file
 static inline void player_system_set_velocity(player_system_data_t *system_data)
 {
-    transform_component_data_t *transform_component_data = system_data->transform_component_data;
+    physics_system_data_t *physics_system_data = system_data->physics_system_data;
 
     if((system_data->state & PLAYER_MOVING) != (system_data->last_state & PLAYER_MOVING))
     {
-        transform_component_data->velocity.x =
+        physics_system_data->velocity.x =
             (float)((system_data->state & PLAYER_MOVING_RIGHT) >> 3) - (float)((system_data->state & PLAYER_MOVING_LEFT) >> 2);
-        transform_component_data->velocity.y =
+        physics_system_data->velocity.y =
             (float)((system_data->state & PLAYER_MOVING_DOWN) >> 1) - (float)(system_data->state & PLAYER_MOVING_UP);
 
-        if(f_is_not_zero(transform_component_data->velocity.x) && f_is_not_zero(transform_component_data->velocity.y))
+        if(f_is_not_zero(physics_system_data->velocity.x) && f_is_not_zero(physics_system_data->velocity.y))
         {
-            transform_component_data->velocity.x *= 0.707106781186548f;
-            transform_component_data->velocity.y *= 0.707106781186548f;
+            physics_system_data->velocity.x *= 0.707106781186548f;
+            physics_system_data->velocity.y *= 0.707106781186548f;
         }
     }
 }
@@ -82,7 +83,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
 {
     animation_system_data_t *animation_system_data = system_data->animation_system_data;
     sprite_component_data_t *sprite_component_data = system_data->sprite_component_data;
-    transform_component_data_t *transform_component_data = system_data->transform_component_data;
+    physics_system_data_t *physics_system_data = system_data->physics_system_data;
 
     if(system_data->state & PLAYER_MOVING_LEFT) sprite_component_data->flip = true;
     if(system_data->state & PLAYER_MOVING_RIGHT) sprite_component_data->flip = false;
@@ -92,7 +93,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
     {
         if(system_data->state & PLAYER_RUNNING)
         {
-            transform_component_data->speed = PLAYER_DEFAULT_RUN_SPEED;
+            physics_system_data->speed = PLAYER_DEFAULT_RUN_SPEED;
 
             if(sprite_component_set_texture(sprite_component_data, "player_run_sheet")) return EXIT_FAILURE;
 
@@ -103,7 +104,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
         }
         else
         {
-            transform_component_data->speed = PLAYER_DEFAULT_WALK_SPEED;
+            physics_system_data->speed = PLAYER_DEFAULT_WALK_SPEED;
 
             if(sprite_component_set_texture(sprite_component_data, "player_walk_sheet")) return EXIT_FAILURE;
 
