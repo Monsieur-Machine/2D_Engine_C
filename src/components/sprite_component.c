@@ -1,5 +1,6 @@
-#include "memory_alloc.h"
 #include "sprite_component.h"
+
+#include "memory_alloc.h"
 #include "display.h"
 #include "game.h"
 

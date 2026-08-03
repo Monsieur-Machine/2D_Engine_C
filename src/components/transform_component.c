@@ -1,5 +1,6 @@
-#include "memory_alloc.h"
 #include "transform_component.h"
+
+#include "memory_alloc.h"
 #include "game.h"
 
 // Args : frect_t bounds, double speed
