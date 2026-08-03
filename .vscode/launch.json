@@ -9,7 +9,7 @@
             "type": "gdb",
             "request": "launch",
             "target": "${workspaceFolder}/build/2D_Engine",
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/build",
             "valuesFormatting": "parseText",
             "preLaunchTask": "Build"
         }
