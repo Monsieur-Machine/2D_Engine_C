@@ -22,9 +22,9 @@
 
 ### In progress
 
-- [ ] Make functionnal hitboxes between entities
-
 ### Done
+
+- [x] Make functionnal hitboxes between entities
 
 - [x] Change the way default values are defined across components and systems
   - [NO] Remove the need of a dummy texture
