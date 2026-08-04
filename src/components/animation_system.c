@@ -7,9 +7,9 @@
 // Args : size_t nb_frames, size_t current_frame, float frame_delay_ms, bool play, bool loop, bool reverse
 int animation_system_init(component_t *component)
 {
-    animation_system_data_t *system_data = component->component_data;
+    animation_system_data_t *system_data = component->data;
 
-    system_data->sprite_component_data = entity_get_component(component->entity, SPRITE_COMPONENT)->component_data;
+    system_data->sprite_component_data = entity_get_component(component->entity, SPRITE_COMPONENT)->data;
     if(!system_data->sprite_component_data) return EXIT_FAILURE;
 
     system_data->nb_frames = 1;
@@ -29,7 +29,7 @@ int animation_system_init(component_t *component)
 
 int animation_system_update(component_t *component)
 {
-    animation_system_data_t *system_data = component->component_data;
+    animation_system_data_t *system_data = component->data;
 
     if(system_data->play)
     {
@@ -83,7 +83,7 @@ int animation_system_update(component_t *component)
 
 inline int animation_system_destroy(component_t *component)
 {
-    animation_system_data_t *system_data = component->component_data;
+    animation_system_data_t *system_data = component->data;
 
     if(linked_list_exit(&system_data->frames)) return EXIT_FAILURE;
 

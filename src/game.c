@@ -29,7 +29,7 @@ int game_init(void)
     component_t *component = entity_new_component(player, TRANSFORM_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
-    ((transform_component_data_t *)component->component_data)->bounds = (frect_t) {
+    ((transform_component_data_t *)component->data)->bounds = (frect_t) {
         .x = 10.0f,
         .y = 10.0f,
         .w = 32.0f,
@@ -39,12 +39,12 @@ int game_init(void)
     component = entity_new_component(player, HITBOX_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
-    ((hitbox_component_data_t *)component->component_data)->position = (fvector2d_t) {
+    ((hitbox_component_data_t *)component->data)->position = (fvector2d_t) {
         .x = 0.5f,
         .y = 1.0f
     };
 
-    ((hitbox_component_data_t *)component->component_data)->scale = (fvector2d_t) {
+    ((hitbox_component_data_t *)component->data)->scale = (fvector2d_t) {
         .x = 0.5f,
         .y = 0.5f
     };
@@ -61,14 +61,26 @@ int game_init(void)
     component = entity_new_component(entity, TRANSFORM_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
-    ((transform_component_data_t *)component->component_data)->bounds = (frect_t) {
+    ((transform_component_data_t *)component->data)->bounds = (frect_t) {
         .x = 120.0f,
         .y = 30.0f,
         .w = 32.0f,
         .h = 32.0f
     };
 
-    if(!entity_new_component(entity, HITBOX_COMPONENT)) return EXIT_FAILURE;
+    component = entity_new_component(entity, HITBOX_COMPONENT);
+    if(!component) return EXIT_FAILURE;
+
+    ((hitbox_component_data_t *)component->data)->position = (fvector2d_t) {
+        .x = 0.5f,
+        .y = 0.5f
+    };
+
+    ((hitbox_component_data_t *)component->data)->scale = (fvector2d_t) {
+        .x = 2.0f / 3.0f,
+        .y = 2.0f / 3.0f
+    };
+
     if(!entity_new_component(entity, SPRITE_COMPONENT)) return EXIT_FAILURE;
 
     game.is_running = true;

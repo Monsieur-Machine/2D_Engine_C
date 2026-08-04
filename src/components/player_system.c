@@ -9,12 +9,12 @@
 // No args
 inline int player_system_init(component_t *component)
 {
-    player_system_data_t *system_data = component->component_data;
+    player_system_data_t *system_data = component->data;
 
-    system_data->animation_system_data = entity_get_component(component->entity, ANIMATION_SYSTEM)->component_data;
+    system_data->animation_system_data = entity_get_component(component->entity, ANIMATION_SYSTEM)->data;
     if(!system_data->animation_system_data) return EXIT_FAILURE;
     system_data->sprite_component_data = system_data->animation_system_data->sprite_component_data;
-    system_data->physics_system_data = entity_get_component(component->entity, PHYSICS_SYSTEM)->component_data;
+    system_data->physics_system_data = entity_get_component(component->entity, PHYSICS_SYSTEM)->data;
     if(!system_data->physics_system_data) return EXIT_FAILURE;
 
     system_data->state = PLAYER_MOVING;
@@ -129,7 +129,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
 
 inline int player_system_update(component_t *component)
 {
-    player_system_data_t *system_data = component->component_data;
+    player_system_data_t *system_data = component->data;
 
     player_system_get_inputs(system_data);
     player_system_set_velocity(system_data);
@@ -140,7 +140,7 @@ inline int player_system_update(component_t *component)
 
 inline int player_system_destroy(component_t *component)
 {
-    player_system_data_t *component_data = component->component_data;
+    player_system_data_t *component_data = component->data;
 
     free(component_data);
 

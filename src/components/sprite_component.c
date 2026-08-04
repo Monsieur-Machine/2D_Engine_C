@@ -7,9 +7,9 @@
 // Arg : const char *name
 inline int sprite_component_init(component_t *component)
 {
-    sprite_component_data_t *component_data = component->component_data;
+    sprite_component_data_t *component_data = component->data;
 
-    component_data->transform_component_data = entity_get_component(component->entity, TRANSFORM_COMPONENT)->component_data;
+    component_data->transform_component_data = entity_get_component(component->entity, TRANSFORM_COMPONENT)->data;
     if(!component_data->transform_component_data) return EXIT_FAILURE;
 
     transform_component_data_t *transform_component_data = component_data->transform_component_data;
@@ -27,7 +27,7 @@ inline int sprite_component_init(component_t *component)
 
 inline int sprite_component_update(component_t *component)
 {
-    sprite_component_data_t *component_data = component->component_data;
+    sprite_component_data_t *component_data = component->data;
     component_data->dst_rect = component_data->transform_component_data->bounds;
 
     return EXIT_SUCCESS;
@@ -35,7 +35,7 @@ inline int sprite_component_update(component_t *component)
 
 inline int sprite_component_draw(component_t *component)
 {
-    sprite_component_data_t *component_data = component->component_data;
+    sprite_component_data_t *component_data = component->data;
     if(display_draw_texture(component_data->texture, &component_data->src_rect, &component_data->dst_rect, component_data->flip)) return EXIT_FAILURE;
 
     return EXIT_SUCCESS;
@@ -43,7 +43,7 @@ inline int sprite_component_draw(component_t *component)
 
 inline int sprite_component_destroy(component_t *component)
 {
-    sprite_component_data_t *component_data = component->component_data;
+    sprite_component_data_t *component_data = component->data;
 
     free(component_data);
 

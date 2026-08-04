@@ -7,9 +7,9 @@
 // Args : frect_t bounds, double speed
 int hitbox_component_init(component_t *component)
 {
-    hitbox_component_data_t *component_data = component->component_data;
+    hitbox_component_data_t *component_data = component->data;
 
-    component_data->transform_component_data = entity_get_component(component->entity, TRANSFORM_COMPONENT)->component_data;
+    component_data->transform_component_data = entity_get_component(component->entity, TRANSFORM_COMPONENT)->data;
     if(!component_data->transform_component_data) return EXIT_FAILURE;
 
     component_data->position = (fvector2d_t) {
@@ -29,7 +29,7 @@ int hitbox_component_init(component_t *component)
 
 int hitbox_component_update(component_t *component)
 {
-    hitbox_component_data_t *component_data = component->component_data;
+    hitbox_component_data_t *component_data = component->data;
     transform_component_data_t *transform_component_data = component_data->transform_component_data;
 
     component_data->bounds.x = transform_component_data->bounds.x + (transform_component_data->bounds.w - component_data->bounds.w) * component_data->position.x;
@@ -46,7 +46,7 @@ int hitbox_component_update(component_t *component)
 
 int hitbox_component_draw(component_t *component)
 {
-    hitbox_component_data_t *component_data = component->component_data;
+    hitbox_component_data_t *component_data = component->data;
 
     if(display_draw_frect(&component_data->bounds, C_RED, 128)) return EXIT_FAILURE;
 
@@ -56,7 +56,7 @@ int hitbox_component_draw(component_t *component)
 
 inline int hitbox_component_destroy(component_t *component)
 {
-    hitbox_component_data_t *component_data = component->component_data;
+    hitbox_component_data_t *component_data = component->data;
 
     free(component_data);
 

@@ -6,7 +6,7 @@
 // Args : frect_t bounds, double speed
 int transform_component_init(component_t *component)
 {
-    transform_component_data_t *component_data = component->component_data;
+    transform_component_data_t *component_data = component->data;
 
     component_data->bounds = (frect_t) {
         .x = 0.0f,
@@ -29,7 +29,7 @@ inline int transform_component_update(component_t *component __attribute__((unus
 
 inline int transform_component_draw(component_t *component)
 {
-    transform_component_data_t *component_data = component->component_data;
+    transform_component_data_t *component_data = component->data;
 
     if(display_draw_frect(&component_data->bounds, C_BLUE, 128)) return EXIT_FAILURE;
 
@@ -39,7 +39,7 @@ inline int transform_component_draw(component_t *component)
 
 inline int transform_component_destroy(component_t *component)
 {
-    transform_component_data_t *component_data = component->component_data;
+    transform_component_data_t *component_data = component->data;
 
     free(component_data);
 
