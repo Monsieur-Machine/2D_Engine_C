@@ -65,15 +65,15 @@ static inline void player_system_set_velocity(player_system_data_t *system_data)
 
     if((system_data->state & PLAYER_MOVING) != (system_data->last_state & PLAYER_MOVING))
     {
-        physics_system_data->velocity.x =
+        physics_system_data->target_velocity.x =
             (float)((system_data->state & PLAYER_MOVING_RIGHT) >> 3) - (float)((system_data->state & PLAYER_MOVING_LEFT) >> 2);
-        physics_system_data->velocity.y =
+        physics_system_data->target_velocity.y =
             (float)((system_data->state & PLAYER_MOVING_DOWN) >> 1) - (float)(system_data->state & PLAYER_MOVING_UP);
 
-        if(f_is_not_zero(physics_system_data->velocity.x) && f_is_not_zero(physics_system_data->velocity.y))
+        if(f_is_not_zero(physics_system_data->target_velocity.x) && f_is_not_zero(physics_system_data->target_velocity.y))
         {
-            physics_system_data->velocity.x *= 0.707106781186548f;
-            physics_system_data->velocity.y *= 0.707106781186548f;
+            physics_system_data->target_velocity.x *= 0.707106781186548f;
+            physics_system_data->target_velocity.y *= 0.707106781186548f;
         }
     }
 }

@@ -7,8 +7,10 @@
 
 typedef struct physics_system_data_t {
     transform_component_data_t *transform_component_data;
+    fvector2d_t target_velocity;
     fvector2d_t velocity;
     float speed;
+    float smoothing_factor;
 } physics_system_data_t;
 
 int physics_system_init(component_t *component);
