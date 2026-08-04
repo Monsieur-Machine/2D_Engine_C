@@ -18,7 +18,7 @@ int transform_component_init(component_t *component)
     return EXIT_SUCCESS;
 }
 
-inline int transform_component_update(component_t *component)
+inline int transform_component_update(component_t *component __attribute__((unused)))
 {
     return EXIT_SUCCESS;
 }

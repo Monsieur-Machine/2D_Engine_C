@@ -20,8 +20,6 @@ inline int sprite_component_init(component_t *component)
     component_data->src_rect.x = 0.0f;
     component_data->src_rect.y = 0.0f;
 
-    frect_to_rect(&transform_component_data->bounds, &component_data->dst_rect);
-
     component_data->flip = false;
 
     return EXIT_SUCCESS;
@@ -30,7 +28,7 @@ inline int sprite_component_init(component_t *component)
 inline int sprite_component_update(component_t *component)
 {
     sprite_component_data_t *component_data = component->component_data;
-    frect_to_rect(&component_data->transform_component_data->bounds, &component_data->dst_rect);
+    component_data->dst_rect = component_data->transform_component_data->bounds;
 
     return EXIT_SUCCESS;
 }

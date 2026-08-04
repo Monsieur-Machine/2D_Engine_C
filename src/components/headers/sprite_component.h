@@ -11,7 +11,7 @@ typedef struct sprite_component_data_t {
     texture_t *texture;
 
     rect_t src_rect;
-    rect_t dst_rect;
+    frect_t dst_rect;
 
     bool flip;
 } sprite_component_data_t;
