@@ -2,9 +2,9 @@
 #define PLAYER_SYSTEM_H
 
 #include "ecs.h"
-#include "physics_system.h"
 #include "sprite_component.h"
 #include "animation_system.h"
+#include "physics_system.h"
 
 #define PLAYER_DEFAULT_WALK_SPEED 60.0f // px / s
 #define PLAYER_DEFAULT_RUN_SPEED 100.0f // px / s
@@ -24,9 +24,9 @@ typedef enum player_state_t {
 } player_state_t;
 
 typedef struct player_system_data_t {
-    physics_system_data_t *physics_system_data;
     sprite_component_data_t *sprite_component_data;
     animation_system_data_t *animation_system_data;
+    physics_system_data_t *physics_system_data;
 
     player_state_t state;
     player_state_t last_state;

@@ -5,6 +5,7 @@
 #include "ecs.h"
 #include "transform_component.h"
 #include "vector2d.h"
+#include "errors.h"
 
 typedef struct hitbox_component_data_t {
     transform_component_data_t *transform_component_data;

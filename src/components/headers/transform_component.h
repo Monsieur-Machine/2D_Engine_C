@@ -3,6 +3,7 @@
 
 #include "ecs.h"
 #include "vector2d.h"
+#include "errors.h"
 
 typedef struct transform_component_data_t {
     frect_t bounds;

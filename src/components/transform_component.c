@@ -1,7 +1,7 @@
 #include "transform_component.h"
 
-#include "memory_alloc.h"
 #include "game.h"
+#include "memory_alloc.h"
 
 // Args : frect_t bounds, double speed
 int transform_component_init(component_t *component)

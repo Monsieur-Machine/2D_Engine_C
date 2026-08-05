@@ -36,6 +36,8 @@ int game_init(void)
         .h = 32.0f
     };
 
+    if(!entity_new_component(player, SPRITE_COMPONENT)) return EXIT_FAILURE;
+    if(!entity_new_component(player, ANIMATION_SYSTEM)) return EXIT_FAILURE;
     component = entity_new_component(player, HITBOX_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
@@ -50,8 +52,6 @@ int game_init(void)
     };
 
     if(!entity_new_component(player, PHYSICS_SYSTEM))   return EXIT_FAILURE;
-    if(!entity_new_component(player, SPRITE_COMPONENT)) return EXIT_FAILURE;
-    if(!entity_new_component(player, ANIMATION_SYSTEM)) return EXIT_FAILURE;
     if(!entity_new_component(player, PLAYER_SYSTEM))    return EXIT_FAILURE;
 
     /* ======== Test entity ======== */
@@ -68,6 +68,7 @@ int game_init(void)
         .h = 32.0f
     };
 
+    if(!entity_new_component(entity, SPRITE_COMPONENT)) return EXIT_FAILURE;
     component = entity_new_component(entity, HITBOX_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
@@ -80,8 +81,6 @@ int game_init(void)
         .x = 2.0f / 3.0f,
         .y = 2.0f / 3.0f
     };
-
-    if(!entity_new_component(entity, SPRITE_COMPONENT)) return EXIT_FAILURE;
 
     game.is_running = true;
 

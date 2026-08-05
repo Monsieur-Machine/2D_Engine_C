@@ -1,8 +1,8 @@
 #include "sprite_component.h"
 
-#include "memory_alloc.h"
-#include "display.h"
 #include "game.h"
+#include "display.h"
+#include "memory_alloc.h"
 
 // Arg : const char *name
 inline int sprite_component_init(component_t *component)

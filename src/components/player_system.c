@@ -1,10 +1,10 @@
 #include "player_system.h"
 
 #include "game.h"
-#include "memory_alloc.h"
 #include "animation_system.h"
 #include "sprite_component.h"
 #include "physics_system.h"
+#include "memory_alloc.h"
 
 // No args
 inline int player_system_init(component_t *component)

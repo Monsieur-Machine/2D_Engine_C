@@ -1,8 +1,8 @@
 #include "hitbox_component.h"
 
+#include "game.h"
 #include "transform_component.h"
 #include "memory_alloc.h"
-#include "game.h"
 
 // Args : frect_t bounds, double speed
 int hitbox_component_init(component_t *component)

@@ -1,9 +1,9 @@
 #include "physics_system.h"
 
 #include <stdarg.h>
+#include "game.h"
 #include "vector2d.h"
 #include "memory_alloc.h"
-#include "game.h"
 #include "errors.h"
 
 // Args : frect_t bounds, double speed
