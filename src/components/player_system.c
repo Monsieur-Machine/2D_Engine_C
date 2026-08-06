@@ -11,11 +11,29 @@ inline int player_system_init(component_t *component)
 {
     player_system_data_t *system_data = component->data;
 
-    system_data->animation_system_data = entity_get_component(component->entity, ANIMATION_SYSTEM)->data;
-    if(!system_data->animation_system_data) return EXIT_FAILURE;
-    system_data->sprite_component_data = system_data->animation_system_data->sprite_component_data;
-    system_data->physics_system_data = entity_get_component(component->entity, PHYSICS_SYSTEM)->data;
-    if(!system_data->physics_system_data) return EXIT_FAILURE;
+    component_t *sprite_component = entity_get_component(component->entity, SPRITE_COMPONENT);
+    if(!sprite_component)
+    {
+        error_printf("Player system require a sprite component.");
+        return EXIT_FAILURE;
+    }
+    system_data->sprite_component_data = sprite_component->data;
+
+    component_t *animation_system = entity_get_component(component->entity, ANIMATION_SYSTEM);
+    if(!animation_system)
+    {
+        error_printf("Player system require an animation system.");
+        return EXIT_FAILURE;
+    }
+    system_data->animation_system_data = animation_system->data;
+
+    component_t *physics_system = entity_get_component(component->entity, PHYSICS_SYSTEM);
+    if(!physics_system)
+    {
+        error_printf("Player system require a physics system.");
+        return EXIT_FAILURE;
+    }
+    system_data->physics_system_data = physics_system->data;
 
     system_data->state = PLAYER_MOVING;
 

@@ -9,8 +9,13 @@ int animation_system_init(component_t *component)
 {
     animation_system_data_t *system_data = component->data;
 
-    system_data->sprite_component_data = entity_get_component(component->entity, SPRITE_COMPONENT)->data;
-    if(!system_data->sprite_component_data) return EXIT_FAILURE;
+    component_t *sprite_component = entity_get_component(component->entity, SPRITE_COMPONENT);
+    if(!sprite_component)
+    {
+        error_printf("Animation system require a sprite component.");
+        return EXIT_FAILURE;
+    }
+    system_data->sprite_component_data = sprite_component->data;
 
     system_data->nb_frames = 1;
     system_data->current_frame_nb = 0;

@@ -9,8 +9,13 @@ int hitbox_component_init(component_t *component)
 {
     hitbox_component_data_t *component_data = component->data;
 
-    component_data->transform_component_data = entity_get_component(component->entity, TRANSFORM_COMPONENT)->data;
-    if(!component_data->transform_component_data) return EXIT_FAILURE;
+    component_t *transform_component = entity_get_component(component->entity, TRANSFORM_COMPONENT);
+    if(!transform_component)
+    {
+        error_printf("Hitbox component require a transform component.");
+        return EXIT_FAILURE;
+    }
+    component_data->transform_component_data = transform_component->data;
 
     component_data->position = (fvector2d_t) {
         .x = 0.0f,

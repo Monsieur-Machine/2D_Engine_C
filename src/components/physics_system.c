@@ -11,9 +11,21 @@ int physics_system_init(component_t *component)
 {
     physics_system_data_t *system_data = component->data;
 
-    system_data->hitbox_component_data = entity_get_component(component->entity, HITBOX_COMPONENT)->data;
-    if(!system_data->hitbox_component_data) return EXIT_FAILURE;
-    system_data->transform_component_data = system_data->hitbox_component_data->transform_component_data;
+    component_t *transform_component = entity_get_component(component->entity, TRANSFORM_COMPONENT);
+    if(!transform_component)
+    {
+        error_printf("Physics system require a transform component.");
+        return EXIT_FAILURE;
+    }
+    system_data->transform_component_data = transform_component->data;
+
+    component_t *hitbox_component = entity_get_component(component->entity, HITBOX_COMPONENT);
+    if(!hitbox_component)
+    {
+        error_printf("Physics system require an hitbox component.");
+        return EXIT_FAILURE;
+    }
+    system_data->hitbox_component_data = hitbox_component->data;
 
     system_data->target_velocity = (fvector2d_t) {
         .x = 0.0f,
