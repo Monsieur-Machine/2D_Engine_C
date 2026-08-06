@@ -30,7 +30,7 @@ int hitbox_component_init(component_t *component)
 int hitbox_component_update(component_t *component)
 {
     hitbox_component_data_t *component_data = component->data;
-    transform_component_data_t *transform_component_data = component_data->transform_component_data;
+    const transform_component_data_t *transform_component_data = component_data->transform_component_data;
 
     component_data->bounds.x = transform_component_data->bounds.x + (transform_component_data->bounds.w - component_data->bounds.w) * component_data->position.x;
     component_data->bounds.y = transform_component_data->bounds.y + (transform_component_data->bounds.h - component_data->bounds.h) * component_data->position.y;
@@ -44,9 +44,9 @@ int hitbox_component_update(component_t *component)
 #include "display.h"
 #include "errors.h"
 
-int hitbox_component_draw(component_t *component)
+int hitbox_component_draw(const component_t *component)
 {
-    hitbox_component_data_t *component_data = component->data;
+    const hitbox_component_data_t *component_data = component->data;
 
     if(display_draw_frect(&component_data->bounds, C_RED, 128)) return EXIT_FAILURE;
 

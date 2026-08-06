@@ -20,7 +20,7 @@ int hitbox_component_init(component_t *component);
 int hitbox_component_update(component_t *component);
 
 #if DEBUG >= 2
-int hitbox_component_draw(component_t *component);
+int hitbox_component_draw(const component_t *component);
 #endif
 
 int hitbox_component_destroy(component_t *component);

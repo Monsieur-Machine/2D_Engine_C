@@ -20,7 +20,7 @@ int sprite_component_init(component_t *component);
 
 int sprite_component_update(component_t *component);
 
-int sprite_component_draw(component_t *component);
+int sprite_component_draw(const component_t *component);
 
 int sprite_component_destroy(component_t *component);
 

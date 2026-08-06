@@ -28,14 +28,16 @@ inline int sprite_component_init(component_t *component)
 inline int sprite_component_update(component_t *component)
 {
     sprite_component_data_t *component_data = component->data;
+
     component_data->dst_rect = component_data->transform_component_data->bounds;
 
     return EXIT_SUCCESS;
 }
 
-inline int sprite_component_draw(component_t *component)
+inline int sprite_component_draw(const component_t *component)
 {
-    sprite_component_data_t *component_data = component->data;
+    const sprite_component_data_t *component_data = component->data;
+
     if(display_draw_texture(component_data->texture, &component_data->src_rect, &component_data->dst_rect, component_data->flip)) return EXIT_FAILURE;
 
     return EXIT_SUCCESS;

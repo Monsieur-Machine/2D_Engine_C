@@ -27,9 +27,9 @@ inline int transform_component_update(component_t *component __attribute__((unus
 #include "display.h"
 #include "errors.h"
 
-inline int transform_component_draw(component_t *component)
+inline int transform_component_draw(const component_t *component)
 {
-    transform_component_data_t *component_data = component->data;
+    const transform_component_data_t *component_data = component->data;
 
     if(display_draw_frect(&component_data->bounds, C_BLUE, 128)) return EXIT_FAILURE;
 
