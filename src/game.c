@@ -16,18 +16,20 @@ int game_init(void)
     if(asset_manager_init(&game.asset_manager)) return EXIT_FAILURE;
 
     if(asset_manager_load_asset(&game.asset_manager, "dummy_sheet",       ASSET_TEXTURE)) return EXIT_FAILURE;
-    if(asset_manager_load_asset(&game.asset_manager, "tileset",           ASSET_TEXTURE)) return EXIT_FAILURE;
     if(asset_manager_load_asset(&game.asset_manager, "player_idle_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
     if(asset_manager_load_asset(&game.asset_manager, "player_walk_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
     if(asset_manager_load_asset(&game.asset_manager, "player_run_sheet",  ASSET_TEXTURE)) return EXIT_FAILURE;
+    if(asset_manager_load_asset(&game.asset_manager, "lever_sheet",       ASSET_TEXTURE)) return EXIT_FAILURE;
+    if(asset_manager_load_asset(&game.asset_manager, "barred_door_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
+    if(asset_manager_load_asset(&game.asset_manager, "tileset",           ASSET_TEXTURE)) return EXIT_FAILURE;
 
     entity_manager_init(&game.entity_manager);
 
     /* ======== Player ======== */
-    entity_t *player = entity_manager_new_entity(&game.entity_manager, 0);
-    if(!player) return EXIT_FAILURE;
+    entity_t *player_entity = entity_manager_new_entity(&game.entity_manager, 0);
+    if(!player_entity) return EXIT_FAILURE;
 
-    component_t *component = entity_new_component(player, TRANSFORM_COMPONENT);
+    component_t *component = entity_new_component(player_entity, TRANSFORM_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
     ((transform_component_data_t *)component->data)->bounds = (frect_t) {
@@ -37,9 +39,9 @@ int game_init(void)
         .h = 32.0f
     };
 
-    if(!entity_new_component(player, SPRITE_COMPONENT)) return EXIT_FAILURE;
-    if(!entity_new_component(player, ANIMATION_SYSTEM)) return EXIT_FAILURE;
-    component = entity_new_component(player, HITBOX_COMPONENT);
+    if(!entity_new_component(player_entity, SPRITE_COMPONENT)) return EXIT_FAILURE;
+    if(!entity_new_component(player_entity, ANIMATION_SYSTEM)) return EXIT_FAILURE;
+    component = entity_new_component(player_entity, HITBOX_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
     ((hitbox_component_data_t *)component->data)->position = (fvector2d_t) {
@@ -49,43 +51,74 @@ int game_init(void)
 
     ((hitbox_component_data_t *)component->data)->scale = (fvector2d_t) {
         .x = 0.5f,
-        .y = 0.5f
+        .y = 1.0f / 3.0f
     };
 
-    if(!entity_new_component(player, PHYSICS_SYSTEM))   return EXIT_FAILURE;
-    if(!entity_new_component(player, PLAYER_SYSTEM))    return EXIT_FAILURE;
+    if(!entity_new_component(player_entity, PHYSICS_SYSTEM))   return EXIT_FAILURE;
+    if(!entity_new_component(player_entity, PLAYER_SYSTEM))    return EXIT_FAILURE;
 
-    /* ======== Test entity ======== */
-    entity_t *entity = entity_manager_new_entity(&game.entity_manager, 1);
-    if(!entity) return EXIT_FAILURE;
+    /* ======== Lever ========*/
+    entity_t *lever_entity = entity_manager_new_entity(&game.entity_manager, 1);
+    if(!lever_entity) return EXIT_FAILURE;
 
-    component = entity_new_component(entity, TRANSFORM_COMPONENT);
+    component = entity_new_component(lever_entity, TRANSFORM_COMPONENT);
+    if(!component) return EXIT_FAILURE;
+
+    ((transform_component_data_t *)component->data)->bounds = (frect_t) {
+        .x = 30.0f,
+        .y = 120.0f,
+        .w = 48.0f,
+        .h = 32.0f
+    };
+
+    component = entity_new_component(lever_entity, SPRITE_COMPONENT);
+    if(!component) return EXIT_FAILURE;
+
+    if(sprite_component_set_texture(component->data, "lever_sheet")) return EXIT_FAILURE;
+
+    component = entity_new_component(lever_entity, HITBOX_COMPONENT);
+    if(!component) return EXIT_FAILURE;
+
+    ((hitbox_component_data_t *)component->data)->position = (fvector2d_t) {
+        .x = 0.5f,
+        .y = 0.9f
+    };
+
+    ((hitbox_component_data_t *)component->data)->scale = (fvector2d_t) {
+        .x = 1.0f / 3.0f,
+        .y = 1.0f / 3.0f
+    };
+
+    /* ======== Door ======== */
+    entity_t *door_entity = entity_manager_new_entity(&game.entity_manager, 2);
+    if(!door_entity) return EXIT_FAILURE;
+
+    component = entity_new_component(door_entity, TRANSFORM_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
     ((transform_component_data_t *)component->data)->bounds = (frect_t) {
         .x = 120.0f,
         .y = 30.0f,
         .w = 32.0f,
-        .h = 32.0f
+        .h = 48.0f
     };
 
-    component = entity_new_component(entity, SPRITE_COMPONENT);
+    component = entity_new_component(door_entity, SPRITE_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
-    if(sprite_component_set_texture(component->data, "tileset")) return EXIT_FAILURE;
-    ((sprite_component_data_t *)component->data)->src_rect = (rect_t) {0,0,128,128};
+    if(sprite_component_set_texture(component->data, "barred_door_sheet")) return EXIT_FAILURE;
 
-    component = entity_new_component(entity, HITBOX_COMPONENT);
+    component = entity_new_component(door_entity, HITBOX_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
     ((hitbox_component_data_t *)component->data)->position = (fvector2d_t) {
         .x = 0.5f,
-        .y = 0.5f
+        .y = 1.0f
     };
 
     ((hitbox_component_data_t *)component->data)->scale = (fvector2d_t) {
-        .x = 2.0f / 3.0f,
-        .y = 2.0f / 3.0f
+        .x = 1.0f,
+        .y = 1.0f / 7.0f
     };
 
     game.is_running = true;
