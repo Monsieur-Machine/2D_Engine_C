@@ -53,7 +53,8 @@ int hitbox_component_draw(const component_t *component)
 {
     const hitbox_component_data_t *component_data = component->data;
 
-    if(display_draw_frect(&component_data->bounds, C_RED, 128)) return EXIT_FAILURE;
+    if(component_data->activated)
+        if(display_draw_frect(&component_data->bounds, C_RED, 128)) return EXIT_FAILURE;
 
     return EXIT_SUCCESS;
 }
