@@ -24,11 +24,11 @@
 
 ###### Bugs
 
-- [ ] Work on asset corruption.
-
 ### In progress
 
 ### Done
+
+- [x] Work on asset corruption.
 
 - [x] Make functionnal hitboxes between entities
 

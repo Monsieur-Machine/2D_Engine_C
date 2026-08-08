@@ -233,7 +233,7 @@ int parse_png_for_content_and_write(const char *input_file_name, FILE *output_fi
                 b = 0x1F;
             }
 
-            uint16_t pixel = ((r) << 11) | ((g) << 6) | b;
+            uint16_t pixel = ((r) << 11) | ((g) << 5) | b;
 
 //            printf("\033[48;2;%d;%d;%dm ", r << 3, g << 2, b << 3);
 
