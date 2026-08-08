@@ -6,7 +6,7 @@
 
 - [ ] Work on events (publish / subscribe)
 
-- [ ] Work on entities draw priority
+- [ ] Work on entities draw order
 
 - [ ] Create tilemap management and display
   - [ ] Find tilemap building format
@@ -22,13 +22,15 @@
 - [ ] Make triggers
   - [ ] Add triggers into map loading
 
+- [ ] Make physics component use acceleration
+
 ###### Bugs
 
 ### In progress
 
 ### Done
 
-- [x] Work on asset corruption.
+- [x] Work on asset corruption
 
 - [x] Make functionnal hitboxes between entities
 
