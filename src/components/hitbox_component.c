@@ -3,8 +3,8 @@
 #include "game.h"
 #include "transform_component.h"
 #include "memory_alloc.h"
+#include "errors.h"
 
-// Args : frect_t bounds, double speed
 int hitbox_component_init(component_t *component)
 {
     hitbox_component_data_t *component_data = component->data;
@@ -47,7 +47,6 @@ int hitbox_component_update(component_t *component)
 
 #if DEBUG >= 2
 #include "display.h"
-#include "errors.h"
 
 int hitbox_component_draw(const component_t *component)
 {

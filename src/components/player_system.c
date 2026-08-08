@@ -6,7 +6,6 @@
 #include "physics_system.h"
 #include "memory_alloc.h"
 
-// No args
 inline int player_system_init(component_t *component)
 {
     player_system_data_t *system_data = component->data;

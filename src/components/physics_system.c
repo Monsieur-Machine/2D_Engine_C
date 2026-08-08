@@ -6,7 +6,6 @@
 #include "memory_alloc.h"
 #include "errors.h"
 
-// Args : frect_t bounds, double speed
 int physics_system_init(component_t *component)
 {
     physics_system_data_t *system_data = component->data;

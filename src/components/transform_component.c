@@ -3,7 +3,6 @@
 #include "game.h"
 #include "memory_alloc.h"
 
-// Args : frect_t bounds, double speed
 int transform_component_init(component_t *component)
 {
     transform_component_data_t *component_data = component->data;

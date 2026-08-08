@@ -4,7 +4,6 @@
 #include "memory_alloc.h"
 #include "errors.h"
 
-// Args : size_t nb_frames, size_t current_frame, float frame_delay_ms, bool play, bool loop, bool reverse
 int animation_system_init(component_t *component)
 {
     animation_system_data_t *system_data = component->data;

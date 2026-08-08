@@ -4,7 +4,6 @@
 #include "display.h"
 #include "memory_alloc.h"
 
-// Arg : const char *name
 inline int sprite_component_init(component_t *component)
 {
     sprite_component_data_t *component_data = component->data;
