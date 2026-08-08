@@ -2,6 +2,8 @@
 
 ### Todo
 
+###### Features
+
 - [ ] Work on events (publish / subscribe)
 
 - [ ] Work on entities draw priority
@@ -19,6 +21,10 @@
 
 - [ ] Make triggers
   - [ ] Add triggers into map loading
+
+###### Bugs
+
+- [ ] Work on asset corruption.
 
 ### In progress
 
