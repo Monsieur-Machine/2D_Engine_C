@@ -2,8 +2,9 @@
 
 #include "game.h"
 #include "memory_alloc.h"
+#include "errors.h"
 
-int transform_component_init(component_t *component)
+inline int transform_component_init(component_t *component)
 {
     transform_component_data_t *component_data = component->data;
 
@@ -24,7 +25,6 @@ inline int transform_component_update(component_t *component __attribute__((unus
 
 #if DEBUG >= 2
 #include "display.h"
-#include "errors.h"
 
 inline int transform_component_draw(const component_t *component)
 {

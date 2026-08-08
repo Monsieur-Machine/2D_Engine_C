@@ -6,7 +6,7 @@
 #include "memory_alloc.h"
 #include "errors.h"
 
-int physics_system_init(component_t *component)
+inline int physics_system_init(component_t *component)
 {
     physics_system_data_t *system_data = component->data;
 

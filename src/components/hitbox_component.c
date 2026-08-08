@@ -5,7 +5,7 @@
 #include "memory_alloc.h"
 #include "errors.h"
 
-int hitbox_component_init(component_t *component)
+inline int hitbox_component_init(component_t *component)
 {
     hitbox_component_data_t *component_data = component->data;
 
@@ -32,7 +32,7 @@ int hitbox_component_init(component_t *component)
     return EXIT_SUCCESS;
 }
 
-int hitbox_component_update(component_t *component)
+inline int hitbox_component_update(component_t *component)
 {
     hitbox_component_data_t *component_data = component->data;
     const transform_component_data_t *transform_component_data = component_data->transform_component_data;
@@ -48,7 +48,7 @@ int hitbox_component_update(component_t *component)
 #if DEBUG >= 2
 #include "display.h"
 
-int hitbox_component_draw(const component_t *component)
+inline int hitbox_component_draw(const component_t *component)
 {
     const hitbox_component_data_t *component_data = component->data;
 

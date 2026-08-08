@@ -89,6 +89,19 @@ int game_init(void)
         .y = 1.0f / 3.0f
     };
 
+    component = entity_new_component(lever_entity, INTERACT_COMPONENT);
+    if(!component) return EXIT_FAILURE;
+
+    ((interact_component_data_t *)component->data)->position = (fvector2d_t) {
+        .x = 0.5f,
+        .y = 4.0f / 3.0f
+    };
+
+    ((interact_component_data_t *)component->data)->scale = (fvector2d_t) {
+        .x = 2.0f / 3.0f,
+        .y = 0.7f
+    };
+
     /* ======== Door ======== */
     entity_t *door_entity = entity_manager_new_entity(&game.entity_manager, 2);
     if(!door_entity) return EXIT_FAILURE;

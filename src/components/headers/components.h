@@ -6,6 +6,7 @@
 #include "animation_system.h"
 #include "hitbox_component.h"
 #include "physics_system.h"
+#include "interact_component.h"
 #include "player_system.h"
 // Add new components header file here
 
