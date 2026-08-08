@@ -16,6 +16,7 @@ int game_init(void)
     if(asset_manager_init(&game.asset_manager)) return EXIT_FAILURE;
 
     if(asset_manager_load_asset(&game.asset_manager, "dummy_sheet",       ASSET_TEXTURE)) return EXIT_FAILURE;
+    if(asset_manager_load_asset(&game.asset_manager, "tileset",           ASSET_TEXTURE)) return EXIT_FAILURE;
     if(asset_manager_load_asset(&game.asset_manager, "player_idle_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
     if(asset_manager_load_asset(&game.asset_manager, "player_walk_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
     if(asset_manager_load_asset(&game.asset_manager, "player_run_sheet",  ASSET_TEXTURE)) return EXIT_FAILURE;
@@ -68,7 +69,12 @@ int game_init(void)
         .h = 32.0f
     };
 
-    if(!entity_new_component(entity, SPRITE_COMPONENT)) return EXIT_FAILURE;
+    component = entity_new_component(entity, SPRITE_COMPONENT);
+    if(!component) return EXIT_FAILURE;
+
+    if(sprite_component_set_texture(component->data, "tileset")) return EXIT_FAILURE;
+    ((sprite_component_data_t *)component->data)->src_rect = (rect_t) {0,0,128,128};
+
     component = entity_new_component(entity, HITBOX_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
