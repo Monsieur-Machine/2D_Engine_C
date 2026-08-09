@@ -141,16 +141,16 @@ int game_init(void)
 
 void game_handle_event(void)
 {
-    event_t event;
+    input_event_t event;
 
-    while(pollevent(&event))
+    while(poll_event(&event))
     {
-        if(event.type == EVENT_KEY_DOWN)
+        if(event.type == INPUT_EVENT_KEY_DOWN)
             game.events.keys[event.key] = true;
-        else if(event.type == EVENT_KEY_UP)
+        else if(event.type == INPUT_EVENT_KEY_UP)
             game.events.keys[event.key] = false;
 
-        if(event.type == EVENT_QUIT)
+        if(event.type == INPUT_EVENT_QUIT)
             game.is_running = false;
     }
 }
