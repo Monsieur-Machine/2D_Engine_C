@@ -94,12 +94,12 @@ int game_init(void)
 
     ((interact_component_data_t *)component->data)->position = (fvector2d_t) {
         .x = 0.5f,
-        .y = 4.0f / 3.0f
+        .y = 2.0f
     };
 
     ((interact_component_data_t *)component->data)->scale = (fvector2d_t) {
         .x = 2.0f / 3.0f,
-        .y = 0.7f
+        .y = 5.0f / 6.0f
     };
 
     /* ======== Door ======== */
