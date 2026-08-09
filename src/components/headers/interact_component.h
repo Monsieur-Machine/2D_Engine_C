@@ -11,6 +11,7 @@ typedef struct interact_component_data_t {
     fvector2d_t position;
     fvector2d_t scale;
     frect_t bounds;
+    bool activated;
 } interact_component_data_t;
 
 int interact_component_init(component_t *component);

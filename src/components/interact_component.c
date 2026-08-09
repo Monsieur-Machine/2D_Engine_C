@@ -26,6 +26,8 @@ inline int interact_component_init(component_t *component)
         .y = 1.0f
     };
 
+    component_data->activated = true;
+
     return EXIT_SUCCESS;
 }
 

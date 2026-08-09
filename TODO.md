@@ -4,8 +4,6 @@
 
 ###### Features
 
-- [ ] Work on events (publish / subscribe)
-
 - [ ] Work on entities draw order
 
 - [ ] Create tilemap management and display
@@ -27,6 +25,8 @@
 ###### Bugs
 
 ### In progress
+
+- [ ] Work on events (publish / subscribe)
 
 ### Done
 

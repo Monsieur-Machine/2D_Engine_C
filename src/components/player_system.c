@@ -1,10 +1,12 @@
 #include "player_system.h"
 
 #include "game.h"
-#include "animation_system.h"
 #include "sprite_component.h"
+#include "animation_system.h"
+#include "interact_component.h"
 #include "physics_system.h"
 #include "memory_alloc.h"
+#include "errors.h"
 
 inline int player_system_init(component_t *component)
 {
@@ -44,7 +46,23 @@ inline int player_system_init(component_t *component)
     return EXIT_SUCCESS;
 }
 
-// Only for this file
+static void player_system_get_inputs(player_system_data_t *system_data);
+static void player_system_set_velocity(player_system_data_t *system_data);
+static int player_system_set_animation_and_speed(player_system_data_t *system_data);
+static int player_system_process_interaction(player_system_data_t *system_data);
+
+inline int player_system_update(component_t *component)
+{
+    player_system_data_t *system_data = component->data;
+
+    player_system_get_inputs(system_data);
+    player_system_set_velocity(system_data);
+    if(player_system_set_animation_and_speed(system_data)) return EXIT_FAILURE;
+    if(player_system_process_interaction(system_data)) return EXIT_FAILURE;
+
+    return EXIT_SUCCESS;
+}
+
 static inline void player_system_get_inputs(player_system_data_t *system_data)
 {
     system_data->last_state = system_data->state;
@@ -75,7 +93,6 @@ static inline void player_system_get_inputs(player_system_data_t *system_data)
     }
 }
 
-// Only for this file
 static inline void player_system_set_velocity(player_system_data_t *system_data)
 {
     physics_system_data_t *physics_system_data = system_data->physics_system_data;
@@ -95,7 +112,6 @@ static inline void player_system_set_velocity(player_system_data_t *system_data)
     }
 }
 
-// Only for this file
 static inline int player_system_set_animation_and_speed(player_system_data_t *system_data)
 {
     animation_system_data_t *animation_system_data = system_data->animation_system_data;
@@ -144,13 +160,38 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
     return EXIT_SUCCESS;
 }
 
-inline int player_system_update(component_t *component)
+// Args : player_system_data_t *system_data
+static inline int action_detect_activate_interact(elem_t *elem, va_list args)
 {
-    player_system_data_t *system_data = component->data;
+    const entity_t *target_entity = elem->data;
+    const player_system_data_t *system_data = va_arg(args, player_system_data_t *);
 
-    player_system_get_inputs(system_data);
-    player_system_set_velocity(system_data);
-    if(player_system_set_animation_and_speed(system_data)) return EXIT_FAILURE;
+    const component_t *target_interact_component = entity_get_component(target_entity, INTERACT_COMPONENT);
+    if(!target_interact_component) return EXIT_SUCCESS;
+
+    if(!((interact_component_data_t *)target_interact_component->data)->activated)
+    {
+        return EXIT_SUCCESS;
+    }
+
+    const frect_t *hitbox_bounds = &system_data->physics_system_data->hitbox_component_data->bounds;
+    const frect_t *target_interact_bounds = &((interact_component_data_t *)target_interact_component->data)->bounds;
+
+    if(fhas_intersection(hitbox_bounds, target_interact_bounds))
+    {
+        static size_t i = 0;
+        debug_printf("Interact n*%lu", i++);
+    }
+
+    return EXIT_SUCCESS;
+}
+
+static inline int player_system_process_interaction(player_system_data_t *system_data)
+{
+    if(game.events.keys[KEY_INTERACT])
+    {
+        if(linked_list_for_each(&game.entity_manager.entities, action_detect_activate_interact, system_data)) return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }
