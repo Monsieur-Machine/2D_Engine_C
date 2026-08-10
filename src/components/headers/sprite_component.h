@@ -9,10 +9,8 @@ typedef struct sprite_component_data_t {
     transform_component_data_t *transform_component_data;
 
     texture_t *texture;
-
     rect_t src_rect;
     frect_t dst_rect;
-
     bool flip;
 } sprite_component_data_t;
 

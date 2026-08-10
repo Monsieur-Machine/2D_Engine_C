@@ -9,6 +9,7 @@
 typedef struct physics_system_data_t {
     transform_component_data_t *transform_component_data;
     hitbox_component_data_t *hitbox_component_data;
+
     fvector2d_t target_velocity;
     fvector2d_t velocity;
     float speed;

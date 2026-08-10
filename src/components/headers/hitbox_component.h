@@ -9,9 +9,11 @@
 
 typedef struct hitbox_component_data_t {
     transform_component_data_t *transform_component_data;
+
     fvector2d_t position;
     fvector2d_t scale;
     frect_t bounds;
+
     bool activated;
 } hitbox_component_data_t;
 
