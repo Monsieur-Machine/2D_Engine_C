@@ -29,7 +29,7 @@ inline int interact_component_init(component_t *component)
     component_data->topic_id = 0;
     component_data->type = INTERACT_TOGGLE;
 
-    component_data->event_payload = 0;
+    component_data->state = 0;
 
     if(event_bus_new_topic(&game.event_bus, component_data->topic_id, 1)) return EXIT_FAILURE;
 
@@ -73,7 +73,24 @@ inline int interact_component_destroy(component_t *component)
     return EXIT_SUCCESS;
 }
 
-inline int interact_component_set_topic(interact_component_data_t *component_data, size_t id)
+inline int interact_component_interact(interact_component_data_t *component_data, const entity_t *entity)
+{
+    switch(component_data->type)
+    {
+      case INTERACT_TOGGLE:
+        component_data->state = !component_data->state;
+        break;
+
+      default:
+        return EXIT_FAILURE;
+    }
+
+    if(event_bus_publish(&game.event_bus, component_data->topic_id, entity, component_data->state)) return EXIT_FAILURE;
+
+    return EXIT_SUCCESS;
+}
+
+inline int interact_component_modify_topic(interact_component_data_t *component_data, size_t id, size_t max_history_size)
 {
     if(event_bus_change_topic_id(&game.event_bus, component_data->topic_id, id)) return EXIT_FAILURE;
 

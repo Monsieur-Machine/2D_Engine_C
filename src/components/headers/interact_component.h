@@ -7,7 +7,6 @@
 #include "errors.h"
 
 typedef enum interact_type_t {
-    INTERACT_BUTTON,
     INTERACT_TOGGLE
 } interact_type_t;
 
@@ -18,9 +17,9 @@ typedef struct interact_component_data_t {
     fvector2d_t scale;
     frect_t bounds;
 
-    size_t topic_id;
     interact_type_t type;
-    size_t event_payload;
+    size_t state;
+    size_t topic_id;
 
     bool activated;
 } interact_component_data_t;
@@ -35,6 +34,8 @@ int interact_component_draw(const component_t *component);
 
 int interact_component_destroy(component_t *component);
 
-inline int interact_component_set_topic(interact_component_data_t *component_data, size_t id);
+int interact_component_interact(interact_component_data_t *component_data, const entity_t *entity);
+
+int interact_component_modify_topic(interact_component_data_t *component_data, size_t id, size_t max_history_size);
 
 #endif // TRANSFORM_COMPONENT_H

@@ -77,6 +77,8 @@ int game_init(void)
 
     if(sprite_component_set_texture(component->data, "lever_sheet")) return EXIT_FAILURE;
 
+    if(!entity_new_component(lever_entity, ANIMATION_SYSTEM)) return EXIT_FAILURE;
+
     component = entity_new_component(lever_entity, HITBOX_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
@@ -102,6 +104,8 @@ int game_init(void)
         .x = 2.0f / 3.0f,
         .y = 5.0f / 6.0f
     };
+
+    if(!entity_new_component(lever_entity, LEVER_COMPONENT)) return EXIT_FAILURE;
 
     /* ======== Door ======== */
     entity_t *door_entity = entity_manager_new_entity(&game.entity_manager, 2);
