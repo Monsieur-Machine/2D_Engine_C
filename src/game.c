@@ -4,6 +4,8 @@
 #include "display.h"
 #include "asset_manager.h"
 #include "ecs.h"
+#include "event_bus.h"
+#include "inputs.h"
 #include "components.h"
 #include "errors.h"
 
@@ -12,8 +14,9 @@ int game_init(void)
     game.is_running = false;
 
     if(display_init()) return EXIT_FAILURE;
-
     if(asset_manager_init(&game.asset_manager)) return EXIT_FAILURE;
+    event_bus_init(&game.event_bus);
+    entity_manager_init(&game.entity_manager);
 
     if(asset_manager_load_asset(&game.asset_manager, "dummy_sheet",       ASSET_TEXTURE)) return EXIT_FAILURE;
     if(asset_manager_load_asset(&game.asset_manager, "player_idle_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
@@ -22,8 +25,6 @@ int game_init(void)
     if(asset_manager_load_asset(&game.asset_manager, "lever_sheet",       ASSET_TEXTURE)) return EXIT_FAILURE;
     if(asset_manager_load_asset(&game.asset_manager, "barred_door_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
     if(asset_manager_load_asset(&game.asset_manager, "tileset",           ASSET_TEXTURE)) return EXIT_FAILURE;
-
-    entity_manager_init(&game.entity_manager);
 
     /* ======== Player ======== */
     entity_t *player_entity = entity_manager_new_entity(&game.entity_manager, 0);
@@ -188,9 +189,8 @@ int game_render(void)
 int game_exit(void)
 {
     entity_manager_exit(&game.entity_manager);
-
+    event_bus_exit(&game.event_bus);
     if(asset_manager_exit(&game.asset_manager)) return EXIT_FAILURE;
-
     display_exit();
 
     return EXIT_SUCCESS;

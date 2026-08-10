@@ -169,18 +169,21 @@ static inline int action_detect_activate_interact(elem_t *elem, va_list args)
     const component_t *target_interact_component = entity_get_component(target_entity, INTERACT_COMPONENT);
     if(!target_interact_component) return EXIT_SUCCESS;
 
-    if(!((interact_component_data_t *)target_interact_component->data)->activated)
+    const interact_component_data_t *target_interact_component_data = target_interact_component->data;
+
+    if(!target_interact_component_data->activated)
     {
         return EXIT_SUCCESS;
     }
 
     const frect_t *hitbox_bounds = &system_data->physics_system_data->hitbox_component_data->bounds;
-    const frect_t *target_interact_bounds = &((interact_component_data_t *)target_interact_component->data)->bounds;
+    const frect_t *target_interact_bounds = &target_interact_component_data->bounds;
 
     if(fhas_intersection(hitbox_bounds, target_interact_bounds))
     {
         static size_t i = 0;
         debug_printf("Interact n*%lu", i++);
+        if(event_bus_publish(&game.event_bus, target_interact_component_data->topic_id, (void *)&target_interact_component_data->event_payload)) return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;
@@ -188,10 +191,14 @@ static inline int action_detect_activate_interact(elem_t *elem, va_list args)
 
 static inline int player_system_process_interaction(player_system_data_t *system_data)
 {
-    if(game.events.keys[KEY_INTERACT])
+    static bool last_state = false;
+
+    if(game.events.keys[KEY_INTERACT] && !last_state)
     {
         if(linked_list_for_each(&game.entity_manager.entities, action_detect_activate_interact, system_data)) return EXIT_FAILURE;
     }
+
+    last_state = game.events.keys[KEY_INTERACT];
 
     return EXIT_SUCCESS;
 }

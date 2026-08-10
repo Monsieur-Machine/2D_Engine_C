@@ -1,6 +1,7 @@
 #include "interact_component.h"
 
 #include "game.h"
+#include "event_bus.h"
 #include "memory_alloc.h"
 #include "errors.h"
 
@@ -20,11 +21,17 @@ inline int interact_component_init(component_t *component)
         .x = 0.0f,
         .y = 0.0f
     };
-
     component_data->scale = (fvector2d_t) {
         .x = 1.0f,
         .y = 1.0f
     };
+
+    component_data->topic_id = 0;
+    component_data->type = INTERACT_TOGGLE;
+
+    component_data->event_payload = 0;
+
+    if(event_bus_new_topic(&game.event_bus, component_data->topic_id, 1)) return EXIT_FAILURE;
 
     component_data->activated = true;
 
@@ -62,6 +69,15 @@ inline int interact_component_destroy(component_t *component)
     interact_component_data_t *component_data = component->data;
 
     free(component_data);
+
+    return EXIT_SUCCESS;
+}
+
+inline int interact_component_set_topic(interact_component_data_t *component_data, size_t id)
+{
+    if(event_bus_change_topic_id(&game.event_bus, component_data->topic_id, id)) return EXIT_FAILURE;
+
+    component_data->topic_id = id;
 
     return EXIT_SUCCESS;
 }
