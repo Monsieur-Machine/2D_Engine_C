@@ -26,9 +26,11 @@
 
 ### In progress
 
-- [ ] Work on events (publish / subscribe)
+- [ ] Make entities react to events
 
 ### Done
+
+- [x] Work on events (publish / subscribe)
 
 - [x] Work on asset corruption
 
