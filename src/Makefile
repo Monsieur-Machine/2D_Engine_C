@@ -8,7 +8,8 @@ SOURCES := \
   components/interact_component.c \
   components/animation_system.c \
   components/player_system.c \
-  components/lever_component.c
+  components/lever_component.c \
+  components/door_component.c
 
 # Compiler and flags
 SRC_CC = gcc

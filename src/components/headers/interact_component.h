@@ -34,8 +34,8 @@ int interact_component_draw(const component_t *component);
 
 int interact_component_destroy(component_t *component);
 
-int interact_component_interact(interact_component_data_t *component_data, const entity_t *entity);
+int interact_component_interact(interact_component_data_t *component_data);
 
-int interact_component_modify_topic(interact_component_data_t *component_data, size_t id, size_t max_history_size);
+int interact_component_modify_topic(interact_component_data_t *component_data, size_t id);
 
 #endif // TRANSFORM_COMPONENT_H

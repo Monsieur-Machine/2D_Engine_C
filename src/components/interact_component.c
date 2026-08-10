@@ -31,7 +31,7 @@ inline int interact_component_init(component_t *component)
 
     component_data->state = 0;
 
-    if(event_bus_new_topic(&game.event_bus, component_data->topic_id, 1)) return EXIT_FAILURE;
+    if(event_bus_new_topic(&game.event_bus, component_data->topic_id)) return EXIT_FAILURE;
 
     component_data->activated = true;
 
@@ -73,7 +73,7 @@ inline int interact_component_destroy(component_t *component)
     return EXIT_SUCCESS;
 }
 
-inline int interact_component_interact(interact_component_data_t *component_data, const entity_t *entity)
+inline int interact_component_interact(interact_component_data_t *component_data)
 {
     switch(component_data->type)
     {
@@ -85,12 +85,12 @@ inline int interact_component_interact(interact_component_data_t *component_data
         return EXIT_FAILURE;
     }
 
-    if(event_bus_publish(&game.event_bus, component_data->topic_id, entity, component_data->state)) return EXIT_FAILURE;
+    if(event_bus_publish(&game.event_bus, component_data->topic_id, component_data->state)) return EXIT_FAILURE;
 
     return EXIT_SUCCESS;
 }
 
-inline int interact_component_modify_topic(interact_component_data_t *component_data, size_t id, size_t max_history_size)
+inline int interact_component_modify_topic(interact_component_data_t *component_data, size_t id)
 {
     if(event_bus_change_topic_id(&game.event_bus, component_data->topic_id, id)) return EXIT_FAILURE;
 

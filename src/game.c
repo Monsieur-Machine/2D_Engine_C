@@ -108,8 +108,8 @@ int game_init(void)
     if(!entity_new_component(lever_entity, LEVER_COMPONENT)) return EXIT_FAILURE;
 
     /* ======== Door ======== */
-    entity_t *door_entity = entity_manager_new_entity(&game.entity_manager, 2);
-    if(!door_entity) return EXIT_FAILURE;
+    entity_t *door_entity = entity_manager_new_entity(&game.entity_manager, 1);
+    if(!lever_entity) return EXIT_FAILURE;
 
     component = entity_new_component(door_entity, TRANSFORM_COMPONENT);
     if(!component) return EXIT_FAILURE;
@@ -126,6 +126,8 @@ int game_init(void)
 
     if(sprite_component_set_texture(component->data, "barred_door_sheet")) return EXIT_FAILURE;
 
+    if(!entity_new_component(door_entity, ANIMATION_SYSTEM)) return EXIT_FAILURE;
+
     component = entity_new_component(door_entity, HITBOX_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
@@ -138,6 +140,8 @@ int game_init(void)
         .x = 1.0f,
         .y = 1.0f / 7.0f
     };
+
+    if(!entity_new_component(door_entity, DOOR_COMPONENT)) return EXIT_FAILURE;
 
     game.is_running = true;
 

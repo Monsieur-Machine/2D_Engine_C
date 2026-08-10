@@ -181,7 +181,7 @@ static inline int action_detect_activate_interact(elem_t *elem, va_list args)
 
     if(fhas_intersection(hitbox_bounds, target_interact_bounds))
     {
-        if(interact_component_interact(target_interact_component_data, target_entity)) return EXIT_FAILURE;
+        if(interact_component_interact(target_interact_component_data)) return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;

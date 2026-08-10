@@ -8,17 +8,19 @@
 #include "memory_alloc.h"
 #include "errors.h"
 
+#include "hitbox_component.h"
+
 // Args = entity_t *entity, size_t state
-static inline int lever_component_callback(va_list args)
+static inline int lever_component_callback(va_list args, void *subscription_data)
 {
-    const entity_t *entity = va_arg(args, entity_t *);
+    const entity_t *entity = subscription_data;
 
     component_t *lever_component = entity_get_component(entity, LEVER_COMPONENT);
     if(!lever_component) return EXIT_FAILURE;
 
     lever_component_data_t *component_data = lever_component->data;
 
-    component_data->state = va_arg(args, size_t);
+    component_data->state = (bool)va_arg(args, size_t);
 
     return EXIT_SUCCESS;
 }
@@ -35,25 +37,18 @@ inline int lever_component_init(component_t *component)
     }
     component_data->animation_system_data = animation_system->data;
 
-    component_t *interact_component = entity_get_component(component->entity, INTERACT_COMPONENT);
-    if(!interact_component)
-    {
-        error_printf("Lever component require a transform component.");
-        return EXIT_FAILURE;
-    }
-    component_data->interact_component_data = interact_component->data;
-
     animation_system_data_t *animation_system_data = component_data->animation_system_data;
 
     animation_system_data->nb_frames = 3;
     animation_system_data->frame_delay_ms = LEVER_DEFAULT_ANIMATION_SPEED;
     if(animation_system_create_frames_clips(animation_system_data)) return EXIT_FAILURE;
 
-    interact_component_data_t *interact_component_data = component_data->interact_component_data;
+    component_data->topic_id = 0;
 
-    event_bus_subscribe(&game.event_bus, interact_component_data->topic_id, lever_component_callback);
+    event_bus_subscribe(&game.event_bus, component_data->topic_id, lever_component_callback, component->entity);
 
     component_data->state = false;
+    component_data->last_state = false;
 
     return EXIT_SUCCESS;
 }

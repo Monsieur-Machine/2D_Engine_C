@@ -109,7 +109,7 @@ int animation_system_create_frames_clips(animation_system_data_t *system_data)
         elem_t *frame = create_elem(&system_data->frames);
         if(!frame) return EXIT_FAILURE;
 
-        ((rect_t *)frame->data)->x = sprite_component_data->src_rect.w * (float)current_frame_nb;
+        ((rect_t *)frame->data)->x = sprite_component_data->src_rect.w * current_frame_nb;
         ((rect_t *)frame->data)->y = 0;
         ((rect_t *)frame->data)->w = sprite_component_data->src_rect.w;
         ((rect_t *)frame->data)->h = sprite_component_data->src_rect.h;

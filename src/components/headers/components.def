@@ -17,6 +17,7 @@ COMPONENT(SPRITE_COMPONENT,    sprite_component,    DRAW)
 COMPONENT(ANIMATION_SYSTEM,    animation_system,    NO_DRAW)
 COMPONENT(PLAYER_SYSTEM,       player_system,       NO_DRAW)
 COMPONENT(LEVER_COMPONENT,     lever_component,     NO_DRAW)
+COMPONENT(DOOR_COMPONENT,      door_component,      NO_DRAW)
 // Add new components definition here
 
 #undef COMPONENT
