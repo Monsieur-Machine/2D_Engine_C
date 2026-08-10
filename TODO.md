@@ -26,9 +26,10 @@
 
 ### In progress
 
-- [ ] Make entities react to events
 
 ### Done
+
+- [x] Make entities react to events
 
 - [x] Work on events (publish / subscribe)
 
