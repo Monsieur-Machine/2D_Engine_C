@@ -5,7 +5,8 @@
 #include "animation_system.h"
 #include "hitbox_component.h"
 
-#define DOOR_DEFAULT_ANIMATION_SPEED 30
+#define BARRED_DOOR_DEFAULT_ANIMATION_SPEED 30
+#define WOODEN_DOOR_DEFAULT_ANIMATION_SPEED 100
 
 typedef struct door_component_data_t {
     animation_system_data_t *animation_system_data;

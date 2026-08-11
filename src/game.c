@@ -24,6 +24,7 @@ int game_init(void)
     if(asset_manager_load_asset(&game.asset_manager, "player_run_sheet",  ASSET_TEXTURE)) return EXIT_FAILURE;
     if(asset_manager_load_asset(&game.asset_manager, "lever_sheet",       ASSET_TEXTURE)) return EXIT_FAILURE;
     if(asset_manager_load_asset(&game.asset_manager, "barred_door_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
+    if(asset_manager_load_asset(&game.asset_manager, "wooden_door_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
     if(asset_manager_load_asset(&game.asset_manager, "tileset",           ASSET_TEXTURE)) return EXIT_FAILURE;
 
     /* ======== Player ======== */
@@ -142,7 +143,7 @@ int game_init(void)
     if(!component) return EXIT_FAILURE;
 
     ((animation_system_data_t *)component->data)->nb_frames = 8;
-    ((animation_system_data_t *)component->data)->frame_delay_ms = DOOR_DEFAULT_ANIMATION_SPEED;
+    ((animation_system_data_t *)component->data)->frame_delay_ms = BARRED_DOOR_DEFAULT_ANIMATION_SPEED;
     if(animation_system_create_frames_clips(component->data)) return EXIT_FAILURE;
 
     component = entity_new_component(door_entity, HITBOX_COMPONENT);
@@ -159,6 +160,47 @@ int game_init(void)
     };
 
     if(!entity_new_component(door_entity, DOOR_COMPONENT)) return EXIT_FAILURE;
+
+    /* ======== Door 2 ======== */
+    entity_t *door2_entity = entity_manager_new_entity(&game.entity_manager, 1);
+    if(!lever_entity) return EXIT_FAILURE;
+
+    component = entity_new_component(door2_entity, TRANSFORM_COMPONENT);
+    if(!component) return EXIT_FAILURE;
+
+    ((transform_component_data_t *)component->data)->bounds = (frect_t) {
+        .x = 240.0f,
+        .y = 30.0f,
+        .w = 32.0f,
+        .h = 48.0f
+    };
+
+    component = entity_new_component(door2_entity, SPRITE_COMPONENT);
+    if(!component) return EXIT_FAILURE;
+
+    if(sprite_component_set_texture(component->data, "wooden_door_sheet")) return EXIT_FAILURE;
+
+    component = entity_new_component(door2_entity, ANIMATION_SYSTEM);
+    if(!component) return EXIT_FAILURE;
+
+    ((animation_system_data_t *)component->data)->nb_frames = 6;
+    ((animation_system_data_t *)component->data)->frame_delay_ms = WOODEN_DOOR_DEFAULT_ANIMATION_SPEED;
+    if(animation_system_create_frames_clips(component->data)) return EXIT_FAILURE;
+
+    component = entity_new_component(door2_entity, HITBOX_COMPONENT);
+    if(!component) return EXIT_FAILURE;
+
+    ((hitbox_component_data_t *)component->data)->position = (fvector2d_t) {
+        .x = 0.5f,
+        .y = 1.0f
+    };
+
+    ((hitbox_component_data_t *)component->data)->scale = (fvector2d_t) {
+        .x = 1.0f,
+        .y = 1.0f / 7.0f
+    };
+
+    if(!entity_new_component(door2_entity, DOOR_COMPONENT)) return EXIT_FAILURE;
 
     game.is_running = true;
 

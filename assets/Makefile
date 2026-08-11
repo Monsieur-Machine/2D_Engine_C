@@ -5,6 +5,7 @@ ASSETS := \
   player_sheets/player_run_sheet.png \
   props_sheets/lever_sheet.png \
   props_sheets/barred_door_sheet.png \
+  props_sheets/wooden_door_sheet.png \
   tileset/tileset.png
 
 ASSETS := $(addprefix $(ASSETS_DIR)/,$(ASSETS))
