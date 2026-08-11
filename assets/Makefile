@@ -21,6 +21,7 @@ setup_asset:
 	@echo "Building $(notdir $(ASSET_OUTPUT))"
 
 $(ASSET_OUTPUT): $(ASSET_BUILDER_OUTPUT) $(ASSETS)
+	@echo -e "[100%] $(YELLOW)Building $(notdir $(ASSET_OUTPUT))$(RESET)"
 	$(Q)$(ASSET_BUILDER_OUTPUT) $@ $(ASSETS)
 
 asset_end: $(ASSET_OUTPUT)

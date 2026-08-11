@@ -101,7 +101,7 @@ int game_init(void)
 
     ((hitbox_component_data_t *)component->data)->scale = (fvector2d_t) {
         .x = 1.0f / 3.0f,
-        .y = 1.0f / 3.0f
+        .y = 0.3f
     };
 
     component = entity_new_component(lever_entity, INTERACT_COMPONENT);
@@ -109,12 +109,12 @@ int game_init(void)
 
     ((interact_component_data_t *)component->data)->position = (fvector2d_t) {
         .x = 0.5f,
-        .y = 2.0f
+        .y = 1.9f
     };
 
     ((interact_component_data_t *)component->data)->scale = (fvector2d_t) {
         .x = 2.0f / 3.0f,
-        .y = 5.0f / 6.0f
+        .y = 0.8f
     };
 
     if(!entity_new_component(lever_entity, LEVER_COMPONENT)) return EXIT_FAILURE;
