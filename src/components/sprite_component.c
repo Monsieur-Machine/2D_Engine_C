@@ -32,8 +32,10 @@ inline int sprite_component_init(component_t *component)
 inline int sprite_component_update(component_t *component)
 {
     sprite_component_data_t *component_data = component->data;
+    transform_component_data_t *transform_component_data = component_data->transform_component_data;
 
-    component_data->dst_rect = component_data->transform_component_data->bounds;
+    component_data->dst_rect = transform_component_data->bounds;
+    component->entity->draw_priority = transform_component_data->bounds.y + transform_component_data->bounds.h;
 
     return EXIT_SUCCESS;
 }

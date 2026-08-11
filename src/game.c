@@ -41,7 +41,13 @@ int game_init(void)
     };
 
     if(!entity_new_component(player_entity, SPRITE_COMPONENT)) return EXIT_FAILURE;
-    if(!entity_new_component(player_entity, ANIMATION_SYSTEM)) return EXIT_FAILURE;
+
+    component = entity_new_component(player_entity, ANIMATION_SYSTEM);
+    if(!component) return EXIT_FAILURE;
+
+    ((animation_system_data_t *)component->data)->loop = true;
+    ((animation_system_data_t *)component->data)->play = true;
+
     component = entity_new_component(player_entity, HITBOX_COMPONENT);
     if(!component) return EXIT_FAILURE;
 
@@ -56,6 +62,7 @@ int game_init(void)
     };
 
     if(!entity_new_component(player_entity, PHYSICS_SYSTEM))   return EXIT_FAILURE;
+
     if(!entity_new_component(player_entity, PLAYER_SYSTEM))    return EXIT_FAILURE;
 
     /* ======== Lever ========*/
@@ -77,7 +84,12 @@ int game_init(void)
 
     if(sprite_component_set_texture(component->data, "lever_sheet")) return EXIT_FAILURE;
 
-    if(!entity_new_component(lever_entity, ANIMATION_SYSTEM)) return EXIT_FAILURE;
+    component = entity_new_component(lever_entity, ANIMATION_SYSTEM);
+    if(!component) return EXIT_FAILURE;
+
+    ((animation_system_data_t *)component->data)->nb_frames = 3;
+    ((animation_system_data_t *)component->data)->frame_delay_ms = LEVER_DEFAULT_ANIMATION_SPEED;
+    if(animation_system_create_frames_clips(component->data)) return EXIT_FAILURE;
 
     component = entity_new_component(lever_entity, HITBOX_COMPONENT);
     if(!component) return EXIT_FAILURE;
@@ -126,7 +138,12 @@ int game_init(void)
 
     if(sprite_component_set_texture(component->data, "barred_door_sheet")) return EXIT_FAILURE;
 
-    if(!entity_new_component(door_entity, ANIMATION_SYSTEM)) return EXIT_FAILURE;
+    component = entity_new_component(door_entity, ANIMATION_SYSTEM);
+    if(!component) return EXIT_FAILURE;
+
+    ((animation_system_data_t *)component->data)->nb_frames = 8;
+    ((animation_system_data_t *)component->data)->frame_delay_ms = DOOR_DEFAULT_ANIMATION_SPEED;
+    if(animation_system_create_frames_clips(component->data)) return EXIT_FAILURE;
 
     component = entity_new_component(door_entity, HITBOX_COMPONENT);
     if(!component) return EXIT_FAILURE;

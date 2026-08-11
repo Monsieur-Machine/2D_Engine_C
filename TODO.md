@@ -4,8 +4,6 @@
 
 ###### Features
 
-- [ ] Work on entities draw order
-
 - [ ] Create tilemap management and display
   - [ ] Find tilemap building format
   - [ ] Add building support for tilemaps in asset builder
@@ -26,8 +24,9 @@
 
 ### In progress
 
-
 ### Done
+
+- [x] Work on entities draw order
 
 - [x] Make entities react to events
 
