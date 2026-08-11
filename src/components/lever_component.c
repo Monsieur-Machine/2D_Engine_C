@@ -37,14 +37,7 @@ inline int lever_component_init(component_t *component)
     }
     component_data->animation_system_data = animation_system->data;
 
-    animation_system_data_t *animation_system_data = component_data->animation_system_data;
-
-    animation_system_data->nb_frames = 3;
-    animation_system_data->frame_delay_ms = LEVER_DEFAULT_ANIMATION_SPEED;
-    if(animation_system_create_frames_clips(animation_system_data)) return EXIT_FAILURE;
-
     component_data->topic_id = 0;
-
     event_bus_subscribe(&game.event_bus, component_data->topic_id, lever_component_callback, component->entity);
 
     component_data->state = false;

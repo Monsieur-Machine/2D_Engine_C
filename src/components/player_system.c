@@ -38,11 +38,6 @@ inline int player_system_init(component_t *component)
 
     system_data->state = PLAYER_MOVING;
 
-    animation_system_data_t *animation_system_data = system_data->animation_system_data;
-
-    animation_system_data->loop = true;
-    animation_system_data->play = true;
-
     return EXIT_SUCCESS;
 }
 
