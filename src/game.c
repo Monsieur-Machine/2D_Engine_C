@@ -3,29 +3,28 @@
 #include <stdlib.h>
 #include "display.h"
 #include "asset_manager.h"
-#include "ecs.h"
 #include "event_bus.h"
-#include "inputs.h"
+#include "ecs.h"
 #include "components.h"
+#include "inputs.h"
 #include "errors.h"
 
 int game_init(void)
 {
     game.is_running = false;
 
-    if(display_init()) return EXIT_FAILURE;
-    if(asset_manager_init(&game.asset_manager)) return EXIT_FAILURE;
+    if(display_init()) return_failure_int;
+    if(asset_manager_init(&game.asset_manager)) return_failure_int;
     event_bus_init(&game.event_bus);
     entity_manager_init(&game.entity_manager);
 
-    if(asset_manager_load_asset(&game.asset_manager, "dummy_sheet",       ASSET_TEXTURE)) return EXIT_FAILURE;
-    if(asset_manager_load_asset(&game.asset_manager, "player_idle_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
-    if(asset_manager_load_asset(&game.asset_manager, "player_walk_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
-    if(asset_manager_load_asset(&game.asset_manager, "player_run_sheet",  ASSET_TEXTURE)) return EXIT_FAILURE;
-    if(asset_manager_load_asset(&game.asset_manager, "lever_sheet",       ASSET_TEXTURE)) return EXIT_FAILURE;
-    if(asset_manager_load_asset(&game.asset_manager, "barred_door_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
-    if(asset_manager_load_asset(&game.asset_manager, "wooden_door_sheet", ASSET_TEXTURE)) return EXIT_FAILURE;
-    if(asset_manager_load_asset(&game.asset_manager, "tileset",           ASSET_TEXTURE)) return EXIT_FAILURE;
+    if(asset_manager_load_asset(&game.asset_manager, "player_idle_sheet", ASSET_TEXTURE)) return_failure_int;
+    if(asset_manager_load_asset(&game.asset_manager, "player_walk_sheet", ASSET_TEXTURE)) return_failure_int;
+    if(asset_manager_load_asset(&game.asset_manager, "player_run_sheet",  ASSET_TEXTURE)) return_failure_int;
+    if(asset_manager_load_asset(&game.asset_manager, "lever_sheet",       ASSET_TEXTURE)) return_failure_int;
+    if(asset_manager_load_asset(&game.asset_manager, "barred_door_sheet", ASSET_TEXTURE)) return_failure_int;
+    if(asset_manager_load_asset(&game.asset_manager, "wooden_door_sheet", ASSET_TEXTURE)) return_failure_int;
+    if(asset_manager_load_asset(&game.asset_manager, "tileset",           ASSET_TEXTURE)) return_failure_int;
 
     /* ======== Player ======== */
     entity_t *player_entity = entity_manager_new_entity(&game.entity_manager, 0);
@@ -228,7 +227,7 @@ int game_update(void)
     if(entity_manager_update(&game.entity_manager))
     {
         game.is_running = false;
-        return EXIT_FAILURE;
+        return_failure_int;
     }
 
     return EXIT_SUCCESS;
@@ -239,13 +238,13 @@ int game_render(void)
     if(display_clear())
     {
         game.is_running = false;
-        return EXIT_FAILURE;
+        return_failure_int;
     }
 
     if(entity_manager_draw(&game.entity_manager))
     {
         game.is_running = false;
-        return EXIT_FAILURE;
+        return_failure_int;
     }
 
     display_update();
@@ -257,7 +256,7 @@ int game_exit(void)
 {
     entity_manager_exit(&game.entity_manager);
     event_bus_exit(&game.event_bus);
-    if(asset_manager_exit(&game.asset_manager)) return EXIT_FAILURE;
+    if(asset_manager_exit(&game.asset_manager)) return_failure_int;
     display_exit();
 
     return EXIT_SUCCESS;

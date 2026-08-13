@@ -52,8 +52,8 @@ inline int player_system_update(component_t *component)
 
     player_system_get_inputs(system_data);
     player_system_set_velocity(system_data);
-    if(player_system_set_animation_and_speed(system_data)) return EXIT_FAILURE;
-    if(player_system_process_interaction(system_data)) return EXIT_FAILURE;
+    if(player_system_set_animation_and_speed(system_data)) return_failure_int;
+    if(player_system_process_interaction(system_data)) return_failure_int;
 
     return EXIT_SUCCESS;
 }
@@ -123,33 +123,33 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
         {
             physics_system_data->speed = PLAYER_DEFAULT_RUN_SPEED;
 
-            if(sprite_component_set_texture(sprite_component_data, "player_run_sheet")) return EXIT_FAILURE;
+            if(sprite_component_set_texture(sprite_component_data, "player_run_sheet")) return_failure_int;
 
             animation_system_data->nb_frames = 8;
             animation_system_data->current_frame_nb = 0;
             animation_system_data->frame_delay_ms = PLAYER_DEFAULT_RUN_ANIMATION_SPEED;
-            if(animation_system_apply_changes(animation_system_data)) return EXIT_FAILURE;
+            if(animation_system_apply_changes(animation_system_data)) return_failure_int;
         }
         else
         {
             physics_system_data->speed = PLAYER_DEFAULT_WALK_SPEED;
 
-            if(sprite_component_set_texture(sprite_component_data, "player_walk_sheet")) return EXIT_FAILURE;
+            if(sprite_component_set_texture(sprite_component_data, "player_walk_sheet")) return_failure_int;
 
             animation_system_data->nb_frames = 4;
             animation_system_data->current_frame_nb = 0;
             animation_system_data->frame_delay_ms = PLAYER_DEFAULT_WALK_ANIMATION_SPEED;
-            if(animation_system_apply_changes(animation_system_data)) return EXIT_FAILURE;
+            if(animation_system_apply_changes(animation_system_data)) return_failure_int;
         }
     }
     else if(!(system_data->state & PLAYER_MOVING) && (system_data->last_state & PLAYER_MOVING))
     {
-        if(sprite_component_set_texture(sprite_component_data, "player_idle_sheet")) return EXIT_FAILURE;
+        if(sprite_component_set_texture(sprite_component_data, "player_idle_sheet")) return_failure_int;
 
         animation_system_data->nb_frames = 4;
         animation_system_data->current_frame_nb = 0;
         animation_system_data->frame_delay_ms = PLAYER_DEFAULT_IDLE_ANIMATION_SPEED;
-        if(animation_system_apply_changes(animation_system_data)) return EXIT_FAILURE;
+        if(animation_system_apply_changes(animation_system_data)) return_failure_int;
     }
 
     return EXIT_SUCCESS;
@@ -176,7 +176,7 @@ static inline int action_detect_activate_interact(elem_t *elem, va_list args)
 
     if(fhas_intersection(hitbox_bounds, target_interact_bounds))
     {
-        if(interact_component_interact(target_interact_component_data)) return EXIT_FAILURE;
+        if(interact_component_interact(target_interact_component_data)) return_failure_int;
     }
 
     return EXIT_SUCCESS;
@@ -188,7 +188,7 @@ static inline int player_system_process_interaction(player_system_data_t *system
 
     if(game.events.keys[KEY_INTERACT] && !last_state)
     {
-        if(linked_list_for_each(&game.entity_manager.entities, action_detect_activate_interact, system_data)) return EXIT_FAILURE;
+        if(linked_list_for_each(&game.entity_manager.entities, action_detect_activate_interact, system_data)) return_failure_int;
     }
 
     last_state = game.events.keys[KEY_INTERACT];

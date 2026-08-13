@@ -89,36 +89,9 @@ inline int animation_system_destroy(component_t *component)
 {
     animation_system_data_t *system_data = component->data;
 
-    if(linked_list_exit(&system_data->frames)) return EXIT_FAILURE;
+    if(linked_list_exit(&system_data->frames)) return_failure_int;
 
     free(system_data);
-
-    return EXIT_SUCCESS;
-}
-
-int animation_system_create_frames_clips(animation_system_data_t *system_data)
-{
-    sprite_component_data_t *sprite_component_data = system_data->sprite_component_data;
-
-    if(linked_list_clear(&system_data->frames)) return EXIT_FAILURE;
-
-    if(linked_list_reserve(&system_data->frames, system_data->nb_frames)) return EXIT_FAILURE;
-
-    for(size_t current_frame_nb = 0; current_frame_nb < system_data->nb_frames; current_frame_nb++)
-    {
-        elem_t *frame = create_elem(&system_data->frames);
-        if(!frame) return EXIT_FAILURE;
-
-        ((rect_t *)frame->data)->x = sprite_component_data->src_rect.w * current_frame_nb;
-        ((rect_t *)frame->data)->y = 0;
-        ((rect_t *)frame->data)->w = sprite_component_data->src_rect.w;
-        ((rect_t *)frame->data)->h = sprite_component_data->src_rect.h;
-
-        if(linked_list_push_back(&system_data->frames, frame)) return EXIT_FAILURE;
-    }
-
-    system_data->current_frame = linked_list_get(&system_data->frames, system_data->current_frame_nb);
-    if(!system_data->current_frame) return EXIT_FAILURE;
 
     return EXIT_SUCCESS;
 }
@@ -127,7 +100,23 @@ inline int animation_system_apply_changes(animation_system_data_t *system_data)
 {
     sprite_component_data_t *sprite_component_data = system_data->sprite_component_data;
 
-    if(animation_system_create_frames_clips(system_data)) return EXIT_FAILURE;
+    if(linked_list_clear(&system_data->frames)) return_failure_int;
+
+    for(size_t current_frame_nb = 0; current_frame_nb < system_data->nb_frames; current_frame_nb++)
+    {
+        elem_t *frame = create_elem(&system_data->frames);
+        if(!frame) return_failure_int;
+
+        ((rect_t *)frame->data)->x = sprite_component_data->src_rect.w * current_frame_nb;
+        ((rect_t *)frame->data)->y = 0;
+        ((rect_t *)frame->data)->w = sprite_component_data->src_rect.w;
+        ((rect_t *)frame->data)->h = sprite_component_data->src_rect.h;
+
+        linked_list_push_back(&system_data->frames, frame);
+    }
+
+    system_data->current_frame = linked_list_get(&system_data->frames, system_data->current_frame_nb);
+    if(!system_data->current_frame) return_failure_int;
 
     sprite_component_data->src_rect = *(rect_t *)system_data->current_frame->data;
 

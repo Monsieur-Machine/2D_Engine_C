@@ -14,7 +14,11 @@ static inline int door_component_callback(va_list event_args, void *subscription
     const entity_t *entity = subscription_data;
 
     component_t *door_component = entity_get_component(entity, DOOR_COMPONENT);
-    if(!door_component) return EXIT_FAILURE;
+    if(!door_component)
+    {
+        error_printf("Failed to get door component.");
+        return EXIT_FAILURE;
+    }
 
     door_component_data_t *component_data = door_component->data;
 

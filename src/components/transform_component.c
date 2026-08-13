@@ -30,7 +30,7 @@ inline int transform_component_draw(const component_t *component)
 {
     const transform_component_data_t *component_data = component->data;
 
-    if(display_draw_frect(&component_data->bounds, C_BLUE, 128)) return EXIT_FAILURE;
+    if(display_draw_frect(&component_data->bounds, C_BLUE, 128)) return_failure_int;
 
     return EXIT_SUCCESS;
 }

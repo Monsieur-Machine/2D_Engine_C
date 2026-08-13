@@ -29,16 +29,16 @@ inline int interact_component_init(component_t *component)
     component_data->topic_id = 0;
     component_data->type = INTERACT_TOGGLE;
 
+    if(event_bus_new_topic(&game.event_bus, component_data->topic_id)) return_failure_int;
     component_data->state = 0;
 
-    if(event_bus_new_topic(&game.event_bus, component_data->topic_id)) return EXIT_FAILURE;
 
     component_data->activated = true;
 
     return EXIT_SUCCESS;
 }
 
-inline int interact_component_update(component_t *component __attribute__((unused)))
+inline int interact_component_update(component_t *component)
 {
     interact_component_data_t *component_data = component->data;
     const transform_component_data_t *transform_component_data = component_data->transform_component_data;
@@ -58,7 +58,7 @@ inline int interact_component_draw(const component_t *component)
 {
     const interact_component_data_t *component_data = component->data;
 
-    if(display_draw_frect(&component_data->bounds, C_GREEN, 128)) return EXIT_FAILURE;
+    if(display_draw_frect(&component_data->bounds, C_GREEN, 128)) return_failure_int;
 
     return EXIT_SUCCESS;
 }
@@ -82,17 +82,18 @@ inline int interact_component_interact(interact_component_data_t *component_data
         break;
 
       default:
+        error_printf("Interaction type not valid : %d", component_data->type);
         return EXIT_FAILURE;
     }
 
-    if(event_bus_publish(&game.event_bus, component_data->topic_id, component_data->state)) return EXIT_FAILURE;
+    if(event_bus_publish(&game.event_bus, component_data->topic_id, component_data->state)) return_failure_int;
 
     return EXIT_SUCCESS;
 }
 
 inline int interact_component_modify_topic(interact_component_data_t *component_data, size_t id)
 {
-    if(event_bus_change_topic_id(&game.event_bus, component_data->topic_id, id)) return EXIT_FAILURE;
+    if(event_bus_change_topic_id(&game.event_bus, component_data->topic_id, id)) return_failure_int;
 
     component_data->topic_id = id;
 
