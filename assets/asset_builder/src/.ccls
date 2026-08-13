@@ -1,0 +1,6 @@
+gcc
+# Headers
+-Iassets/asset_builder/src/headers
+
+# Macros
+-DDEBUG=2

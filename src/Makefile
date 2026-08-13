@@ -15,8 +15,10 @@ SOURCES := \
 SRC_CC = gcc
 ifeq ($(RELEASE), 1)
 SRC_CFLAGS = --std=c17 --pedantic -O3 # RELEASE
+
+SRC_LDFLAGS = -O3
 else
-SRC_CFLAGS = --std=c17 --pedantic -O0 -g -DDEBUG=2 \
+SRC_CFLAGS = --std=c17 --pedantic -O1 -g -DDEBUG=2 \
 	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
     -Wformat=2 -Wswitch-default -Wswitch-enum -Wcast-align \
     -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \
@@ -24,12 +26,12 @@ SRC_CFLAGS = --std=c17 --pedantic -O0 -g -DDEBUG=2 \
     -Wcast-qual -Wshadow -Wunreachable-code -Wlogical-op \
     -Wfloat-equal -Wstrict-aliasing=2 -Wredundant-decls \
     -Wold-style-definition # DEVELOPEMENT
+
+SRC_LDFLAGS = -O1
 endif
 
 SRC_INCLUDE_DIRS = $(SOURCE_DIR)/components/headers $(CORE_DIR)/headers
 SRC_INCLUDE_DIRS := $(addprefix -I, $(SRC_INCLUDE_DIRS))
-
-SRC_LDFLAGS =
 
 # Deduce objects
 SOURCE_OBJECTS = $(SOURCES:%.c=$(BUILD_DIR)/$(SOURCE_DIR)/%.o)

@@ -1,10 +1,1 @@
 gcc
-# Headers
--Isrc/components/headers
--ISDL3_Core/src/headers
-#-INCurses_Core/src/headers
--Iassets/asset_builder/src/headers
-
-# Macros
--DASSET_FILE_NAME="$(make print-ASSET_OUTPUT)"
--DDEBUG=2

@@ -1,0 +1,7 @@
+gcc
+# Headers
+-Isrc/components/headers
+-ISDL3_Core/src/headers
+
+# Macros
+-DDEBUG=2
