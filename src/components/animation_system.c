@@ -16,17 +16,9 @@ int animation_system_init(component_t *component)
     }
     system_data->sprite_component_data = sprite_component->data;
 
-    system_data->nb_frames = 1;
-    system_data->current_frame_nb = 0;
     linked_list_init(&system_data->frames, sizeof(rect_t), NULL, NULL);
-    animation_system_create_frames_clips(system_data);
 
-    system_data->frame_delay_ms = 0.0f;
     system_data->frame_timer_ms = 0.0f;
-
-    system_data->play = false;
-    system_data->loop = false;
-    system_data->reverse = false;
 
     return EXIT_SUCCESS;
 }

@@ -47,10 +47,6 @@ inline int door_component_init(component_t *component)
     }
     component_data->hitbox_component_data = hitbox_component->data;
 
-    component_data->topic_id = 0;
-    event_bus_subscribe(&game.event_bus, component_data->topic_id, door_component_callback, component->entity);
-
-    component_data->state = false;
     component_data->last_state = false;
 
     return EXIT_SUCCESS;
@@ -80,6 +76,13 @@ inline int door_component_destroy(component_t *component)
     door_component_data_t *component_data = component->data;
 
     free(component_data);
+
+    return EXIT_SUCCESS;
+}
+
+inline int door_component_subscribe(door_component_data_t *component_data, entity_t *entity)
+{
+    if(event_bus_subscribe(&game.event_bus, component_data->topic_id, door_component_callback, entity)) return_failure_int;
 
     return EXIT_SUCCESS;
 }

@@ -37,8 +37,8 @@ inline int hitbox_component_update(component_t *component)
     hitbox_component_data_t *component_data = component->data;
     const transform_component_data_t *transform_component_data = component_data->transform_component_data;
 
-    component_data->bounds.x = transform_component_data->bounds.x + (transform_component_data->bounds.w - component_data->bounds.w) * component_data->position.x;
-    component_data->bounds.y = transform_component_data->bounds.y + (transform_component_data->bounds.h - component_data->bounds.h) * component_data->position.y;
+    component_data->bounds.x = transform_component_data->bounds.x + transform_component_data->bounds.w * component_data->position.x;
+    component_data->bounds.y = transform_component_data->bounds.y + transform_component_data->bounds.h * component_data->position.y;
     component_data->bounds.w = transform_component_data->bounds.w * component_data->scale.x;
     component_data->bounds.h = transform_component_data->bounds.h * component_data->scale.y;
 

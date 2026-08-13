@@ -28,8 +28,6 @@ int animation_system_update(component_t *component);
 
 int animation_system_destroy(component_t *component);
 
-int animation_system_create_frames_clips(animation_system_data_t *system_data);
-
 int animation_system_apply_changes(animation_system_data_t *system_data);
 
 #endif // SPRITE_COMPONENT_H

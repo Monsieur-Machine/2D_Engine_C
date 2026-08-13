@@ -36,6 +36,6 @@ int interact_component_destroy(component_t *component);
 
 int interact_component_interact(interact_component_data_t *component_data);
 
-int interact_component_modify_topic(interact_component_data_t *component_data, size_t id);
+int interact_component_modify_topic_id(interact_component_data_t *component_data, size_t id);
 
 #endif // TRANSFORM_COMPONENT_H

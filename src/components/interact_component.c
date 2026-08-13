@@ -27,11 +27,8 @@ inline int interact_component_init(component_t *component)
     };
 
     component_data->topic_id = 0;
-    component_data->type = INTERACT_TOGGLE;
 
     if(event_bus_new_topic(&game.event_bus, component_data->topic_id)) return_failure_int;
-    component_data->state = 0;
-
 
     component_data->activated = true;
 
@@ -43,8 +40,8 @@ inline int interact_component_update(component_t *component)
     interact_component_data_t *component_data = component->data;
     const transform_component_data_t *transform_component_data = component_data->transform_component_data;
 
-    component_data->bounds.x = transform_component_data->bounds.x + (transform_component_data->bounds.w - component_data->bounds.w) * component_data->position.x;
-    component_data->bounds.y = transform_component_data->bounds.y + (transform_component_data->bounds.h - component_data->bounds.h) * component_data->position.y;
+    component_data->bounds.x = transform_component_data->bounds.x + transform_component_data->bounds.w * component_data->position.x;
+    component_data->bounds.y = transform_component_data->bounds.y + transform_component_data->bounds.h * component_data->position.y;
     component_data->bounds.w = transform_component_data->bounds.w * component_data->scale.x;
     component_data->bounds.h = transform_component_data->bounds.h * component_data->scale.y;
 
@@ -91,7 +88,7 @@ inline int interact_component_interact(interact_component_data_t *component_data
     return EXIT_SUCCESS;
 }
 
-inline int interact_component_modify_topic(interact_component_data_t *component_data, size_t id)
+inline int interact_component_modify_topic_id(interact_component_data_t *component_data, size_t id)
 {
     if(event_bus_change_topic_id(&game.event_bus, component_data->topic_id, id)) return_failure_int;
 

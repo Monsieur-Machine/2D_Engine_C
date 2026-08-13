@@ -22,4 +22,6 @@ int lever_component_update(component_t *component);
 
 int lever_component_destroy(component_t *component);
 
+int lever_component_subscribe(lever_component_data_t *component_data, entity_t *entity);
+
 #endif // LEVER_COMPONENT_H
