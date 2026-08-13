@@ -171,8 +171,8 @@ function writeEntities(objectLayer, file)
 }
 
 var customMapFormat = {
-    name: "Custom JSON map format",
-    extension: "json",
+    name: "Custom MAP format",
+    extension: "map",
 
     write: function(map, fileName)
     {

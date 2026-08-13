@@ -4,13 +4,6 @@
 
 ###### Features
 
-- [ ] Create tilemap management and display
-  - [ ] Find tilemap building format
-  - [ ] Add building support for tilemaps in asset builder
-  - [ ] Add loading support in asset manager
-  - [ ] Display tilemaps
-    - [ ] Work on optimizations !
-
 - [ ] Create camera
 
 - [ ] Make functionnal hitboxes between entities and map
@@ -23,6 +16,13 @@
 ###### Bugs
 
 ### In progress
+
+- [ ] Create tilemap management and display
+  - [ ] Find tilemap building format
+  - [ ] Add building support for tilemaps in asset builder
+  - [ ] Add loading support in asset manager
+  - [ ] Display tilemaps
+    - [ ] Work on optimizations !
 
 ### Done
 
