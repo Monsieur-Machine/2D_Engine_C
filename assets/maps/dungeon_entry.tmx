@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="left-up" width="32" height="24" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="12">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="left-up" width="32" height="24" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="17">
  <editorsettings>
   <export target="dungeon_entry.json" format="custom"/>
  </editorsettings>
@@ -25,18 +25,10 @@
    eJy9lr1Lw0AYh69JzIeTirZCQXDTxUlBdFKsVRDERfwbXEXQRakfrXbVQXAX7KDS+lHQSdDJQSdRBy212gpOnRQEfyEJvbZJTHK1w0NCkrvnzXt3752PEOKrAbcCIXcCez/9HCE7Dd7ach7bVTLLle5vatSnG3Yp/0+FP8jXN5YeUbtuwhsHAZMx3qpjjiIyIStgFayBdRAFMVl7L+vxNor/40/CkwLH4AScgjOQlkvfDMA9qPszHLvzEn0FFELaQRaeV5ADb+Ad5EFBNs9NUs9PVHbmovtQ2xfxsAj/GNzjirfcGPHFxepxM+ujk9P6MMutHXa5Ud+fw38hlsdmtN3mq/sw2k97GMMliZBlSc+pVP6Ojs14dgX/tcXajrn0H8B3CI4kd+2sSLv0P8P7AjK6P+swji7Ulm4QofKQh7vg0t+EvDaDFjDlcO7MVNS1FK/NU7q2OGUI3w+7aLNhsW/m+Or5z2MNCn+sQ5U5lzGb4RfK149KL9x9YNEiBrp+OPV8WPx/2OY8kaD8X7j/1mOia9AI8hdysF8GLfavBRP/AxyP4Mnk/xMV9Xne4V49YeHfd3GeMotpj+GsYNRKlvlzz3hW+WT0y4zn0Q6G+tmKsWgDfqW0dzuaC5RzksEfgm8UhBX7vfsXuP91rA==
   </data>
  </layer>
- <layer id="12" name="HitBoxes" width="32" height="24" visible="0">
-  <properties>
-   <property name="2" type="list">
-    <item value="room_1"/>
-    <item type="list">
-     <item type="int" value="15"/>
-     <item type="int" value="22"/>
-    </item>
-   </property>
-  </properties>
+ <layer id="12" name="Hitboxes" width="32" height="24">
   <data encoding="base64" compression="zlib">
    eJwL52JgCB/Fo3gUj+IhhiOhmB52RWDBxMhRy25S5anpBnL9Rg03kGsGLfw/EHaTmg5oZTeutECrND+KR/Eopj0GAGrPIzU=
   </data>
  </layer>
+ <objectgroup id="13" name="Entities"/>
 </map>
