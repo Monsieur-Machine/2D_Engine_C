@@ -206,25 +206,27 @@ int parse_png_for_content_and_write(const char *input_file_name, FILE *output_fi
     }
 
     // Prepare storage.
-    png_byte pixels[height * row_length];
-    png_bytep row_ptrs[height];
+    png_byte src_pixels[height * row_length];
+    png_bytep src_row_ptrs[height];
     for(png_uint_32 i = 0; i < height; i++)
-        row_ptrs[i] = &pixels[i * row_length];
+        src_row_ptrs[i] = &src_pixels[i * row_length];
 
     // Read pixels.
-    png_read_image(png_ptr, row_ptrs);
+    png_read_image(png_ptr, src_row_ptrs);
+
+    uint16_t dst_pixels[width * height * sizeof(uint16_t)];
 
     for(size_t i = 0; i < height; i++)
     {
-        for(size_t j = 0; j < row_length; j += 4)
+        for(size_t j = 0; j < width; j += 1)
         {
             uint8_t r, g, b;
 
-            if(pixels[i * row_length + j + 3])
+            if(src_pixels[i * row_length + j * 4 + 3])
             {
-                r = pixels[i * row_length + j] >> 3;
-                g = pixels[i * row_length + j + 1] >> 2;
-                b = pixels[i * row_length + j + 2] >> 3;
+                r = src_pixels[i * row_length + j * 4]     >> 3;
+                g = src_pixels[i * row_length + j * 4 + 1] >> 2;
+                b = src_pixels[i * row_length + j * 4 + 2] >> 3;
             }
             else
             {
@@ -235,16 +237,18 @@ int parse_png_for_content_and_write(const char *input_file_name, FILE *output_fi
 
             uint16_t pixel = ((r) << 11) | ((g) << 5) | b;
 
-//            printf("\033[48;2;%d;%d;%dm ", r << 3, g << 2, b << 3);
+            dst_pixels[i * width + j] = pixel;
 
-            if(fwrite(&pixel, sizeof(uint16_t), 1, output_file) != 1)
-            {
-                png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-                fclose(input_file);
-                return WRITE_FAILED;
-            }
+//            printf("\033[48;2;%d;%d;%dm ", r << 3, g << 2, b << 3);
         }
 //        puts("\033[m");
+    }
+
+    if(fwrite(&dst_pixels, width * height * sizeof(uint16_t), 1, output_file) != 1)
+    {
+        png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+        fclose(input_file);
+        return WRITE_FAILED;
     }
 
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
