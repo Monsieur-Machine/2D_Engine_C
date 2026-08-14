@@ -8,25 +8,6 @@
 #include "memory_alloc.h"
 #include "errors.h"
 
-// Args = entity_t *entity, size_t state
-static inline int lever_component_callback(va_list args, void *subscription_data)
-{
-    const entity_t *entity = subscription_data;
-
-    component_t *lever_component = entity_get_component(entity, LEVER_COMPONENT);
-    if(!lever_component)
-    {
-        error_printf("Failed to get lever component.");
-        return EXIT_FAILURE;
-    }
-
-    lever_component_data_t *component_data = lever_component->data;
-
-    component_data->state = (bool)va_arg(args, size_t);
-
-    return EXIT_SUCCESS;
-}
-
 inline int lever_component_init(component_t *component)
 {
     lever_component_data_t *component_data = component->data;
@@ -65,6 +46,25 @@ inline int lever_component_destroy(component_t *component)
     lever_component_data_t *component_data = component->data;
 
     free(component_data);
+
+    return EXIT_SUCCESS;
+}
+
+// Event arg : size_t state, Subscription arg : entity_t *entity
+static inline int lever_component_callback(va_list args, void *subscription_data)
+{
+    const entity_t *entity = subscription_data;
+
+    component_t *lever_component = entity_get_component(entity, LEVER_COMPONENT);
+    if(!lever_component)
+    {
+        error_printf("Failed to get lever component.");
+        return EXIT_FAILURE;
+    }
+
+    lever_component_data_t *component_data = lever_component->data;
+
+    component_data->state = (bool)va_arg(args, size_t);
 
     return EXIT_SUCCESS;
 }

@@ -8,25 +8,6 @@
 #include "memory_alloc.h"
 #include "errors.h"
 
-// Event arg = size_t state, Subscription arg = entity_t *entity
-static inline int door_component_callback(va_list event_args, void *subscription_data)
-{
-    const entity_t *entity = subscription_data;
-
-    component_t *door_component = entity_get_component(entity, DOOR_COMPONENT);
-    if(!door_component)
-    {
-        error_printf("Failed to get door component.");
-        return EXIT_FAILURE;
-    }
-
-    door_component_data_t *component_data = door_component->data;
-
-    component_data->state = (bool)va_arg(event_args, size_t);
-
-    return EXIT_SUCCESS;
-}
-
 inline int door_component_init(component_t *component)
 {
     door_component_data_t *component_data = component->data;
@@ -76,6 +57,25 @@ inline int door_component_destroy(component_t *component)
     door_component_data_t *component_data = component->data;
 
     free(component_data);
+
+    return EXIT_SUCCESS;
+}
+
+// Event arg : size_t state, Subscription arg : entity_t *entity
+static inline int door_component_callback(va_list event_args, void *subscription_data)
+{
+    const entity_t *entity = subscription_data;
+
+    component_t *door_component = entity_get_component(entity, DOOR_COMPONENT);
+    if(!door_component)
+    {
+        error_printf("Failed to get door component.");
+        return EXIT_FAILURE;
+    }
+
+    door_component_data_t *component_data = door_component->data;
+
+    component_data->state = (bool)va_arg(event_args, size_t);
 
     return EXIT_SUCCESS;
 }

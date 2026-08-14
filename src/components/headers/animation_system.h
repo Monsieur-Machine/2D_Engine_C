@@ -23,9 +23,7 @@ typedef struct animation_system_data_t {
 } animation_system_data_t;
 
 int animation_system_init(component_t *component);
-
 int animation_system_update(component_t *component);
-
 int animation_system_destroy(component_t *component);
 
 int animation_system_apply_changes(animation_system_data_t *system_data);

@@ -19,9 +19,7 @@ typedef struct door_component_data_t {
 } door_component_data_t;
 
 int door_component_init(component_t *component);
-
 int door_component_update(component_t *component);
-
 int door_component_destroy(component_t *component);
 
 int door_component_subscribe(door_component_data_t *component_data, entity_t *entity);

@@ -44,6 +44,35 @@ inline int physics_system_init(component_t *component)
 }
 
 // Args : physics_system_data_t *system_data, size_t entity_id
+static int action_detect_solve_entities_collision(elem_t *elem, va_list args);
+
+int physics_system_update(component_t *component)
+{
+    physics_system_data_t *system_data = component->data;
+    transform_component_data_t *transform_component_data = system_data->transform_component_data;
+    hitbox_component_data_t *hitbox_component_data = system_data->hitbox_component_data;
+
+    system_data->velocity.x = lerp(system_data->velocity.x, system_data->target_velocity.x, system_data->smoothing_factor);
+    system_data->velocity.y = lerp(system_data->velocity.y, system_data->target_velocity.y, system_data->smoothing_factor);
+
+    if(hitbox_component_data->activated)
+        if(linked_list_for_each(&game.entity_manager.entities, action_detect_solve_entities_collision, system_data, component->entity->id)) return EXIT_FAILURE;
+
+    transform_component_data->bounds.x += system_data->velocity.x * system_data->speed * (float)game.delta_time_ms / 1000.0f;
+    transform_component_data->bounds.y += system_data->velocity.y * system_data->speed * (float)game.delta_time_ms / 1000.0f;
+
+    return EXIT_SUCCESS;
+}
+
+inline int physics_system_destroy(component_t *component)
+{
+    physics_system_data_t *system_data = component->data;
+
+    free(system_data);
+
+    return EXIT_SUCCESS;
+}
+
 static inline int action_detect_solve_entities_collision(elem_t *elem, va_list args)
 {
     const entity_t *target_entity = elem->data;
@@ -101,33 +130,6 @@ static inline int action_detect_solve_entities_collision(elem_t *elem, va_list a
             }
         }
     }
-
-    return EXIT_SUCCESS;
-}
-
-int physics_system_update(component_t *component)
-{
-    physics_system_data_t *system_data = component->data;
-    transform_component_data_t *transform_component_data = system_data->transform_component_data;
-    hitbox_component_data_t *hitbox_component_data = system_data->hitbox_component_data;
-
-    system_data->velocity.x = lerp(system_data->velocity.x, system_data->target_velocity.x, system_data->smoothing_factor);
-    system_data->velocity.y = lerp(system_data->velocity.y, system_data->target_velocity.y, system_data->smoothing_factor);
-
-    if(hitbox_component_data->activated)
-        if(linked_list_for_each(&game.entity_manager.entities, action_detect_solve_entities_collision, system_data, component->entity->id)) return EXIT_FAILURE;
-
-    transform_component_data->bounds.x += system_data->velocity.x * system_data->speed * (float)game.delta_time_ms / 1000.0f;
-    transform_component_data->bounds.y += system_data->velocity.y * system_data->speed * (float)game.delta_time_ms / 1000.0f;
-
-    return EXIT_SUCCESS;
-}
-
-inline int physics_system_destroy(component_t *component)
-{
-    physics_system_data_t *system_data = component->data;
-
-    free(system_data);
 
     return EXIT_SUCCESS;
 }

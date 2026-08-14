@@ -25,17 +25,13 @@ typedef struct interact_component_data_t {
 } interact_component_data_t;
 
 int interact_component_init(component_t *component);
-
 int interact_component_update(component_t *component);
-
 #if DEBUG >= 2
 int interact_component_draw(const component_t *component);
 #endif // DEBUG >= 2
-
 int interact_component_destroy(component_t *component);
 
 int interact_component_interact(interact_component_data_t *component_data);
-
 int interact_component_modify_topic_id(interact_component_data_t *component_data, size_t id);
 
 #endif // TRANSFORM_COMPONENT_H

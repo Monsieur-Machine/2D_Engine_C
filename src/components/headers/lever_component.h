@@ -17,9 +17,7 @@ typedef struct lever_component_data_t {
 } lever_component_data_t;
 
 int lever_component_init(component_t *component);
-
 int lever_component_update(component_t *component);
-
 int lever_component_destroy(component_t *component);
 
 int lever_component_subscribe(lever_component_data_t *component_data, entity_t *entity);

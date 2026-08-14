@@ -17,9 +17,7 @@ typedef struct physics_system_data_t {
 } physics_system_data_t;
 
 int physics_system_init(component_t *component);
-
 int physics_system_update(component_t *component);
-
 int physics_system_destroy(component_t *component);
 
 #endif // PHYSICS_SYSTEM_H

@@ -33,9 +33,7 @@ typedef struct player_system_data_t {
 } player_system_data_t;
 
 int player_system_init(component_t *component);
-
 int player_system_update(component_t *component);
-
 int player_system_destroy(component_t *component);
 
 #endif // PLAYER_SYSTEM_H

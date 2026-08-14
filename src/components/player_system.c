@@ -58,6 +58,15 @@ inline int player_system_update(component_t *component)
     return EXIT_SUCCESS;
 }
 
+inline int player_system_destroy(component_t *component)
+{
+    player_system_data_t *component_data = component->data;
+
+    free(component_data);
+
+    return EXIT_SUCCESS;
+}
+
 static inline void player_system_get_inputs(player_system_data_t *system_data)
 {
     system_data->last_state = system_data->state;
@@ -201,15 +210,6 @@ static inline int player_system_process_interaction(player_system_data_t *system
     }
 
     last_state = game.inputs.keys[KEY_INTERACT];
-
-    return EXIT_SUCCESS;
-}
-
-inline int player_system_destroy(component_t *component)
-{
-    player_system_data_t *component_data = component->data;
-
-    free(component_data);
 
     return EXIT_SUCCESS;
 }
