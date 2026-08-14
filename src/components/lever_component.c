@@ -71,7 +71,7 @@ inline int lever_component_destroy(component_t *component)
 
 inline int lever_component_subscribe(lever_component_data_t *component_data, entity_t *entity)
 {
-    if(event_bus_subscribe(&game.event_bus, component_data->topic_id, lever_component_callback, entity)) return_failure_int;
+    if(event_bus_subscribe(component_data->topic_id, lever_component_callback, entity)) return_failure_int;
 
     return EXIT_SUCCESS;
 }

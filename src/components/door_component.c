@@ -82,7 +82,7 @@ inline int door_component_destroy(component_t *component)
 
 inline int door_component_subscribe(door_component_data_t *component_data, entity_t *entity)
 {
-    if(event_bus_subscribe(&game.event_bus, component_data->topic_id, door_component_callback, entity)) return_failure_int;
+    if(event_bus_subscribe(component_data->topic_id, door_component_callback, entity)) return_failure_int;
 
     return EXIT_SUCCESS;
 }

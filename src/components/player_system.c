@@ -123,7 +123,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
         {
             physics_system_data->speed = PLAYER_DEFAULT_RUN_SPEED;
 
-            asset_t *asset = asset_manager_get_asset(&game.asset_manager, "player_run_sheet");
+            asset_t *asset = asset_manager_get_asset("player_run_sheet");
             if(!asset) return_failure_int;
 
             sprite_component_data->texture = asset->data;
@@ -137,7 +137,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
         {
             physics_system_data->speed = PLAYER_DEFAULT_WALK_SPEED;
 
-            asset_t *asset = asset_manager_get_asset(&game.asset_manager, "player_walk_sheet");
+            asset_t *asset = asset_manager_get_asset("player_walk_sheet");
             if(!asset) return_failure_int;
 
             sprite_component_data->texture = asset->data;
@@ -150,7 +150,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
     }
     else if(!(system_data->state & PLAYER_MOVING) && (system_data->last_state & PLAYER_MOVING))
     {
-        asset_t *asset = asset_manager_get_asset(&game.asset_manager, "player_idle_sheet");
+        asset_t *asset = asset_manager_get_asset("player_idle_sheet");
         if(!asset) return_failure_int;
 
         sprite_component_data->texture = asset->data;

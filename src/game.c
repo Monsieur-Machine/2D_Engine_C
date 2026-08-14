@@ -14,15 +14,15 @@ int game_init(void)
     game.is_running = false;
 
     if(display_init()) return_failure_int;
-    if(asset_manager_init(&game.asset_manager)) return_failure_int;
-    event_bus_init(&game.event_bus);
-    entity_manager_init(&game.entity_manager);
+    if(asset_manager_init()) return_failure_int;
+    event_bus_init();
+    entity_manager_init();
 
-    if(!asset_manager_load_asset(&game.asset_manager, "tileset", ASSET_TEXTURE)) return_failure_int;
+    if(!asset_manager_load_asset("tileset", ASSET_TEXTURE)) return_failure_int;
 
     /* ======== Player ======== */
     {
-        entity_t *player_entity = entity_manager_new_entity(&game.entity_manager, 0);
+        entity_t *player_entity = entity_manager_new_entity(0);
         if(!player_entity) return_failure_int;
 
         {
@@ -45,14 +45,13 @@ int game_init(void)
 
             sprite_component_data_t *sprite_component_data = sprite_component->data;
 
-            if(!asset_manager_load_asset(&game.asset_manager, "player_idle_sheet", ASSET_TEXTURE)) return_failure_int;
-            if(!asset_manager_load_asset(&game.asset_manager, "player_walk_sheet", ASSET_TEXTURE)) return_failure_int;
-            if(!asset_manager_load_asset(&game.asset_manager, "player_run_sheet",  ASSET_TEXTURE)) return_failure_int;
-
-            asset_t *asset = asset_manager_get_asset(&game.asset_manager, "player_idle_sheet");
+            asset_t *asset = asset_manager_load_asset("player_idle_sheet", ASSET_TEXTURE);
             if(!asset) return_failure_int;
 
             sprite_component_data->texture = asset->data;
+
+            if(!asset_manager_load_asset("player_walk_sheet", ASSET_TEXTURE)) return_failure_int;
+            if(!asset_manager_load_asset("player_run_sheet",  ASSET_TEXTURE)) return_failure_int;
         }
 
         {
@@ -95,7 +94,7 @@ int game_init(void)
     }
     /* ======== Lever ========*/
     {
-        entity_t *lever_entity = entity_manager_new_entity(&game.entity_manager, 1);
+        entity_t *lever_entity = entity_manager_new_entity(1);
         if(!lever_entity) return_failure_int;
 
         {
@@ -118,7 +117,7 @@ int game_init(void)
 
             sprite_component_data_t *sprite_component_data = sprite_component->data;
 
-            asset_t *asset = asset_manager_load_asset(&game.asset_manager, "lever_sheet", ASSET_TEXTURE);
+            asset_t *asset = asset_manager_load_asset("lever_sheet", ASSET_TEXTURE);
             if(!asset) return_failure_int;
 
             sprite_component_data->texture = asset->data;
@@ -196,7 +195,7 @@ int game_init(void)
 
     /* ======== Door ======== */
     {
-        entity_t *door_entity = entity_manager_new_entity(&game.entity_manager, 1);
+        entity_t *door_entity = entity_manager_new_entity(1);
         if(!door_entity) return_failure_int;
 
         {
@@ -219,7 +218,7 @@ int game_init(void)
 
             sprite_component_data_t * sprite_component_data = sprite_component->data;
 
-            asset_t *asset = asset_manager_load_asset(&game.asset_manager, "barred_door_sheet", ASSET_TEXTURE);
+            asset_t *asset = asset_manager_load_asset("barred_door_sheet", ASSET_TEXTURE);
             if(!asset) return_failure_int;
 
             sprite_component_data->texture = asset->data;
@@ -274,7 +273,7 @@ int game_init(void)
 
     /* ======== Door 2 ======== */
     {
-        entity_t *door2_entity = entity_manager_new_entity(&game.entity_manager, 1);
+        entity_t *door2_entity = entity_manager_new_entity(1);
         if(!door2_entity) return_failure_int;
 
         {
@@ -297,7 +296,7 @@ int game_init(void)
 
             sprite_component_data_t *sprite_component_data = sprite_component->data;
 
-            asset_t *asset = asset_manager_load_asset(&game.asset_manager, "wooden_door_sheet", ASSET_TEXTURE);
+            asset_t *asset = asset_manager_load_asset("wooden_door_sheet", ASSET_TEXTURE);
             if(!asset) return_failure_int;
 
             sprite_component_data->texture = asset->data;
@@ -373,7 +372,7 @@ void game_handle_event(void)
 
 int game_update(void)
 {
-    if(entity_manager_update(&game.entity_manager))
+    if(entity_manager_update())
     {
         game.is_running = false;
         return_failure_int;
@@ -390,7 +389,7 @@ int game_render(void)
         return_failure_int;
     }
 
-    if(entity_manager_draw(&game.entity_manager))
+    if(entity_manager_draw())
     {
         game.is_running = false;
         return_failure_int;
@@ -403,9 +402,9 @@ int game_render(void)
 
 int game_exit(void)
 {
-    entity_manager_exit(&game.entity_manager);
-    event_bus_exit(&game.event_bus);
-    if(asset_manager_exit(&game.asset_manager)) return_failure_int;
+    entity_manager_exit();
+    event_bus_exit();
+    if(asset_manager_exit()) return_failure_int;
     display_exit();
 
     return EXIT_SUCCESS;
