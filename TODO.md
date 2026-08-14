@@ -4,6 +4,8 @@
 
 ###### Features
 
+- [ ] Change linked list for each implementation to a macro (iykyk)
+
 - [ ] Create camera
 
 - [ ] Make functionnal hitboxes between entities and map
