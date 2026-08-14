@@ -18,13 +18,7 @@ int game_init(void)
     event_bus_init(&game.event_bus);
     entity_manager_init(&game.entity_manager);
 
-    if(!asset_manager_load_asset(&game.asset_manager, "player_idle_sheet", ASSET_TEXTURE)) return_failure_int;
-    if(!asset_manager_load_asset(&game.asset_manager, "player_walk_sheet", ASSET_TEXTURE)) return_failure_int;
-    if(!asset_manager_load_asset(&game.asset_manager, "player_run_sheet",  ASSET_TEXTURE)) return_failure_int;
-    if(!asset_manager_load_asset(&game.asset_manager, "lever_sheet",       ASSET_TEXTURE)) return_failure_int;
-    if(!asset_manager_load_asset(&game.asset_manager, "barred_door_sheet", ASSET_TEXTURE)) return_failure_int;
-    if(!asset_manager_load_asset(&game.asset_manager, "wooden_door_sheet", ASSET_TEXTURE)) return_failure_int;
-    if(!asset_manager_load_asset(&game.asset_manager, "tileset",           ASSET_TEXTURE)) return_failure_int;
+    if(!asset_manager_load_asset(&game.asset_manager, "tileset", ASSET_TEXTURE)) return_failure_int;
 
     /* ======== Player ======== */
     {
@@ -51,7 +45,14 @@ int game_init(void)
 
             sprite_component_data_t *sprite_component_data = sprite_component->data;
 
-            sprite_component_set_texture(sprite_component_data, "player_idle_sheet");
+            if(!asset_manager_load_asset(&game.asset_manager, "player_idle_sheet", ASSET_TEXTURE)) return_failure_int;
+            if(!asset_manager_load_asset(&game.asset_manager, "player_walk_sheet", ASSET_TEXTURE)) return_failure_int;
+            if(!asset_manager_load_asset(&game.asset_manager, "player_run_sheet",  ASSET_TEXTURE)) return_failure_int;
+
+            asset_t *asset = asset_manager_get_asset(&game.asset_manager, "player_idle_sheet");
+            if(!asset) return_failure_int;
+
+            sprite_component_data->texture = asset->data;
         }
 
         {
@@ -117,7 +118,10 @@ int game_init(void)
 
             sprite_component_data_t *sprite_component_data = sprite_component->data;
 
-            if(sprite_component_set_texture(sprite_component_data, "lever_sheet")) return_failure_int;
+            asset_t *asset = asset_manager_load_asset(&game.asset_manager, "lever_sheet", ASSET_TEXTURE);
+            if(!asset) return_failure_int;
+
+            sprite_component_data->texture = asset->data;
         }
 
         {
@@ -215,7 +219,10 @@ int game_init(void)
 
             sprite_component_data_t * sprite_component_data = sprite_component->data;
 
-            if(sprite_component_set_texture(sprite_component_data, "barred_door_sheet")) return_failure_int;
+            asset_t *asset = asset_manager_load_asset(&game.asset_manager, "barred_door_sheet", ASSET_TEXTURE);
+            if(!asset) return_failure_int;
+
+            sprite_component_data->texture = asset->data;
         }
 
         {
@@ -290,7 +297,10 @@ int game_init(void)
 
             sprite_component_data_t *sprite_component_data = sprite_component->data;
 
-            if(sprite_component_set_texture(sprite_component_data, "wooden_door_sheet")) return_failure_int;
+            asset_t *asset = asset_manager_load_asset(&game.asset_manager, "wooden_door_sheet", ASSET_TEXTURE);
+            if(!asset) return_failure_int;
+
+            sprite_component_data->texture = asset->data;
         }
 
         {

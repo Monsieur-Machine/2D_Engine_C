@@ -23,6 +23,4 @@ int sprite_component_draw(const component_t *component);
 
 int sprite_component_destroy(component_t *component);
 
-int sprite_component_set_texture(sprite_component_data_t *component_data, const char *texture_name);
-
 #endif // SPRITE_COMPONENT_H

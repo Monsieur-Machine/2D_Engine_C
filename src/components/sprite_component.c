@@ -55,13 +55,3 @@ inline int sprite_component_destroy(component_t *component)
 
     return EXIT_SUCCESS;
 }
-
-inline int sprite_component_set_texture(sprite_component_data_t *component_data, const char *texture_name)
-{
-    asset_t *texture_asset = asset_manager_get(&game.asset_manager, texture_name);
-    if(!texture_asset) return_failure_int;
-
-    component_data->texture = texture_asset->data;
-
-    return EXIT_SUCCESS;
-}
