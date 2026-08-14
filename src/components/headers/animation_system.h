@@ -3,10 +3,9 @@
 
 #include <stdbool.h>
 #include "ecs.h"
-#include "sprite_component.h"
 
 typedef struct animation_system_data_t {
-    sprite_component_data_t *sprite_component_data;
+    component_t *sprite_component;
 
     size_t nb_frames;
     linked_list_t frames;
@@ -22,10 +21,10 @@ typedef struct animation_system_data_t {
     bool reverse    :1;
 } animation_system_data_t;
 
-int animation_system_init(component_t *component);
-int animation_system_update(component_t *component);
-int animation_system_destroy(component_t *component);
+int animation_system_init(component_t *system);
+int animation_system_update(component_t *system);
+int animation_system_destroy(component_t *system);
 
-int animation_system_apply_changes(animation_system_data_t *system_data);
+int animation_system_apply_changes(component_t *system);
 
 #endif // SPRITE_COMPONENT_H

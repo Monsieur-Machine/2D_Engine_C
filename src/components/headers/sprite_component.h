@@ -2,12 +2,12 @@
 #define SPRITE_COMPONENT_H
 
 #include "ecs.h"
-#include "transform_component.h"
 #include "asset_manager.h"
 #include "texture.h"
+#include "vector2d.h"
 
 typedef struct sprite_component_data_t {
-    transform_component_data_t *transform_component_data;
+    component_t *transform_component;
 
     texture_t *texture;
     rect_t src_rect;

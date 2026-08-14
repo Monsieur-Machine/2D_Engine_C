@@ -1,22 +1,24 @@
 #include "sprite_component.h"
 
 #include "game.h"
+#include "ecs.h"
+#include "transform_component.h"
 #include "display.h"
 #include "memory_alloc.h"
+#include "errors.h"
 
 inline int sprite_component_init(component_t *component)
 {
     sprite_component_data_t *component_data = component->data;
 
-    component_t * transform_component = entity_get_component(component->entity, TRANSFORM_COMPONENT);
-    if(!transform_component)
+    component_data->transform_component = entity_get_component(component->entity, TRANSFORM_COMPONENT);
+    if(!component_data->transform_component)
     {
         error_printf("Sprite component require a transform component.");
         return EXIT_FAILURE;
     }
-    component_data->transform_component_data = transform_component->data;
 
-    transform_component_data_t *transform_component_data = component_data->transform_component_data;
+    transform_component_data_t *transform_component_data = component_data->transform_component->data;
 
     frect_to_rect(&transform_component_data->bounds, &component_data->src_rect);
     component_data->src_rect.x = 0;
@@ -30,7 +32,7 @@ inline int sprite_component_init(component_t *component)
 inline int sprite_component_update(component_t *component)
 {
     sprite_component_data_t *component_data = component->data;
-    transform_component_data_t *transform_component_data = component_data->transform_component_data;
+    transform_component_data_t *transform_component_data = component_data->transform_component->data;
 
     component_data->dst_rect = transform_component_data->bounds;
     component->entity->draw_priority = transform_component_data->bounds.y + transform_component_data->bounds.h;

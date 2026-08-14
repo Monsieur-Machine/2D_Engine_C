@@ -64,7 +64,7 @@ int game_init(void)
 
             animation_system_data->current_frame_nb = 0;
             animation_system_data->nb_frames = 4;
-            if(animation_system_apply_changes(animation_system_data)) return_failure_int;
+            if(animation_system_apply_changes(animation_system)) return_failure_int;
 
             animation_system_data->play = true;
             animation_system_data->loop = true;
@@ -137,7 +137,7 @@ int game_init(void)
             animation_system_data->loop = false;
             animation_system_data->reverse = false;
 
-            if(animation_system_apply_changes(animation_system_data)) return_failure_int;
+            if(animation_system_apply_changes(animation_system)) return_failure_int;
         }
 
         {
@@ -176,7 +176,7 @@ int game_init(void)
             interact_component_data->type = INTERACT_TOGGLE;
             interact_component_data->state = 0;
 
-            interact_component_modify_topic_id(interact_component_data, 0);
+            interact_component_modify_topic_id(interact_component, 0);
 
         }
 
@@ -189,7 +189,7 @@ int game_init(void)
             lever_component_data->topic_id = 0;
             lever_component_data->state = false;
 
-            lever_component_subscribe(lever_component_data, lever_entity);
+            lever_component_subscribe(lever_component);
         }
     }
 
@@ -238,7 +238,7 @@ int game_init(void)
             animation_system_data->loop = false;
             animation_system_data->reverse = false;
 
-            if(animation_system_apply_changes(animation_system->data)) return_failure_int;
+            if(animation_system_apply_changes(animation_system)) return_failure_int;
         }
 
         {
@@ -267,7 +267,7 @@ int game_init(void)
             door_component_data->topic_id = 0;
             door_component_data->state = false;
 
-            door_component_subscribe(door_component_data, door_entity);
+            door_component_subscribe(door_component);
         }
     }
 
@@ -316,7 +316,7 @@ int game_init(void)
             animation_system_data->loop = false;
             animation_system_data->reverse = false;
 
-            if(animation_system_apply_changes(animation_system->data)) return_failure_int;
+            if(animation_system_apply_changes(animation_system)) return_failure_int;
         }
 
         {
@@ -345,7 +345,7 @@ int game_init(void)
             door_component_data->topic_id = 0;
             door_component_data->state = false;
 
-            door_component_subscribe(door_component_data, door2_entity);
+            door_component_subscribe(door_component);
         }
     }
 

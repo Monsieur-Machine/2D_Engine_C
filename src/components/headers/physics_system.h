@@ -2,13 +2,11 @@
 #define PHYSICS_SYSTEM_H
 
 #include "ecs.h"
-#include "transform_component.h"
-#include "hitbox_component.h"
 #include "vector2d.h"
 
 typedef struct physics_system_data_t {
-    transform_component_data_t *transform_component_data;
-    hitbox_component_data_t *hitbox_component_data;
+    component_t *transform_component;
+    component_t *hitbox_component;
 
     fvector2d_t target_velocity;
     fvector2d_t velocity;

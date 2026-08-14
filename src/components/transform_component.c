@@ -1,6 +1,7 @@
 #include "transform_component.h"
 
 #include "game.h"
+#include "ecs.h"
 #include "memory_alloc.h"
 #include "errors.h"
 

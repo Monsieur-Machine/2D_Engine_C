@@ -1,6 +1,8 @@
 #include "interact_component.h"
 
 #include "game.h"
+#include "ecs.h"
+#include "transform_component.h"
 #include "event_bus.h"
 #include "memory_alloc.h"
 #include "errors.h"
@@ -9,13 +11,12 @@ inline int interact_component_init(component_t *component)
 {
     interact_component_data_t *component_data = component->data;
 
-    component_t *transform_component = entity_get_component(component->entity, TRANSFORM_COMPONENT);
-    if(!transform_component)
+    component_data->transform_component = entity_get_component(component->entity, TRANSFORM_COMPONENT);
+    if(!component_data->transform_component)
     {
         error_printf("Hitbox component require a transform component.");
         return EXIT_FAILURE;
     }
-    component_data->transform_component_data = transform_component->data;
 
     component_data->position = (fvector2d_t) {
         .x = 0.0f,
@@ -38,7 +39,7 @@ inline int interact_component_init(component_t *component)
 inline int interact_component_update(component_t *component)
 {
     interact_component_data_t *component_data = component->data;
-    const transform_component_data_t *transform_component_data = component_data->transform_component_data;
+    const transform_component_data_t *transform_component_data = component_data->transform_component->data;
 
     component_data->bounds.x = transform_component_data->bounds.x + transform_component_data->bounds.w * component_data->position.x;
     component_data->bounds.y = transform_component_data->bounds.y + transform_component_data->bounds.h * component_data->position.y;
@@ -70,8 +71,10 @@ inline int interact_component_destroy(component_t *component)
     return EXIT_SUCCESS;
 }
 
-inline int interact_component_interact(interact_component_data_t *component_data)
+inline int interact_component_interact(component_t *component)
 {
+    interact_component_data_t *component_data = component->data;
+
     switch(component_data->type)
     {
       case INTERACT_TOGGLE:
@@ -88,8 +91,10 @@ inline int interact_component_interact(interact_component_data_t *component_data
     return EXIT_SUCCESS;
 }
 
-inline int interact_component_modify_topic_id(interact_component_data_t *component_data, size_t id)
+inline int interact_component_modify_topic_id(component_t *component, size_t id)
 {
+    interact_component_data_t *component_data = component->data;
+
     if(event_bus_change_topic_id(component_data->topic_id, id)) return_failure_int;
 
     component_data->topic_id = id;

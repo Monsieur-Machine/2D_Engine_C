@@ -1,10 +1,12 @@
 #include "player_system.h"
 
 #include "game.h"
+#include "ecs.h"
 #include "sprite_component.h"
 #include "animation_system.h"
 #include "interact_component.h"
 #include "physics_system.h"
+#include "hitbox_component.h"
 #include "memory_alloc.h"
 #include "errors.h"
 
@@ -12,29 +14,26 @@ inline int player_system_init(component_t *component)
 {
     player_system_data_t *system_data = component->data;
 
-    component_t *sprite_component = entity_get_component(component->entity, SPRITE_COMPONENT);
-    if(!sprite_component)
+    system_data->sprite_component = entity_get_component(component->entity, SPRITE_COMPONENT);
+    if(!system_data->sprite_component)
     {
         error_printf("Player system require a sprite component.");
         return EXIT_FAILURE;
     }
-    system_data->sprite_component_data = sprite_component->data;
 
-    component_t *animation_system = entity_get_component(component->entity, ANIMATION_SYSTEM);
-    if(!animation_system)
+    system_data->animation_system = entity_get_component(component->entity, ANIMATION_SYSTEM);
+    if(!system_data->animation_system)
     {
         error_printf("Player system require an animation system.");
         return EXIT_FAILURE;
     }
-    system_data->animation_system_data = animation_system->data;
 
-    component_t *physics_system = entity_get_component(component->entity, PHYSICS_SYSTEM);
-    if(!physics_system)
+    system_data->physics_system = entity_get_component(component->entity, PHYSICS_SYSTEM);
+    if(!system_data->physics_system)
     {
         error_printf("Player system require a physics system.");
         return EXIT_FAILURE;
     }
-    system_data->physics_system_data = physics_system->data;
 
     system_data->state = PLAYER_MOVING;
 
@@ -99,7 +98,7 @@ static inline void player_system_get_inputs(player_system_data_t *system_data)
 
 static inline void player_system_set_velocity(player_system_data_t *system_data)
 {
-    physics_system_data_t *physics_system_data = system_data->physics_system_data;
+    physics_system_data_t *physics_system_data = system_data->physics_system->data;
 
     if((system_data->state & PLAYER_MOVING) != (system_data->last_state & PLAYER_MOVING))
     {
@@ -118,9 +117,9 @@ static inline void player_system_set_velocity(player_system_data_t *system_data)
 
 static inline int player_system_set_animation_and_speed(player_system_data_t *system_data)
 {
-    animation_system_data_t *animation_system_data = system_data->animation_system_data;
-    sprite_component_data_t *sprite_component_data = system_data->sprite_component_data;
-    physics_system_data_t *physics_system_data = system_data->physics_system_data;
+    animation_system_data_t *animation_system_data = system_data->animation_system->data;
+    sprite_component_data_t *sprite_component_data = system_data->sprite_component->data;
+    physics_system_data_t *physics_system_data = system_data->physics_system->data;
 
     if(system_data->state & PLAYER_MOVING_LEFT) sprite_component_data->flip = true;
     if(system_data->state & PLAYER_MOVING_RIGHT) sprite_component_data->flip = false;
@@ -140,7 +139,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
             animation_system_data->nb_frames = 8;
             animation_system_data->current_frame_nb = 0;
             animation_system_data->frame_delay_ms = PLAYER_DEFAULT_RUN_ANIMATION_SPEED;
-            if(animation_system_apply_changes(animation_system_data)) return_failure_int;
+            if(animation_system_apply_changes(system_data->animation_system)) return_failure_int;
         }
         else
         {
@@ -154,7 +153,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
             animation_system_data->nb_frames = 4;
             animation_system_data->current_frame_nb = 0;
             animation_system_data->frame_delay_ms = PLAYER_DEFAULT_WALK_ANIMATION_SPEED;
-            if(animation_system_apply_changes(animation_system_data)) return_failure_int;
+            if(animation_system_apply_changes(system_data->animation_system)) return_failure_int;
         }
     }
     else if(!(system_data->state & PLAYER_MOVING) && (system_data->last_state & PLAYER_MOVING))
@@ -167,7 +166,7 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
         animation_system_data->nb_frames = 4;
         animation_system_data->current_frame_nb = 0;
         animation_system_data->frame_delay_ms = PLAYER_DEFAULT_IDLE_ANIMATION_SPEED;
-        if(animation_system_apply_changes(animation_system_data)) return_failure_int;
+        if(animation_system_apply_changes(system_data->animation_system)) return_failure_int;
     }
 
     return EXIT_SUCCESS;
@@ -176,10 +175,12 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
 // Args : player_system_data_t *system_data
 static inline int action_detect_activate_interact(elem_t *elem, void *arg)
 {
-    const entity_t *target_entity = elem->data;
-    const player_system_data_t *system_data = arg;
+    entity_t *target_entity = elem->data;
 
-    const component_t *target_interact_component = entity_get_component(target_entity, INTERACT_COMPONENT);
+    const player_system_data_t *system_data = arg;
+    physics_system_data_t *physics_system_data = system_data->physics_system->data;
+
+    component_t *target_interact_component = entity_get_component(target_entity, INTERACT_COMPONENT);
     if(!target_interact_component) return EXIT_SUCCESS;
 
     interact_component_data_t *target_interact_component_data = target_interact_component->data;
@@ -189,12 +190,12 @@ static inline int action_detect_activate_interact(elem_t *elem, void *arg)
         return EXIT_SUCCESS;
     }
 
-    const frect_t *hitbox_bounds = &system_data->physics_system_data->hitbox_component_data->bounds;
+    const frect_t *hitbox_bounds = &((hitbox_component_data_t *)physics_system_data->hitbox_component->data)->bounds;
     const frect_t *target_interact_bounds = &target_interact_component_data->bounds;
 
     if(fhas_intersection(hitbox_bounds, target_interact_bounds))
     {
-        if(interact_component_interact(target_interact_component_data)) return_failure_int;
+        if(interact_component_interact(target_interact_component)) return_failure_int;
     }
 
     return EXIT_SUCCESS;

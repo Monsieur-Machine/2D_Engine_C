@@ -1,20 +1,22 @@
 #include "animation_system.h"
 
 #include "game.h"
+#include "ecs.h"
+#include "sprite_component.h"
+#include "vector2d.h"
 #include "memory_alloc.h"
 #include "errors.h"
 
-int animation_system_init(component_t *component)
+int animation_system_init(component_t *system)
 {
-    animation_system_data_t *system_data = component->data;
+    animation_system_data_t *system_data = system->data;
 
-    component_t *sprite_component = entity_get_component(component->entity, SPRITE_COMPONENT);
-    if(!sprite_component)
+    system_data->sprite_component = entity_get_component(system->entity, SPRITE_COMPONENT);
+    if(!system_data->sprite_component)
     {
         error_printf("Animation system require a sprite component.");
         return EXIT_FAILURE;
     }
-    system_data->sprite_component_data = sprite_component->data;
 
     linked_list_init(&system_data->frames, sizeof(rect_t), NULL, NULL);
 
@@ -23,9 +25,10 @@ int animation_system_init(component_t *component)
     return EXIT_SUCCESS;
 }
 
-int animation_system_update(component_t *component)
+int animation_system_update(component_t *system)
 {
-    animation_system_data_t *system_data = component->data;
+    animation_system_data_t *system_data = system->data;
+    sprite_component_data_t *sprite_component_data = system_data->sprite_component->data;
 
     if(system_data->play)
     {
@@ -71,15 +74,15 @@ int animation_system_update(component_t *component)
             }
         }
 
-        system_data->sprite_component_data->src_rect = *(rect_t *)system_data->current_frame->data;
+        sprite_component_data->src_rect = *(rect_t *)system_data->current_frame->data;
     }
 
     return EXIT_SUCCESS;
 }
 
-inline int animation_system_destroy(component_t *component)
+inline int animation_system_destroy(component_t *system)
 {
-    animation_system_data_t *system_data = component->data;
+    animation_system_data_t *system_data = system->data;
 
     if(linked_list_exit(&system_data->frames)) return_failure_int;
 
@@ -88,9 +91,10 @@ inline int animation_system_destroy(component_t *component)
     return EXIT_SUCCESS;
 }
 
-inline int animation_system_apply_changes(animation_system_data_t *system_data)
+inline int animation_system_apply_changes(component_t *system)
 {
-    sprite_component_data_t *sprite_component_data = system_data->sprite_component_data;
+    animation_system_data_t *system_data = system->data;
+    sprite_component_data_t *sprite_component_data = system_data->sprite_component->data;
 
     if(linked_list_clear(&system_data->frames)) return_failure_int;
 

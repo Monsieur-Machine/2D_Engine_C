@@ -2,7 +2,6 @@
 #define INTERACT_COMPONENT_H
 
 #include "ecs.h"
-#include "transform_component.h"
 #include "vector2d.h"
 #include "errors.h"
 
@@ -11,7 +10,7 @@ typedef enum interact_type_t {
 } interact_type_t;
 
 typedef struct interact_component_data_t {
-    transform_component_data_t *transform_component_data;
+    component_t *transform_component;
 
     fvector2d_t position;
     fvector2d_t scale;
@@ -31,7 +30,7 @@ int interact_component_draw(const component_t *component);
 #endif // DEBUG >= 2
 int interact_component_destroy(component_t *component);
 
-int interact_component_interact(interact_component_data_t *component_data);
-int interact_component_modify_topic_id(interact_component_data_t *component_data, size_t id);
+int interact_component_interact(component_t *component);
+int interact_component_modify_topic_id(component_t *component, size_t id);
 
 #endif // TRANSFORM_COMPONENT_H

@@ -2,6 +2,7 @@
 
 #include <stdarg.h>
 #include "game.h"
+#include "ecs.h"
 #include "animation_system.h"
 #include "interact_component.h"
 #include "event_bus.h"
@@ -12,13 +13,12 @@ inline int lever_component_init(component_t *component)
 {
     lever_component_data_t *component_data = component->data;
 
-    component_t *animation_system = entity_get_component(component->entity, ANIMATION_SYSTEM);
-    if(!animation_system)
+    component_data->animation_system = entity_get_component(component->entity, ANIMATION_SYSTEM);
+    if(!component_data->animation_system)
     {
         error_printf("Lever component require an animation system.");
         return EXIT_FAILURE;
     }
-    component_data->animation_system_data = animation_system->data;
 
     component_data->last_state = false;
 
@@ -28,7 +28,7 @@ inline int lever_component_init(component_t *component)
 inline int lever_component_update(component_t *component)
 {
     lever_component_data_t *component_data = component->data;
-    animation_system_data_t *animation_system_data = component_data->animation_system_data;
+    animation_system_data_t *animation_system_data = component_data->animation_system->data;
 
     if(component_data->state != component_data->last_state)
     {
@@ -50,28 +50,22 @@ inline int lever_component_destroy(component_t *component)
     return EXIT_SUCCESS;
 }
 
-// Event arg : size_t state, Subscription arg : entity_t *entity
+// Event arg : size_t state, Subscription data : component_t *component
 static inline int lever_component_callback(void *event_arg, void *subscription_data)
 {
-    const entity_t *entity = subscription_data;
-
-    component_t *lever_component = entity_get_component(entity, LEVER_COMPONENT);
-    if(!lever_component)
-    {
-        error_printf("Failed to get lever component.");
-        return EXIT_FAILURE;
-    }
-
-    lever_component_data_t *component_data = lever_component->data;
+    const component_t *component = subscription_data;
+    lever_component_data_t *component_data = component->data;
 
     component_data->state = *(size_t *)event_arg;
 
     return EXIT_SUCCESS;
 }
 
-inline int lever_component_subscribe(lever_component_data_t *component_data, entity_t *entity)
+inline int lever_component_subscribe(component_t *component)
 {
-    if(event_bus_subscribe(component_data->topic_id, lever_component_callback, entity)) return_failure_int;
+    lever_component_data_t *component_data = component->data;
+
+    if(event_bus_subscribe(component_data->topic_id, lever_component_callback, component)) return_failure_int;
 
     return EXIT_SUCCESS;
 }
