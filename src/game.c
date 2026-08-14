@@ -18,13 +18,13 @@ int game_init(void)
     event_bus_init(&game.event_bus);
     entity_manager_init(&game.entity_manager);
 
-    if(asset_manager_load_asset(&game.asset_manager, "player_idle_sheet", ASSET_TEXTURE)) return_failure_int;
-    if(asset_manager_load_asset(&game.asset_manager, "player_walk_sheet", ASSET_TEXTURE)) return_failure_int;
-    if(asset_manager_load_asset(&game.asset_manager, "player_run_sheet",  ASSET_TEXTURE)) return_failure_int;
-    if(asset_manager_load_asset(&game.asset_manager, "lever_sheet",       ASSET_TEXTURE)) return_failure_int;
-    if(asset_manager_load_asset(&game.asset_manager, "barred_door_sheet", ASSET_TEXTURE)) return_failure_int;
-    if(asset_manager_load_asset(&game.asset_manager, "wooden_door_sheet", ASSET_TEXTURE)) return_failure_int;
-    if(asset_manager_load_asset(&game.asset_manager, "tileset",           ASSET_TEXTURE)) return_failure_int;
+    if(!asset_manager_load_asset(&game.asset_manager, "player_idle_sheet", ASSET_TEXTURE)) return_failure_int;
+    if(!asset_manager_load_asset(&game.asset_manager, "player_walk_sheet", ASSET_TEXTURE)) return_failure_int;
+    if(!asset_manager_load_asset(&game.asset_manager, "player_run_sheet",  ASSET_TEXTURE)) return_failure_int;
+    if(!asset_manager_load_asset(&game.asset_manager, "lever_sheet",       ASSET_TEXTURE)) return_failure_int;
+    if(!asset_manager_load_asset(&game.asset_manager, "barred_door_sheet", ASSET_TEXTURE)) return_failure_int;
+    if(!asset_manager_load_asset(&game.asset_manager, "wooden_door_sheet", ASSET_TEXTURE)) return_failure_int;
+    if(!asset_manager_load_asset(&game.asset_manager, "tileset",           ASSET_TEXTURE)) return_failure_int;
 
     /* ======== Player ======== */
     {
@@ -352,9 +352,9 @@ void game_handle_event(void)
     while(poll_event(&event))
     {
         if(event.type == INPUT_EVENT_KEY_DOWN)
-            game.events.keys[event.key] = true;
+            game.inputs.keys[event.key] = true;
         else if(event.type == INPUT_EVENT_KEY_UP)
-            game.events.keys[event.key] = false;
+            game.inputs.keys[event.key] = false;
 
         if(event.type == INPUT_EVENT_QUIT)
             game.is_running = false;

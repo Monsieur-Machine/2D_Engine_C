@@ -64,11 +64,11 @@ static inline void player_system_get_inputs(player_system_data_t *system_data)
 
     system_data->state &= 0xE0; // 11100000
 
-    system_data->state |= game.events.keys[KEY_UP]    ? PLAYER_MOVING_UP    : 0;
-    system_data->state |= game.events.keys[KEY_DOWN]  ? PLAYER_MOVING_DOWN  : 0;
-    system_data->state |= game.events.keys[KEY_LEFT]  ? PLAYER_MOVING_LEFT  : 0;
-    system_data->state |= game.events.keys[KEY_RIGHT] ? PLAYER_MOVING_RIGHT : 0;
-    system_data->state |= game.events.keys[KEY_MOD]   ? PLAYER_RUNNING      : 0;
+    system_data->state |= game.inputs.keys[KEY_UP]    ? PLAYER_MOVING_UP    : 0;
+    system_data->state |= game.inputs.keys[KEY_DOWN]  ? PLAYER_MOVING_DOWN  : 0;
+    system_data->state |= game.inputs.keys[KEY_LEFT]  ? PLAYER_MOVING_LEFT  : 0;
+    system_data->state |= game.inputs.keys[KEY_RIGHT] ? PLAYER_MOVING_RIGHT : 0;
+    system_data->state |= game.inputs.keys[KEY_MOD]   ? PLAYER_RUNNING      : 0;
 
     // Special cases
     if(system_data->state & PLAYER_MOVING_UP && system_data->state & PLAYER_MOVING_DOWN)
@@ -186,12 +186,12 @@ static inline int player_system_process_interaction(player_system_data_t *system
 {
     static bool last_state = false; // XXX UGLY XXX //
 
-    if(game.events.keys[KEY_INTERACT] && !last_state)
+    if(game.inputs.keys[KEY_INTERACT] && !last_state)
     {
         if(linked_list_for_each(&game.entity_manager.entities, action_detect_activate_interact, system_data)) return_failure_int;
     }
 
-    last_state = game.events.keys[KEY_INTERACT];
+    last_state = game.inputs.keys[KEY_INTERACT];
 
     return EXIT_SUCCESS;
 }

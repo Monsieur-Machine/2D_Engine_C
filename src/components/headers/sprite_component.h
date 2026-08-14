@@ -4,6 +4,7 @@
 #include "ecs.h"
 #include "transform_component.h"
 #include "asset_manager.h"
+#include "texture.h"
 
 typedef struct sprite_component_data_t {
     transform_component_data_t *transform_component_data;
