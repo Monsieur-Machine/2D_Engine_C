@@ -43,8 +43,8 @@ inline int physics_system_init(component_t *component)
     return EXIT_SUCCESS;
 }
 
-// Args : physics_system_data_t *system_data, size_t entity_id
-static int action_detect_solve_entities_collision(elem_t *elem, va_list args);
+// Args : component_t *component
+static int action_detect_solve_entities_collision(elem_t *elem, void *arg);
 
 int physics_system_update(component_t *component)
 {
@@ -56,7 +56,7 @@ int physics_system_update(component_t *component)
     system_data->velocity.y = lerp(system_data->velocity.y, system_data->target_velocity.y, system_data->smoothing_factor);
 
     if(hitbox_component_data->activated)
-        if(linked_list_for_each(&game.entity_manager.entities, action_detect_solve_entities_collision, system_data, component->entity->id)) return EXIT_FAILURE;
+        if(linked_list_for_each(&game.entity_manager.entities, action_detect_solve_entities_collision, component)) return EXIT_FAILURE;
 
     transform_component_data->bounds.x += system_data->velocity.x * system_data->speed * (float)game.delta_time_ms / 1000.0f;
     transform_component_data->bounds.y += system_data->velocity.y * system_data->speed * (float)game.delta_time_ms / 1000.0f;
@@ -73,12 +73,13 @@ inline int physics_system_destroy(component_t *component)
     return EXIT_SUCCESS;
 }
 
-static inline int action_detect_solve_entities_collision(elem_t *elem, va_list args)
+static inline int action_detect_solve_entities_collision(elem_t *elem, void *arg)
 {
+    component_t *physics_system = arg;
+    physics_system_data_t *system_data = physics_system->data;
     const entity_t *target_entity = elem->data;
-    physics_system_data_t *system_data = va_arg(args, physics_system_data_t *);
 
-    if(target_entity->id == va_arg(args, size_t))
+    if(target_entity->id == physics_system->entity->id)
     {
         return EXIT_SUCCESS;
     }

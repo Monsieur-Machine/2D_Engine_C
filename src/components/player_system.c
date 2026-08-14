@@ -174,10 +174,10 @@ static inline int player_system_set_animation_and_speed(player_system_data_t *sy
 }
 
 // Args : player_system_data_t *system_data
-static inline int action_detect_activate_interact(elem_t *elem, va_list args)
+static inline int action_detect_activate_interact(elem_t *elem, void *arg)
 {
     const entity_t *target_entity = elem->data;
-    const player_system_data_t *system_data = va_arg(args, player_system_data_t *);
+    const player_system_data_t *system_data = arg;
 
     const component_t *target_interact_component = entity_get_component(target_entity, INTERACT_COMPONENT);
     if(!target_interact_component) return EXIT_SUCCESS;

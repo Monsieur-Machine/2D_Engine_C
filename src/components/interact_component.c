@@ -83,7 +83,7 @@ inline int interact_component_interact(interact_component_data_t *component_data
         return EXIT_FAILURE;
     }
 
-    if(event_bus_publish(component_data->topic_id, component_data->state)) return_failure_int;
+    if(event_bus_publish(component_data->topic_id, &component_data->state)) return_failure_int;
 
     return EXIT_SUCCESS;
 }

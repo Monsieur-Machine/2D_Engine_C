@@ -51,7 +51,7 @@ inline int lever_component_destroy(component_t *component)
 }
 
 // Event arg : size_t state, Subscription arg : entity_t *entity
-static inline int lever_component_callback(va_list args, void *subscription_data)
+static inline int lever_component_callback(void *event_arg, void *subscription_data)
 {
     const entity_t *entity = subscription_data;
 
@@ -64,7 +64,7 @@ static inline int lever_component_callback(va_list args, void *subscription_data
 
     lever_component_data_t *component_data = lever_component->data;
 
-    component_data->state = (bool)va_arg(args, size_t);
+    component_data->state = *(size_t *)event_arg;
 
     return EXIT_SUCCESS;
 }
