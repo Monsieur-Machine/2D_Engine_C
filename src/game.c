@@ -20,6 +20,8 @@ int game_init(void)
 
     if(!asset_manager_load_asset("tileset", ASSET_TEXTURE)) return_failure_int;
 
+    if(!asset_manager_load_asset("dungeon_room_1", ASSET_MAP)) return_failure_int;
+
     /* ======== Player ======== */
     {
         entity_t *player_entity = entity_manager_new_entity(0);

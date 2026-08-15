@@ -18,7 +18,7 @@ SRC_CFLAGS = --std=c17 --pedantic -O3 # RELEASE
 
 SRC_LDFLAGS = -O3
 else
-SRC_CFLAGS = --std=c17 --pedantic -O1 -g -DDEBUG=2 \
+SRC_CFLAGS = --std=c17 --pedantic -O0 -g -DDEBUG=2 \
 	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
     -Wformat=2 -Wswitch-default -Wswitch -Wcast-align \
     -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \
@@ -27,7 +27,7 @@ SRC_CFLAGS = --std=c17 --pedantic -O1 -g -DDEBUG=2 \
     -Wfloat-equal -Wstrict-aliasing=2 -Wredundant-decls \
     -Wold-style-definition # DEVELOPEMENT
 
-SRC_LDFLAGS = -O1
+SRC_LDFLAGS = -O0
 endif
 
 SRC_INCLUDE_DIRS = $(SOURCE_DIR)/components/headers $(CORE_DIR)/headers
