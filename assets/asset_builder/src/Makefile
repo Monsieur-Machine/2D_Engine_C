@@ -1,8 +1,7 @@
 # Source files
 ASSET_BUILDER_SOURCES := \
-  main.c \
   asset_file.c \
-  errors.c
+  main.c
 
 # Compiler and flags
 ASSET_BUILDER_CC = gcc

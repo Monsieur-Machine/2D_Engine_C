@@ -2,11 +2,10 @@
 
 |    Description    |               Length                |
 | :---------------- | :---------------------------------- |
-| Assets number     | size_t (64 bits)                    |
+| Assets number     | unsigned int (32 bits)              |
 | ...               |                                     |
 | Asset name        | const char * (variable length)      |
-| Asset start index | size_t (64 bits)                    |
-| Asset end index   | size_t (64 bits)                    |
+| Asset start index | unsigned int (32 bits)              |
 | ...               |                                     |
 | Asset data        | depend on assets content and number |
 
@@ -21,8 +20,8 @@ Image data is in RGB 565.
 
 |    Description    |                   Length                    |
 | :---------------- | :------------------------------------------ |
-| Image width       | size_t (64 bits)                            |
-| Image height      | size_t (64 bits)                            |
+| Image width       | unsigned int (32 bits)                      |
+| Image height      | unsigned int (32 bits)                      |
 | Image data        | depend on image size, pixel short (16 bits) |
 
 
@@ -43,7 +42,7 @@ Image data is in RGB 565.
 | Map foreground layer data   | depend on map size, tile short (16 bit) |
 | Entities number             | int (32 bits)                           |
 | ...                         |                                         |
-| Entity ID                   | size_t (64 bits)                        |
+| Entity ID                   | int (32 bits)                        |
 | Entity component number     | int (32 bits)                           |
 |   ...                       |                                         |
 |   Component type            | int (32 bits)                           |

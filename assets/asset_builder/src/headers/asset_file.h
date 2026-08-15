@@ -6,11 +6,11 @@
 
 typedef struct asset_header_def_t {
     char *name;
-    size_t start, end;
+    uint32_t start, end;
 } asset_header_def_t;
 
 typedef struct asset_file_header_t {
-    size_t assets_number;
+    uint32_t assets_number;
     asset_header_def_t *assets_header_def;
 
     size_t header_size;

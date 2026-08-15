@@ -1,23 +1,47 @@
-#ifndef ERROR_H
-#define ERROR_H
+#ifndef ERRORS_H
+#define ERRORS_H
 
-typedef enum error_t {
-    NO_ERROR,
-    NO_EXTENSION,
-    EXTENSION_UNSUPPORTED,
-    OPEN_FAILED,
-    READ_FAILED,
-    WRITE_FAILED,
-    BAD_SIGNATURE,
-    MEMORY_ALLOC_FAILED,
+#include <stdio.h>
+#include <errno.h>
+#include <assert.h>
 
-    // File-format specific errors
-    PNG_BIT_DEPTH_UNSUPPORTED,
-    PNG_COLOR_TYPE_UNSUPPORTED
-} error_t;
+#ifndef DEBUG
+#define DEBUG 0
+#endif
 
-void print_error(const char *content);
+#if DEBUG > 0
+#define debug_printf(...) \
+    do { \
+        fprintf(stderr, "\033[32mINFO\033[m: " __VA_ARGS__); \
+        fputc('\n', stderr); \
+    } while (0)
+#else
+#define debug_printf(...)
+#endif
 
-void print_error_description(error_t error);
+#define warning_printf(...) \
+    do { \
+        fprintf(stderr, "\033[35mWARNING\033[m: " __VA_ARGS__); \
+        fputc('\n', stderr); \
+    } while (0)
 
-#endif // ERROR_H
+#define error_printf(...) \
+    do { \
+        fprintf(stderr, "\033[31mERROR\033[m: %s:%d:%s(): ", __FILE__, __LINE__, __func__); \
+        fprintf(stderr, __VA_ARGS__); \
+        fputc('\n', stderr); \
+    } while (0)
+
+#define return_failure_int \
+    do { \
+        fprintf(stderr, "         in %s:%d:%s()\n", __FILE__, __LINE__, __func__); \
+        return EXIT_FAILURE; \
+    } while (0);
+
+#define return_failure_ptr \
+    do { \
+        fprintf(stderr, "         in %s:%d:%s()\n", __FILE__, __LINE__, __func__); \
+        return NULL; \
+    } while (0);
+
+#endif // ERRORS_H
