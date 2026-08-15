@@ -131,7 +131,7 @@
      </item>
      <item type="list">
       <item value="DOOR_COMPONENT"/>
-      <item value="0"/>
+      <item type="int" value="0"/>
       <item type="bool" value="false"/>
      </item>
     </property>

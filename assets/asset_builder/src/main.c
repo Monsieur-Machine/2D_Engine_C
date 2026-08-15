@@ -21,12 +21,11 @@ int main(int argc, char *argv[])
     asset_file_header_t asset_file_header;
     asset_file_header.assets_number = argc - 2;
     asset_file_header.header_size = sizeof(asset_file_header.assets_number) + sizeof(uint32_t) * asset_file_header.assets_number;
-    asset_file_header.assets_header_def = malloc(asset_file_header.assets_number * sizeof(asset_header_def_t));
+    asset_file_header.assets_header_def = calloc(asset_file_header.assets_number, sizeof(asset_header_def_t));
     if(!asset_file_header.assets_header_def)
     {
         error_printf("Failed to allocate memory.");
         goto end;
-
     }
 
     // Set assets name.

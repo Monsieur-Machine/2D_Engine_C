@@ -1,13 +1,13 @@
 # Asset file structure
 
-|    Description    |               Length                |
-| :---------------- | :---------------------------------- |
-| Assets number     | unsigned int (32 bits)              |
-| ...               |                                     |
-| Asset name        | const char * (variable length)      |
-| Asset start index | unsigned int (32 bits)              |
-| ...               |                                     |
-| Asset data        | depend on assets content and number |
+|    Description    |                      Length                       |
+| :---------------- | :------------------------------------------------ |
+| Assets number     | unsigned int (32 bits)                            |
+| ...               |                                                   |
+| Asset name        | const char [] (variable length, ends with '\00')  |
+| Asset start index | unsigned int (32 bits)                            |
+| ...               |                                                   |
+| Asset data        | depend on assets content and number               |
 
 ## Image (.png)
 
@@ -32,21 +32,26 @@ Image data is in RGB 565.
 
 ### Maps asset data structure
 
-|         Description         |                 Length                  |
-| :-------------------------- | :-------------------------------------- |
-| Map width                   | int (32 bits)                           |
-| Map height                  | int (32 bits)                           |
-| Map background layer 1 data | depend on map size, tile short (16 bit) |
-| Map background layer 2 data | depend on map size, tile short (16 bit) |
-| Map background layer 3 data | depend on map size, tile short (16 bit) |
-| Map foreground layer data   | depend on map size, tile short (16 bit) |
-| Entities number             | int (32 bits)                           |
-| ...                         |                                         |
-| Entity ID                   | int (32 bits)                        |
-| Entity component number     | int (32 bits)                           |
-|   ...                       |                                         |
-|   Component type            | int (32 bits)                           |
-|     ...                     |                                         |
-|     Component attributes    | depend on attribute type                |
-|     ...                     |                                         |
-|   ...                       |                                         |
+|         Description         |                      Length                       |
+| :-------------------------- | :------------------------------------------------ |
+| Map width                   | unsigned int (32 bits)                            |
+| Map height                  | unsigned int (32 bits)                            |
+| Map background layer 1 data | depend on map size, tile short (16 bits)          |
+| Map background layer 2 data | depend on map size, tile short (16 bits)          |
+| Map background layer 3 data | depend on map size, tile short (16 bits)          |
+| Map foreground layer data   | depend on map size, tile short (16 bits)          |
+| Map hitboxes data           | depend on map size, tile unsigned char (8 bits)   |
+| Entities number             | unsigned int (32 bits)                            |
+| ...                         |                                                   |
+| Entity ID                   | unsigned int (32 bits)                            |
+| Entity components number    | unsigned int (32 bits)                            |
+|   ...                       |                                                   |
+|   Component type            | int (32 bits)                                     |
+|     ...                     |                                                   |
+|     Component attributes    | depend on attribute type                          |
+|     int                     | int (32 bits)                                     |
+|     float                   | float (32 bits)                                   |
+|     bool                    | bool (8 bits)                                     |
+|     str                     | const char [] (variable length, ends with '\00')  |
+|     ...                     |                                                   |
+|   ...                       |                                                   |

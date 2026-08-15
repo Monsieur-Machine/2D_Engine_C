@@ -10,6 +10,7 @@ stdenv.mkDerivation {
   ];
   buildInputs = [
     libpng
+    json_c
     sdl3
     ncurses
   ];

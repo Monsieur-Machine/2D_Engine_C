@@ -134,7 +134,7 @@
         {
           "Type": "DOOR_COMPONENT",
           "Attributes": [
-            "0",
+            0,
             false
           ]
         }

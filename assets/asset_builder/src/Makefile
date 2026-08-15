@@ -1,16 +1,18 @@
 # Source files
 ASSET_BUILDER_SOURCES := \
   asset_file.c \
+  image.c \
+  map.c \
   main.c
 
 # Compiler and flags
 ASSET_BUILDER_CC = gcc
 ifeq ($(RELEASE), 1)
-ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O3 $(shell pkg-config --cflags libpng) # RELEASE
+ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O3 $(shell pkg-config --cflags libpng json-c) # RELEASE
 else
-ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O1 -g $(shell pkg-config --cflags libpng) \
+ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O1 -DDEBUG=1 -g $(shell pkg-config --cflags libpng json-c) \
 	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
-    -Wformat=2 -Wswitch-default -Wswitch-enum -Wcast-align \
+    -Wformat=2 -Wswitch-default -Wswitch -Wcast-align \
     -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \
     -Wstrict-prototypes -Winline -Wundef -Wnested-externs \
     -Wcast-qual -Wshadow -Wunreachable-code -Wlogical-op \
@@ -18,10 +20,10 @@ ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O1 -g $(shell pkg-config --cflags l
     -Wold-style-definition # DEVELOPEMENT
 endif
 
-ASSET_BUILDER_INCLUDE_DIRS = $(ASSET_BUILDER_DIR)/headers
+ASSET_BUILDER_INCLUDE_DIRS = $(ASSET_BUILDER_DIR)/headers $(SOURCE_DIR)/components/headers
 ASSET_BUILDER_INCLUDE_DIRS := $(addprefix -I, $(ASSET_BUILDER_INCLUDE_DIRS))
 
-ASSET_BUILDER_LDFLAGS = $(shell pkg-config --libs libpng)
+ASSET_BUILDER_LDFLAGS = $(shell pkg-config --libs libpng json-c)
 
 # Deduce objects
 ASSET_BUILDER_OBJECTS = $(ASSET_BUILDER_SOURCES:%.c=$(BUILD_DIR)/$(ASSET_BUILDER_DIR)/%.o)
