@@ -6,6 +6,10 @@
 
 - [ ] Change linked list for each implementation to a macro (iykyk)
 
+- [ ] Add compression into asset builder and asset manager
+
+- [ ] Optimize asset builder file analize
+
 - [ ] Create camera
 
 - [ ] Make functionnal hitboxes between entities and map

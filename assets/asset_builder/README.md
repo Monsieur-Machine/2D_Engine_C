@@ -1,4 +1,15 @@
-# Asset file structure
+# Asset builder description
+
+This program builds assets into an output file.
+The supported file formats are :
+ - image (.png)
+ - maps (.map which is in reality json)
+
+The different files format are deduced from the extensions only.
+
+The code has some optimisation problems but here is the main idea :
+
+First calculate header wich consists of :
 
 |    Description    |                      Length                       |
 | :---------------- | :------------------------------------------------ |
@@ -7,14 +18,17 @@
 | Asset name        | const char [] (variable length, ends with '\00')  |
 | Asset start index | unsigned int (32 bits)                            |
 | ...               |                                                   |
-| Asset data        | depend on assets content and number               |
+
+This calculation needs to analse the content of inputs files to calculate the start offsets in the file.
+
+Then write the content of each file in the same order as they were analysed for header calculations.
+
+For the moment each input file is openend and analized 2 times.
 
 ## Image (.png)
 
-Convert RGBA to RGB with #FF00FF as the transparent color.
-If alpha null then the color of the pixel will be replaced with this.
-
-Image data is in RGB 565.
+Convert png's RGBA8888 to custom RGB565 with #FF00FF (or #F81F in RGB565) as the transparent color.
+If png's alpha is null then the color of the pixel will be replaced with this.
 
 ### Image asset data structure
 
@@ -24,11 +38,9 @@ Image data is in RGB 565.
 | Image height      | unsigned int (32 bits)                      |
 | Image data        | depend on image size, pixel short (16 bits) |
 
-
-
 ## Maps (.map)
 
-
+Convert from json to custom format.
 
 ### Maps asset data structure
 
