@@ -152,9 +152,9 @@ int game_render(void)
 
 int game_exit(void)
 {
+    if(asset_manager_exit()) return_failure_int;
     entity_manager_exit();
     event_bus_exit();
-    if(asset_manager_exit()) return_failure_int;
     display_exit();
 
     return EXIT_SUCCESS;
