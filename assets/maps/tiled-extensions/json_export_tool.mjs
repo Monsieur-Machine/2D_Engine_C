@@ -1,3 +1,11 @@
+function stringifyFloat(floatNumber)
+{
+    if(floatNumber == Math.trunc(floatNumber))
+        return String(floatNumber) + ".0"
+
+    return String(floatNumber);
+}
+
 function writeTileLayer(tileLayer, file)
 {
     file.writeLine("  \"" + tileLayer.name + "\": [");
@@ -35,6 +43,13 @@ function writeEntities(objectLayer, file)
         }
     }
 
+    entities.sort((a, b) => {
+        if(Number(a.name) > Number(b.name))
+            return 1;
+
+        return -1;
+    });
+
     for(let i = 0; i < entities.length; i++)
     {
         let entity = entities[i];
@@ -66,10 +81,10 @@ function writeEntities(objectLayer, file)
             {
                 file.writeLine(",");
                 file.writeLine("          \"Attributes\": [");
-                file.writeLine("            " + entity.x + ",");
-                file.writeLine("            " + entity.y + ",");
-                file.writeLine("            " + entity.width + ",");
-                file.writeLine("            " + entity.height);
+                file.writeLine("            " + stringifyFloat(entity.x) + ",");
+                file.writeLine("            " + stringifyFloat(entity.y) + ",");
+                file.writeLine("            " + stringifyFloat(entity.width) + ",");
+                file.writeLine("            " + stringifyFloat(entity.height));
                 file.writeLine("          ]");
             }
             else if(component_type == "HITBOX_COMPONENT")
@@ -88,10 +103,10 @@ function writeEntities(objectLayer, file)
                 let width = hitbox.width / entity.width;
                 let height = hitbox.height / entity.height;
 
-                file.writeLine("            " + x + ",");
-                file.writeLine("            " + y + ",");
-                file.writeLine("            " + width + ",");
-                file.writeLine("            " + height);
+                file.writeLine("            " + stringifyFloat(x) + ",");
+                file.writeLine("            " + stringifyFloat(y) + ",");
+                file.writeLine("            " + stringifyFloat(width) + ",");
+                file.writeLine("            " + stringifyFloat(height));
             }
             else if(component_type == "INTERACT_COMPONENT")
             {
@@ -109,45 +124,41 @@ function writeEntities(objectLayer, file)
                 let width = interact_box.width / entity.width;
                 let height = interact_box.height / entity.height;
 
-                file.writeLine("            " + x + ",");
-                file.writeLine("            " + y + ",");
-                file.writeLine("            " + width + ",");
-                file.writeLine("            " + height + ",");
+                file.writeLine("            " + stringifyFloat(x) + ",");
+                file.writeLine("            " + stringifyFloat(y) + ",");
+                file.writeLine("            " + stringifyFloat(width) + ",");
+                file.writeLine("            " + stringifyFloat(height) + ",");
 
                 file.writeLine("            " + component[2] + ",");
                 file.writeLine("            " + component[3] + ",");
                 file.writeLine("            " + component[4]);
             }
+            else if(component_type == "SPRITE_COMPONENT")
+            {
+                file.writeLine("            \"" + component[1] + "\"");
+            }
+            else if(component_type == "ANIMATION_SYSTEM")
+            {
+                file.writeLine("            " + component[1] + ",");
+                file.writeLine("            " + component[2] + ",");
+                file.writeLine("            " + stringifyFloat(component[3]) + ",");
+                file.writeLine("            " + component[4] + ",");
+                file.writeLine("            " + component[5] + ",");
+                file.writeLine("            " + component[6]);
+            }
+            else if(component_type == "LEVER_COMPONENT")
+            {
+                file.writeLine("            " + component[1] + ",");
+                file.writeLine("            " + component[2]);
+            }
+            else if(component_type == "DOOR_COMPONENT")
+            {
+                file.writeLine("            " + component[1] + ",");
+                file.writeLine("            " + component[2]);
+            }
             else
             {
-                if(component.length > 1)
-                {
-                    for(let k = 1; k < component.length; k++)
-                    {
-                        file.write("            ");
-                        switch(typeof(component[k]))
-                        {
-                            case typeof(Number()):
-                            case typeof(Boolean()):
-                                file.write(component[k]);
-                                break;
-
-                            case typeof(String()):
-                                file.write("\"" + component[k] + "\"");
-                                break;
-
-                            default:
-                                throw new Error("Attribute \"" + component[k] + "\", type not supported : " + typeof(component[k]));
-                        }
-
-                        if(k == component.length - 1)
-                            file.writeLine("");
-                        else
-                            file.writeLine(",");
-                    }
-                }
-                else
-                    file.writeLine("");
+                throw new Error("Component type not supported for exporting : " + component_type);
             }
 
             if(component.length > 1)
