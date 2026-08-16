@@ -9,6 +9,8 @@ ASSET_BUILDER_SOURCES := \
 ASSET_BUILDER_CC = gcc
 ifeq ($(RELEASE), 1)
 ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O3 $(shell pkg-config --cflags libpng json-c) # RELEASE
+
+ASSET_BUILDER_LDFLAGS = -O3 $(shell pkg-config --libs libpng json-c)
 else
 ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O1 -DDEBUG=1 -g $(shell pkg-config --cflags libpng json-c) \
 	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
@@ -18,12 +20,12 @@ ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O1 -DDEBUG=1 -g $(shell pkg-config 
     -Wcast-qual -Wshadow -Wunreachable-code -Wlogical-op \
     -Wfloat-equal -Wstrict-aliasing=2 -Wredundant-decls \
     -Wold-style-definition # DEVELOPEMENT
+
+ASSET_BUILDER_LDFLAGS = -O1 $(shell pkg-config --libs libpng json-c)
 endif
 
 ASSET_BUILDER_INCLUDE_DIRS = $(ASSET_BUILDER_DIR)/headers $(SOURCE_DIR)/components/headers
 ASSET_BUILDER_INCLUDE_DIRS := $(addprefix -I, $(ASSET_BUILDER_INCLUDE_DIRS))
-
-ASSET_BUILDER_LDFLAGS = $(shell pkg-config --libs libpng json-c)
 
 # Deduce objects
 ASSET_BUILDER_OBJECTS = $(ASSET_BUILDER_SOURCES:%.c=$(BUILD_DIR)/$(ASSET_BUILDER_DIR)/%.o)
