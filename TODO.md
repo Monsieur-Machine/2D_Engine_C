@@ -24,9 +24,9 @@
 ### In progress
 
 - [ ] Create tilemap management and display
-  - [ ] Find tilemap building format
-  - [ ] Add building support for tilemaps in asset builder
-  - [ ] Add loading support in asset manager
+  - [x] Find tilemap building format
+  - [x] Add building support for tilemaps in asset builder
+  - [x] Add loading support in asset manager
   - [ ] Display tilemaps
     - [ ] Work on optimizations !
 
@@ -43,6 +43,6 @@
 - [x] Make functionnal hitboxes between entities
 
 - [x] Change the way default values are defined across components and systems
-  - [NO] Remove the need of a dummy texture
+  - [x] Remove the need of a dummy texture
 
 - [x] Work on linked lists optimizations
