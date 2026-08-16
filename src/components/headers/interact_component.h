@@ -31,6 +31,5 @@ int interact_component_draw(const component_t *component);
 int interact_component_destroy(component_t *component);
 
 int interact_component_interact(component_t *component);
-int interact_component_modify_topic_id(component_t *component, size_t id);
 
 #endif // TRANSFORM_COMPONENT_H

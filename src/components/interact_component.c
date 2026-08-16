@@ -28,9 +28,6 @@ inline int interact_component_init(component_t *component)
     };
 
     component_data->topic_id = 0;
-
-    if(event_bus_new_topic(component_data->topic_id)) return_failure_int;
-
     component_data->activated = true;
 
     return EXIT_SUCCESS;
@@ -66,6 +63,8 @@ inline int interact_component_destroy(component_t *component)
 {
     interact_component_data_t *component_data = component->data;
 
+    if(event_bus_remove_topic(component_data->topic_id)) return_failure_int;
+
     free(component_data);
 
     return EXIT_SUCCESS;
@@ -87,17 +86,6 @@ inline int interact_component_interact(component_t *component)
     }
 
     if(event_bus_publish(component_data->topic_id, &component_data->state)) return_failure_int;
-
-    return EXIT_SUCCESS;
-}
-
-inline int interact_component_modify_topic_id(component_t *component, size_t id)
-{
-    interact_component_data_t *component_data = component->data;
-
-    if(event_bus_change_topic_id(component_data->topic_id, id)) return_failure_int;
-
-    component_data->topic_id = id;
 
     return EXIT_SUCCESS;
 }
