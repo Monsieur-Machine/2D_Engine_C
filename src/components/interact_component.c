@@ -63,8 +63,6 @@ inline int interact_component_destroy(component_t *component)
 {
     interact_component_data_t *component_data = component->data;
 
-    if(event_bus_remove_topic(component_data->topic_id)) return_failure_int;
-
     free(component_data);
 
     return EXIT_SUCCESS;
