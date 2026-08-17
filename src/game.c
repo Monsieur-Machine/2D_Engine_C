@@ -15,9 +15,9 @@ int game_init(void)
     game.is_running = false;
 
     if(display_init()) return_failure_int;
-    if(asset_manager_init()) return_failure_int;
     event_bus_init();
     entity_manager_init();
+    if(asset_manager_init()) return_failure_int;
 
     if(!asset_manager_load_asset("tileset", ASSET_TEXTURE)) return_failure_int;
 
@@ -145,7 +145,11 @@ int game_render(void)
         return_failure_int;
     }
 
-    display_update();
+    if(display_update())
+    {
+        game.is_running = false;
+        return_failure_int;
+    }
 
     return EXIT_SUCCESS;
 }
@@ -153,8 +157,8 @@ int game_render(void)
 int game_exit(void)
 {
     if(asset_manager_exit()) return_failure_int;
-    entity_manager_exit();
-    event_bus_exit();
+    if(entity_manager_exit()) return_failure_int;
+    if(event_bus_exit()) return_failure_int;
     display_exit();
 
     return EXIT_SUCCESS;

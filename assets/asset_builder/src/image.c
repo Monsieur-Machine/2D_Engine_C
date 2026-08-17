@@ -186,9 +186,9 @@ int parse_png_for_content_and_write(const char *input_file_name, FILE *output_fi
             }
             else
             {
-                r = 0x1F;
+                r = 0x00;
                 g = 0x00;
-                b = 0x1F;
+                b = 0x01;
             }
 
             uint16_t pixel = ((r) << 11) | ((g) << 5) | b;

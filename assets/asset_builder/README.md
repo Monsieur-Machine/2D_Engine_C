@@ -27,7 +27,7 @@ For the moment each input file is openend and analized 2 times.
 
 ## Image (.png)
 
-Convert png's RGBA8888 to custom RGB565 with #FF00FF (or #F81F in RGB565) as the transparent color.
+Convert png's RGBA8888 to custom RGB565 with #0001 in RGB565 as the transparent color.
 If png's alpha is null then the color of the pixel will be replaced with this.
 
 ### Image asset data structure
