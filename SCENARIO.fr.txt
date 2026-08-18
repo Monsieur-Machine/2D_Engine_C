@@ -1,6 +1,11 @@
 # Idées
 
-## Masion abuelo
+## Maison abuelo
 
 Cycle jour / nuit.
 Ordre des salles en bazard.
+
+## Control
+
+Deux routes, une ou l'on reprend control, une autre ou l'on perd control.
+Ce control s'exprimerai par l'environnement par exemple.
