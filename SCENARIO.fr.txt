@@ -10,3 +10,4 @@ Ordre des salles en bazard.
 Deux routes, une ou l'on reprend control, une autre ou l'on perd control.
 Ce control s'exprimerai par l'environnement par exemple.
 Dans l'idée de se faire contrôler c'est toujours sympa quand le perso fait quelque chose, par exemple dire "j'adore la peluche chat!" et ses parents disent "t'es plus un bébé", et l'enfant ne prend plus de peluches.
+Parfois des opinions plus graves comme l'homophobie, racisme, grossophobie, etc...
