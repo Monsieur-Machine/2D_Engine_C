@@ -6,6 +6,7 @@ ASSETS := \
   props_sheets/barred_door_sheet.png \
   props_sheets/wooden_door_sheet.png \
   tileset/tileset.png \
+  maps/dungeon_entry.map \
   maps/dungeon_room_1.map
 
 ASSETS := $(addprefix $(ASSETS_DIR)/,$(ASSETS))

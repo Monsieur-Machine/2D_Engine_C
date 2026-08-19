@@ -17,22 +17,21 @@ int game_init(void)
 
     if(display_init()) return_failure_int;
     camera_init();
-    if(tilemap_display_init()) return_failure_int;
     event_bus_init();
     entity_manager_init();
     if(asset_manager_init()) return_failure_int;
 
-    asset_t *map_asset = asset_manager_load_asset("dungeon_room_1", ASSET_MAP);
+    asset_t *map_asset = asset_manager_load_asset("dungeon_entry", ASSET_MAP);
     if(!map_asset) return_failure_int;
 
     game.map = map_asset->data;
 
-    if(map_load_entities(game.map)) return_failure_int;
-
     asset_t *tileset_asset = asset_manager_load_asset("tileset", ASSET_TEXTURE);
     if(!tileset_asset) return_failure_int;
 
-    game.tilemap_display.tileset = tileset_asset->data;
+    game.map->tileset = tileset_asset->data;
+
+    if(map_load_entities(game.map)) return_failure_int;
 
     /* ======== Player ======== */
     {
@@ -46,8 +45,8 @@ int game_init(void)
             transform_component_data_t *transform_component_data = transform_component->data;
 
             transform_component_data->bounds = (frect_t) {
-                .x = 10.0f,
-                .y = 10.0f,
+                .x = 100.0f,
+                .y = 100.0f,
                 .w = 32.0f,
                 .h = 32.0f
             };
@@ -154,14 +153,7 @@ int game_render(void)
         game.is_running = false;
         return_failure_int;
     }
-
-    if(tilemap_display_update())
-    {
-        game.is_running = false;
-        return_failure_int;
-    }
-
-    if(tilemap_display_background())
+    if(map_display_background())
     {
         game.is_running = false;
         return_failure_int;
@@ -173,7 +165,7 @@ int game_render(void)
         return_failure_int;
     }
 
-    if(tilemap_display_foreground())
+    if(map_display_foreground())
     {
         game.is_running = false;
         return_failure_int;
@@ -193,7 +185,6 @@ int game_exit(void)
     if(asset_manager_exit()) return_failure_int;
     if(entity_manager_exit()) return_failure_int;
     if(event_bus_exit()) return_failure_int;
-    tilemap_display_exit();
     display_exit();
 
     return EXIT_SUCCESS;

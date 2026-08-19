@@ -34,7 +34,7 @@ inline int sprite_component_update(component_t *component)
     sprite_component_data_t *component_data = component->data;
     transform_component_data_t *transform_component_data = component_data->transform_component->data;
 
-    component_data->dst_rect = transform_component_data->bounds;
+    frect_to_rect(&transform_component_data->bounds, &component_data->dst_rect);
     component->entity->draw_priority = transform_component_data->bounds.y + transform_component_data->bounds.h;
 
     return EXIT_SUCCESS;
@@ -44,10 +44,7 @@ inline int sprite_component_draw(const component_t *component)
 {
     const sprite_component_data_t *component_data = component->data;
 
-    frect_t src_frect;
-    rect_to_frect(&component_data->src_rect, &src_frect);
-
-    if(display_draw_texture(component_data->texture, &src_frect, &component_data->dst_rect, component_data->flip)) return_failure_int;
+    if(display_draw_texture(component_data->texture, &component_data->src_rect, &component_data->dst_rect, component_data->flip)) return_failure_int;
 
     return EXIT_SUCCESS;
 }
