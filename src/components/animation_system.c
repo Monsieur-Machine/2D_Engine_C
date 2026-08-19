@@ -34,9 +34,9 @@ int animation_system_update(component_t *system)
     {
         system_data->frame_timer_ms += game.delta_time_ms;
 
-        if(system_data->frame_timer_ms >= system_data->frame_delay_ms)
+        while(system_data->frame_timer_ms >= system_data->frame_delay_ms)
         {
-            system_data->frame_timer_ms = 0.0f;
+            system_data->frame_timer_ms -= system_data->frame_delay_ms;
 
             if(system_data->reverse)
             {
