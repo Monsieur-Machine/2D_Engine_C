@@ -44,7 +44,10 @@ inline int sprite_component_draw(const component_t *component)
 {
     const sprite_component_data_t *component_data = component->data;
 
-    if(display_draw_texture(component_data->texture, &component_data->src_rect, &component_data->dst_rect, component_data->flip)) return_failure_int;
+    frect_t src_frect;
+    rect_to_frect(&component_data->src_rect, &src_frect);
+
+    if(display_draw_texture(component_data->texture, &src_frect, &component_data->dst_rect, component_data->flip)) return_failure_int;
 
     return EXIT_SUCCESS;
 }
