@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="14" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="13">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="14" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="13">
  <editorsettings>
-  <export target="dungeon_room_1.json" format="custom"/>
+  <export target="dungeon_room_1.map" format="custom"/>
  </editorsettings>
  <tileset firstgid="1" source="../tileset/tileset.tsx"/>
  <tileset firstgid="2647" source="hiitboxes.tsx"/>
- <layer id="1" name="BackgroundLayer1" width="14" height="16">
+ <layer id="1" name="Background1" width="14" height="16">
   <data encoding="csv">
 14,158,158,158,158,158,246,248,158,158,158,158,158,15,
 109,2,3,3,3,3,246,248,3,3,3,3,4,157,
@@ -22,34 +22,14 @@
 109,246,247,247,247,247,247,247,247,247,247,247,248,157,
 109,246,247,247,247,247,247,247,247,247,247,247,248,157,
 109,295,296,296,296,296,296,296,296,296,296,296,297,157,
-63,108,108,108,108,108,70,71,108,108,108,108,108,64
+63,108,108,108,108,108,1,1,108,108,108,108,108,64
 </data>
  </layer>
- <layer id="2" name="BackgroundLayer2" width="14" height="16">
+ <layer id="9" name="Background2" width="14" height="16">
   <data encoding="csv">
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,72,73,1,1,1,1,1,1,
 1,1,1,1,1,1,121,122,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1
-</data>
- </layer>
- <layer id="3" name="BackgroundLayer3" width="14" height="16">
-  <data encoding="csv">
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -68,7 +48,7 @@
  <layer id="4" name="Foreground" width="14" height="16">
   <data encoding="csv">
 1,1,1,1,1,1,23,24,1,1,1,1,1,1,
-1,1,1,1,1,1,72,73,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -82,7 +62,7 @@
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 1,1,1,1,1,1,21,22,1,1,1,1,1,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1
+1,1,1,1,1,1,70,71,1,1,1,1,1,1
 </data>
  </layer>
  <layer id="7" name="Hitboxes" width="14" height="16">

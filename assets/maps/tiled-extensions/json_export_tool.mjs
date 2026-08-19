@@ -5,37 +5,30 @@ function stringifyFloat(floatNumber)
 
     return String(floatNumber);
 }
-
-function writeTileLayer(tileLayer, file)
+function writeLayerContent(output_file, layer)
 {
-    file.writeLine("  \"" + tileLayer.name + "\": [");
-
-    for(let cell_y = 0; cell_y < tileLayer.height; ++cell_y)
+    for(let cell_y = 0; cell_y < layer.height; ++cell_y)
     {
-        file.write("   ");
+        output_file.write(" ");
 
-        for(let cell_x = 0; cell_x < tileLayer.width; ++cell_x)
+        for(let cell_x = 0; cell_x < layer.width; ++cell_x)
         {
-            file.write(" " + tileLayer.cellAt(cell_x, cell_y).tileId)
-            if(cell_x < tileLayer.width - 1 || cell_y < tileLayer.height - 1)
-                file.write(",");
+            output_file.file.write(" " + layer.cellAt(cell_x, cell_y).tileId)
+            if(cell_x < layer.width - 1 || cell_y < layer.height - 1)
+                output_file.file.write(",");
         }
 
-        file.writeLine("");
+        output_file.file.writeLine("");
     }
-
-    file.writeLine("  ],");
 }
 
-function writeEntities(objectLayer, file)
+function writeEntities(output_file, entitieslayer)
 {
-    file.writeLine("  \"Entities\": [");
-
     let entities = [];
 
-    for(let i = 0; i < objectLayer.objectCount; i++)
+    for(let i = 0; i < entitieslayer.objectCount; i++)
     {
-        let entity = objectLayer.objectAt(i);
+        let entity = entitieslayer.objectAt(i);
 
         if(entity.name)
         {
@@ -54,46 +47,51 @@ function writeEntities(objectLayer, file)
     {
         let entity = entities[i];
 
-        file.writeLine("    {");
-        file.writeLine("      \"ID\":" + entity.name + ",");
-        file.writeLine("      \"Components\": [");
+        output_file.writeLine("{");
+
+        output_file.indent_add(2);
+        output_file.writeLine("\"ID\":" + entity.name + ",");
+        output_file.writeLine("\"Components\": [");
 
         let components = entity.properties()["components"];
         let nb_components = Object.keys(components).length;
+
+        output_file.indent_add(2);
 
         for(let j = 0; j < nb_components; j++)
         {
             let component = components[j];
             let component_type = component[0];
 
-            file.writeLine("        {");
+            output_file.writeLine("{");
 
-            file.write("          \"Type\": \"" + component_type + "\"");
+            output_file.indent_add(2);
+            output_file.write("\"Type\": \"" + component_type + "\"");
 
             if(component.length > 1)
             {
-                file.writeLine(",");
-                file.writeLine("          \"Attributes\": [");
+                output_file.file.writeLine(",");
+                output_file.writeLine("\"Attributes\": [");
             }
 
             // Write atributes, speciale cases need speciale treatment.
             if(component_type == "TRANSFORM_COMPONENT")
             {
-                file.writeLine(",");
-                file.writeLine("          \"Attributes\": [");
-                file.writeLine("            " + stringifyFloat(entity.x) + ",");
-                file.writeLine("            " + stringifyFloat(entity.y) + ",");
-                file.writeLine("            " + stringifyFloat(entity.width) + ",");
-                file.writeLine("            " + stringifyFloat(entity.height));
-                file.writeLine("          ]");
+                output_file.file.writeLine(",");
+                output_file.writeLine("\"Attributes\": [");
+                output_file.writeLine("  " + stringifyFloat(entity.x) + ",");
+                output_file.writeLine("  " + stringifyFloat(entity.y) + ",");
+                output_file.writeLine("  " + stringifyFloat(entity.width) + ",");
+                output_file.writeLine("  " + stringifyFloat(entity.height));
+                output_file.writeLine("]");
             }
             else if(component_type == "HITBOX_COMPONENT")
             {
                 let hitbox;
 
-                for(let k = 0; k < objectLayer.objectCount; k++)
+                for(let k = 0; k < entitieslayer.objectCount; k++)
                 {
-                    hitbox = objectLayer.objectAt(k);
+                    hitbox = entitieslayer.objectAt(k);
                     if(hitbox.id === component[1].id)
                         break;
                 }
@@ -103,18 +101,18 @@ function writeEntities(objectLayer, file)
                 let width = hitbox.width / entity.width;
                 let height = hitbox.height / entity.height;
 
-                file.writeLine("            " + stringifyFloat(x) + ",");
-                file.writeLine("            " + stringifyFloat(y) + ",");
-                file.writeLine("            " + stringifyFloat(width) + ",");
-                file.writeLine("            " + stringifyFloat(height));
+                output_file.writeLine("  " + stringifyFloat(x) + ",");
+                output_file.writeLine("  " + stringifyFloat(y) + ",");
+                output_file.writeLine("  " + stringifyFloat(width) + ",");
+                output_file.writeLine("  " + stringifyFloat(height));
             }
             else if(component_type == "INTERACT_COMPONENT")
             {
                 let interact_box;
 
-                for(let k = 0; k < objectLayer.objectCount; k++)
+                for(let k = 0; k < entitieslayer.objectCount; k++)
                 {
-                    interact_box = objectLayer.objectAt(k);
+                    interact_box = entitieslayer.objectAt(k);
                     if(interact_box.id === component[1].id)
                         break;
                 }
@@ -124,37 +122,37 @@ function writeEntities(objectLayer, file)
                 let width = interact_box.width / entity.width;
                 let height = interact_box.height / entity.height;
 
-                file.writeLine("            " + stringifyFloat(x) + ",");
-                file.writeLine("            " + stringifyFloat(y) + ",");
-                file.writeLine("            " + stringifyFloat(width) + ",");
-                file.writeLine("            " + stringifyFloat(height) + ",");
+                output_file.writeLine("  " + stringifyFloat(x) + ",");
+                output_file.writeLine("  " + stringifyFloat(y) + ",");
+                output_file.writeLine("  " + stringifyFloat(width) + ",");
+                output_file.writeLine("  " + stringifyFloat(height) + ",");
 
-                file.writeLine("            " + component[2] + ",");
-                file.writeLine("            " + component[3] + ",");
-                file.writeLine("            " + component[4]);
+                output_file.writeLine("  " + component[2] + ",");
+                output_file.writeLine("  " + component[3] + ",");
+                output_file.writeLine("  " + component[4]);
             }
             else if(component_type == "SPRITE_COMPONENT")
             {
-                file.writeLine("            \"" + component[1] + "\"");
+                output_file.writeLine("  \"" + component[1] + "\"");
             }
             else if(component_type == "ANIMATION_SYSTEM")
             {
-                file.writeLine("            " + component[1] + ",");
-                file.writeLine("            " + component[2] + ",");
-                file.writeLine("            " + stringifyFloat(component[3]) + ",");
-                file.writeLine("            " + component[4] + ",");
-                file.writeLine("            " + component[5] + ",");
-                file.writeLine("            " + component[6]);
+                output_file.writeLine("  " + component[1] + ",");
+                output_file.writeLine("  " + component[2] + ",");
+                output_file.writeLine("  " + stringifyFloat(component[3]) + ",");
+                output_file.writeLine("  " + component[4] + ",");
+                output_file.writeLine("  " + component[5] + ",");
+                output_file.writeLine("  " + component[6]);
             }
             else if(component_type == "LEVER_COMPONENT")
             {
-                file.writeLine("            " + component[1] + ",");
-                file.writeLine("            " + component[2]);
+                output_file.writeLine("  " + component[1] + ",");
+                output_file.writeLine("  " + component[2]);
             }
             else if(component_type == "DOOR_COMPONENT")
             {
-                file.writeLine("            " + component[1] + ",");
-                file.writeLine("            " + component[2]);
+                output_file.writeLine("  " + component[1] + ",");
+                output_file.writeLine("  " + component[2]);
             }
             else
             {
@@ -162,23 +160,27 @@ function writeEntities(objectLayer, file)
             }
 
             if(component.length > 1)
-                file.writeLine("          ]");
+                output_file.writeLine("]");
+
+            output_file.indent_remove(2);
 
             if(j == nb_components - 1)
-                file.writeLine("        }");
+                output_file.writeLine("}");
             else
-                file.writeLine("        },");
+                output_file.writeLine("},");
         }
 
-        file.writeLine("      ]");
+        output_file.indent_remove(2);
+
+        output_file.writeLine("]");
+
+        output_file.indent_remove(2);
 
         if(i == entities.length - 1)
-            file.writeLine("    }");
+            output_file.writeLine("}");
         else
-            file.writeLine("    },");
+            output_file.writeLine("},");
     }
-
-    file.writeLine("  ]");
 }
 
 var customMapFormat = {
@@ -187,12 +189,44 @@ var customMapFormat = {
 
     write: function(map, fileName)
     {
-        let file = new TextFile(fileName, TextFile.WriteOnly);
+        let output_file = {
+            file: new TextFile(fileName, TextFile.WriteOnly),
+            indent: "",
+            indent_add: function(nb)
+            {
+                this.indent += " ".repeat(nb);
+            },
+            indent_remove: function(nb)
+            {
+                this.indent = this.indent.substring(0, this.indent.length - nb);
+            },
 
-        file.writeLine("{");
-        file.writeLine("  \"MapWidth\": " + map.width + ",");
-        file.writeLine("  \"MapHeight\": " + map.height + ",");
-        file.writeLine("");
+            write: function(content)
+            {
+                this.file.write(this.indent);
+                this.file.write(content);
+            },
+            writeLine: function(content)
+            {
+                this.file.write(this.indent);
+                this.file.writeLine(content);
+            },
+            commit: function()
+            {
+                this.file.commit();
+            }
+        };
+
+        output_file.file.writeLine("{");
+        output_file.indent_add(2);
+        output_file.writeLine("\"MapWidth\": " + map.width + ",");
+        output_file.writeLine("\"MapHeight\": " + map.height + ",");
+        output_file.file.writeLine("");
+
+        let backgroundlayers = [];
+        let foregroundlayer = null;
+        let hitboxes = null;
+        let entitieslayer = null;
 
         for(let i = 0; i < map.layerCount; i++)
         {
@@ -200,17 +234,89 @@ var customMapFormat = {
 
             if(layer.isTileLayer)
             {
-                writeTileLayer(layer, file);
+                if(layer.name.startsWith("Background"))
+                {
+                    backgroundlayers.push(layer);
+                }
+                else if(layer.name.startsWith("Foreground"))
+                {
+                    foregroundlayer = layer;
+                }
+                else if(layer.name == "Hitboxes")
+                {
+                    hitboxes = layer;
+                }
+                else
+                {
+                    throw new Error("Invalid layer name for a tile layer : " + layer.name);
+                }
             }
             else if(layer.isObjectLayer)
             {
-                writeEntities(layer, file);
+                if(layer.name == "Entities")
+                {
+                    if(entitieslayer)
+                        throw new Error("There cannot be multiple entity layers.");
+
+                    entitieslayer = layer;
+                }
+                else
+                {
+                    throw new Error("Invalid layer name for an object layer : " + layer.name);
+                }
             }
         }
 
-        file.write("}");
-        file.commit();
-    },
+        if(backgroundlayers.length == 0)
+        {
+            throw new Error("At least one background layer is needed.");
+        }
+
+        if(foregroundlayer == null)
+        {
+            throw new Error("A foreground layer is needed.");
+        }
+
+        backgroundlayers.sort((a, b) => {
+            if(Number(a.name[a.name.length - 1]) > Number(b.name[b.name.length - 1]))
+                return 1;
+
+            return -1;
+        });
+
+        output_file.writeLine("\"BackgroundLayers\": [");
+        output_file.indent_add(2);
+        for(let i = 0; i < backgroundlayers.length; i++)
+        {
+            const layer = backgroundlayers[i];
+ 
+            output_file.writeLine("[");
+
+            writeLayerContent(output_file, layer);
+
+            if(i == backgroundlayers.length - 1)
+                output_file.writeLine("]");
+            else
+                output_file.writeLine("],");
+        };
+        output_file.indent_remove(2);
+        output_file.writeLine("],");
+
+        output_file.writeLine("\"ForegroundLayer\": [");
+        writeLayerContent(output_file, foregroundlayer);
+        output_file.writeLine("],");
+
+        output_file.writeLine("\"Entities\": [");
+        output_file.indent_add(2);
+        if(entitieslayer)
+            writeEntities(output_file, entitieslayer);
+        output_file.indent_remove(2);
+        output_file.writeLine("]");
+
+        output_file.indent_remove(2);
+        output_file.write("}");
+        output_file.commit();
+    }
 }
 
 tiled.registerMapFormat("custom", customMapFormat)
