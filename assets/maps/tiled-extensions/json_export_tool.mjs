@@ -225,7 +225,7 @@ var customMapFormat = {
 
         let backgroundlayers = [];
         let foregroundlayer = null;
-        let hitboxes = null;
+        let hitboxeslayer = null;
         let entitieslayer = null;
 
         for(let i = 0; i < map.layerCount; i++)
@@ -244,7 +244,9 @@ var customMapFormat = {
                 }
                 else if(layer.name == "Hitboxes")
                 {
-                    hitboxes = layer;
+                    if(hitboxeslayer)
+                        throw new Error("There cannot be multiple hitboxes layers.");
+                    hitboxeslayer = layer;
                 }
                 else
                 {
@@ -277,6 +279,11 @@ var customMapFormat = {
             throw new Error("A foreground layer is needed.");
         }
 
+        if(hitboxeslayer == null)
+        {
+            throw new Error("An hitboxes layer is needed.");
+        }
+
         backgroundlayers.sort((a, b) => {
             if(Number(a.name[a.name.length - 1]) > Number(b.name[b.name.length - 1]))
                 return 1;
@@ -304,6 +311,10 @@ var customMapFormat = {
 
         output_file.writeLine("\"ForegroundLayer\": [");
         writeLayerContent(output_file, foregroundlayer);
+        output_file.writeLine("],");
+
+        output_file.writeLine("\"Hitboxes\": [");
+        writeLayerContent(output_file, hitboxeslayer);
         output_file.writeLine("],");
 
         output_file.writeLine("\"Entities\": [");
