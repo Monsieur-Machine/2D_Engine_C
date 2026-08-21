@@ -1,8 +1,9 @@
 # Source files
 ASSET_BUILDER_SOURCES := \
-  asset_file.c \
+  object.c \
   image.c \
   map.c \
+  utils.c \
   main.c
 
 # Compiler and flags

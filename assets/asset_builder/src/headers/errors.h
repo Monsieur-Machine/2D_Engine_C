@@ -15,8 +15,23 @@
         fprintf(stderr, "\033[32mINFO\033[m: " __VA_ARGS__); \
         fputc('\n', stderr); \
     } while (0)
+
+#define return_failure_int \
+    do { \
+        fprintf(stderr, "\tin %s:%d:%s()\n", __FILE__, __LINE__, __func__); \
+        return EXIT_FAILURE; \
+    } while (0);
+
+#define return_failure_ptr \
+    do { \
+        fprintf(stderr, "\tin %s:%d:%s()\n", __FILE__, __LINE__, __func__); \
+        return NULL; \
+    } while (0);
 #else
 #define debug_printf(...)
+
+#define return_failure_int return EXIT_FAILURE;
+#define return_failure_ptr return NULL;
 #endif
 
 #define warning_printf(...) \
@@ -31,17 +46,5 @@
         fprintf(stderr, __VA_ARGS__); \
         fputc('\n', stderr); \
     } while (0)
-
-#define return_failure_int \
-    do { \
-        fprintf(stderr, "         in %s:%d:%s()\n", __FILE__, __LINE__, __func__); \
-        return EXIT_FAILURE; \
-    } while (0);
-
-#define return_failure_ptr \
-    do { \
-        fprintf(stderr, "         in %s:%d:%s()\n", __FILE__, __LINE__, __func__); \
-        return NULL; \
-    } while (0);
 
 #endif // ERRORS_H

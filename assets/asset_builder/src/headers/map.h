@@ -1,9 +1,9 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "asset_file.h"
+#include <stdio.h>
+#include <stdint.h>
 
-int parse_map_for_header(const char *input_file_name, asset_header_def_t *asset_header_def);
-int parse_map_for_content_and_write(const char *input_file_name, FILE *output_file);
+int build_map(const char *input_file_name, FILE *output_file, uint32_t *asset_size);
 
 #endif // MAP_H

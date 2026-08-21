@@ -4,170 +4,41 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-#include "asset_file.h"
+#include "utils.h"
 #include "errors.h"
 
-int parse_map_for_header(const char *input_file_name, asset_header_def_t *asset_header_def)
+static int json_get_object_of_type(const json_object *obj, const char *key, json_type type, json_object **result)
 {
-    json_object *root = json_object_from_file(input_file_name);
-    if (!root)
+    if(!json_object_object_get_ex(obj, key, result))
     {
-        error_printf("Failed to load input file.");
+        error_printf("Object doesn't contain key \"%s\".", key);
         return EXIT_FAILURE;
     }
 
-    if(json_object_object_length(root) != 8)
+    if(!json_object_is_type(*result, type))
     {
-        json_object_put(root);
-        error_printf("Map file doesn't contain 8 elements at its root.");
+        error_printf("Key \"%s\" is not of type %s.", key, json_type_to_name(type));
         return EXIT_FAILURE;
     }
 
-    json_object *tmp_obj;
+    return EXIT_SUCCESS;
+}
 
-    if(!json_object_object_get_ex(root, "MapWidth", &tmp_obj))
+static inline int json_get_idx_of_type(const json_object *obj, size_t idx, json_type type, json_object **result)
+{
+    *result = json_object_array_get_idx(obj, idx);
+
+    if(!*result)
     {
-        json_object_put(root);
-        error_printf("Map file doesn't contain key \"MapWidth\".");
+        error_printf("Array index out of range : %lu.", idx);
         return EXIT_FAILURE;
     }
 
-    if(!json_object_is_type(tmp_obj, json_type_int))
+    if(!json_object_is_type(*result, type))
     {
-        error_printf("Map key \"MapWidth\" is not of type int.");
+        error_printf("Result is not of type %s.", json_type_to_name(type));
         return EXIT_FAILURE;
     }
-
-    int map_width = json_object_get_int(tmp_obj);
-
-    if(!json_object_object_get_ex(root, "MapHeight", &tmp_obj))
-    {
-        json_object_put(root);
-        error_printf("Map file doesn't contain key \"MapHeight\".");
-        return EXIT_FAILURE;
-    }
-
-    if(!json_object_is_type(tmp_obj, json_type_int))
-    {
-        error_printf("Map key \"MapHeight\" is not of type int.");
-        return EXIT_FAILURE;
-    }
-
-    int map_height = json_object_get_int(tmp_obj);
-
-    json_object *entities;
-
-    if(!json_object_object_get_ex(root, "Entities", &entities))
-    {
-        json_object_put(root);
-        error_printf("Map file doesn't contain key \"Entities\".");
-        return EXIT_FAILURE;
-    }
-
-    if(!json_object_is_type(entities, json_type_array))
-    {
-        json_object_put(root);
-        error_printf("Map object \"Entities\" is not an array.");
-        return EXIT_FAILURE;
-    }
-
-    uint32_t entities_nb = json_object_array_length(entities);
-
-    asset_header_def->start = 0;
-    asset_header_def->end = sizeof(map_width) + sizeof(map_height)
-                            + map_width * map_height * sizeof(uint16_t) * 4
-                            + map_width * map_height * sizeof(uint8_t)
-                            + sizeof(entities_nb);
-
-    for(uint32_t i = 0; i < entities_nb; i++)
-    {
-        json_object *entity = json_object_array_get_idx(entities, i);
-
-        if(!json_object_is_type(entity, json_type_object))
-        {
-            error_printf("Map entity is not of type object.");
-            return EXIT_FAILURE;
-        }
-
-        asset_header_def->end += sizeof(uint32_t);
-
-        json_object *components;
-
-        if(!json_object_object_get_ex(entity, "Components", &components))
-        {
-            error_printf("Entity doesn't have key \"Components\".");
-            return EXIT_FAILURE;
-        }
-
-        if(!json_object_is_type(components, json_type_array))
-        {
-            error_printf("Component is not of type array.");
-            return EXIT_FAILURE;
-        }
-
-        uint32_t components_nb = json_object_array_length(components);
-
-        asset_header_def->end += sizeof(components_nb);
-
-        for(uint32_t j = 0; j < components_nb; j++)
-        {
-            json_object *component = json_object_array_get_idx(components, j);
-
-            if(!json_object_is_type(component, json_type_object))
-            {
-                error_printf("Entity component is not of type object.");
-                return EXIT_FAILURE;
-            }
-
-            asset_header_def->end += sizeof(uint32_t);
-
-            json_object *attributes;
-
-            if(!json_object_object_get_ex(component, "Attributes", &attributes))
-            {
-                error_printf("Component doesn't have key \"Attributes\".");
-                return EXIT_FAILURE;
-            }
-
-            if(!json_object_is_type(attributes, json_type_array))
-            {
-                error_printf("Attributes is not of type array.");
-                return EXIT_FAILURE;
-            }
-
-            uint32_t attributes_nb = json_object_array_length(attributes);
-
-            for(uint32_t k = 0; k < attributes_nb; k++)
-            {
-                json_object *attribute = json_object_array_get_idx(attributes, k);
-
-                switch(json_object_get_type(attribute))
-                {
-                  case json_type_int:
-                    asset_header_def->end += sizeof(uint32_t);
-                    break;
-
-                  case json_type_double:
-                    asset_header_def->end += sizeof(float);
-                    break;
-
-                  case json_type_boolean:
-                    asset_header_def->end += sizeof(bool);
-                    break;
-
-                  case json_type_string:
-                    asset_header_def->end += json_object_get_string_len(attribute) + 1;
-                    break;
-
-                  default:
-                    error_printf("Attribute type is not supported : %s", json_type_to_name(json_object_get_type(attribute)));
-                    return EXIT_FAILURE;
-                }
-            }
-        }
-    }
-
-    json_object_put(root);
 
     return EXIT_SUCCESS;
 }
@@ -177,7 +48,7 @@ typedef enum component_type_t {
 #include "components.def"
 } component_type_t;
 
-int parse_map_for_content_and_write(const char *input_file_name, FILE *output_file)
+int build_map(const char *input_file_name, FILE *output_file, uint32_t *asset_size)
 {
     json_object *root = json_object_from_file(input_file_name);
     if (!root)
@@ -188,283 +59,233 @@ int parse_map_for_content_and_write(const char *input_file_name, FILE *output_fi
 
     json_object *tmp_obj;
 
-    if(!json_object_object_get_ex(root, "MapWidth", &tmp_obj))
+    if(json_get_object_of_type(root, "MapWidth", json_type_int, &tmp_obj))
     {
         json_object_put(root);
-        error_printf("Map file doesn't contain key \"MapWidth\".");
-        return EXIT_FAILURE;
+        return_failure_int;
     }
 
-    int map_width = json_object_get_int(tmp_obj);
+    uint16_t map_width = json_object_get_int(tmp_obj);
 
-    if(fwrite(&map_width, sizeof(map_width), 1, output_file) != 1)
+    if(json_get_object_of_type(root, "MapHeight", json_type_int, &tmp_obj))
     {
         json_object_put(root);
-        error_printf("Failed to write to output file : %d", errno);
-        return EXIT_FAILURE;
+        return_failure_int;
     }
 
-    if(!json_object_object_get_ex(root, "MapHeight", &tmp_obj))
+    uint16_t map_height = json_object_get_int(tmp_obj);
+
+    if(file_write(&map_width, sizeof(map_width), 1, output_file))
     {
         json_object_put(root);
-        error_printf("Map file doesn't contain key \"MapHeight\".");
-        return EXIT_FAILURE;
+        return_failure_int;
     }
 
-    int map_height = json_object_get_int(tmp_obj);
+    *asset_size += sizeof(map_width);
 
-    if(fwrite(&map_height, sizeof(map_height), 1, output_file) != 1)
+    if(file_write(&map_height, sizeof(map_height), 1, output_file))
     {
         json_object_put(root);
-        error_printf("Failed to write to output file : %d", errno);
-        return EXIT_FAILURE;
+        return_failure_int;
     }
 
-    // Background Layer 1
-    if(!json_object_object_get_ex(root, "BackgroundLayer1", &tmp_obj))
+    *asset_size += sizeof(map_height);
+
+    // BackgroundLayers
+    json_object *backgroundlayers;
+    if(json_get_object_of_type(root, "BackgroundLayers", json_type_array, &backgroundlayers))
     {
         json_object_put(root);
-        error_printf("Map file doesn't contain key \"BackgroundLayer1\".");
-        return EXIT_FAILURE;
+        return_failure_int;
     }
 
-    if(!json_object_is_type(tmp_obj, json_type_array))
+    uint8_t layer_count = json_object_array_length(backgroundlayers);
+
+    if(file_write(&layer_count, sizeof(layer_count), 1, output_file))
     {
         json_object_put(root);
-        error_printf("Map background layer 1 is not of type array.");
-        return EXIT_FAILURE;
+        return_failure_int;
     }
 
-    uint16_t layer_data[map_width * map_height];
+    *asset_size += sizeof(layer_count);
 
-    for(size_t i = 0; i < (size_t)map_width * (size_t)map_height; i++)
-    {
-        json_object *tile = json_object_array_get_idx(tmp_obj, i);
-        layer_data[i] = json_object_get_int(tile);
-    }
+    uint16_t layer_data[(size_t)map_width * (size_t)map_height];
 
-    if(fwrite(&layer_data, sizeof(uint16_t), map_width * map_height, output_file) != (size_t)map_width * (size_t)map_height)
+    for(uint8_t i = 0; i < layer_count; i++)
     {
-        json_object_put(root);
-        error_printf("Failed to write to output file : %d", errno);
-        return EXIT_FAILURE;
-    }
+        json_object *backgroundlayer;
+        if(json_get_idx_of_type(backgroundlayers, i, json_type_array, &backgroundlayer))
+        {
+            json_object_put(root);
+            return_failure_int;
+        }
 
-    // Background Layer 2
-    if(!json_object_object_get_ex(root, "BackgroundLayer2", &tmp_obj))
-    {
-        json_object_put(root);
-        error_printf("Map file doesn't contain key \"BackgroundLayer2\".");
-        return EXIT_FAILURE;
-    }
+        for(size_t j = 0; j < (size_t)map_width * (size_t)map_height; j++)
+        {
+            if(json_get_idx_of_type(backgroundlayer, j, json_type_int, &tmp_obj))
+            {
+                json_object_put(root);
+                return_failure_int;
+            }
+            layer_data[j] = json_object_get_int(tmp_obj);
+        }
 
-    if(!json_object_is_type(tmp_obj, json_type_array))
-    {
-        json_object_put(root);
-        error_printf("Map background layer 1 is not of type array.");
-        return EXIT_FAILURE;
-    }
+        if(file_write(&layer_data, sizeof(*layer_data), (size_t)map_width * (size_t)map_height, output_file))
+        {
+            json_object_put(root);
+            return_failure_int;
+        }
 
-    for(size_t i = 0; i < (size_t)map_width * (size_t)map_height; i++)
-    {
-        json_object *tile = json_object_array_get_idx(tmp_obj, i);
-        layer_data[i] = json_object_get_int(tile);
-    }
-
-    if(fwrite(&layer_data, sizeof(uint16_t), map_width * map_height, output_file) != (size_t)map_width * (size_t)map_height)
-    {
-        json_object_put(root);
-        error_printf("Failed to write to output file : %d", errno);
-        return EXIT_FAILURE;
-    }
-
-    // Background Layer 3
-    if(!json_object_object_get_ex(root, "BackgroundLayer3", &tmp_obj))
-    {
-        json_object_put(root);
-        error_printf("Map file doesn't contain key \"BackgroundLayer3\".");
-        return EXIT_FAILURE;
-    }
-
-    if(!json_object_is_type(tmp_obj, json_type_array))
-    {
-        json_object_put(root);
-        error_printf("Map background layer 1 is not of type array.");
-        return EXIT_FAILURE;
-    }
-
-    for(size_t i = 0; i < (size_t)map_width * (size_t)map_height; i++)
-    {
-        json_object *tile = json_object_array_get_idx(tmp_obj, i);
-        layer_data[i] = json_object_get_int(tile);
-    }
-
-    if(fwrite(&layer_data, sizeof(uint16_t), map_width * map_height, output_file) != (size_t)map_width * (size_t)map_height)
-    {
-        json_object_put(root);
-        error_printf("Failed to write to output file : %d", errno);
-        return EXIT_FAILURE;
+        *asset_size += sizeof(layer_data);
     }
 
     // Foreground
-    if(!json_object_object_get_ex(root, "Foreground", &tmp_obj))
+    json_object *foregroundlayer;
+    if(json_get_object_of_type(root, "ForegroundLayer", json_type_array, &foregroundlayer))
     {
         json_object_put(root);
-        error_printf("Map file doesn't contain key \"Foreground\".");
-        return EXIT_FAILURE;
-    }
-
-    if(!json_object_is_type(tmp_obj, json_type_array))
-    {
-        json_object_put(root);
-        error_printf("Map background layer 1 is not of type array.");
-        return EXIT_FAILURE;
+        return_failure_int;
     }
 
     for(size_t i = 0; i < (size_t)map_width * (size_t)map_height; i++)
     {
-        json_object *tile = json_object_array_get_idx(tmp_obj, i);
-        layer_data[i] = json_object_get_int(tile);
+        if(json_get_idx_of_type(foregroundlayer, i, json_type_int, &tmp_obj))
+        {
+            json_object_put(root);
+            return_failure_int;
+        }
+        layer_data[i] = json_object_get_int(tmp_obj);
     }
 
-    if(fwrite(&layer_data, sizeof(uint16_t), map_width * map_height, output_file) != (size_t)map_width * (size_t)map_height)
+    if(file_write(&layer_data, sizeof(*layer_data), (size_t)map_width * (size_t)map_height, output_file))
     {
         json_object_put(root);
-        error_printf("Failed to write to output file : %d", errno);
-        return EXIT_FAILURE;
+        return_failure_int;
     }
+
+    *asset_size += sizeof(layer_data);
 
     // Hitboxes
-    if(!json_object_object_get_ex(root, "Hitboxes", &tmp_obj))
+    json_object *hitboxes;
+    if(json_get_object_of_type(root, "Hitboxes", json_type_array, &hitboxes))
     {
         json_object_put(root);
-        error_printf("Map file doesn't contain key \"Hitboxes\".");
-        return EXIT_FAILURE;
+        return_failure_int;
     }
 
-    if(!json_object_is_type(tmp_obj, json_type_array))
-    {
-        json_object_put(root);
-        error_printf("Map background layer 1 is not of type array.");
-        return EXIT_FAILURE;
-    }
-
-    uint8_t hitboxes_layer[map_width * map_height];
+    uint8_t hitboxes_layer_data[(size_t)map_width * (size_t)map_height];
 
     for(size_t i = 0; i < (size_t)map_width * (size_t)map_height; i++)
     {
-        json_object *tile = json_object_array_get_idx(tmp_obj, i);
-        hitboxes_layer[i] = json_object_get_int(tile);
+        if(json_get_idx_of_type(hitboxes, i, json_type_int, &tmp_obj))
+        {
+            json_object_put(root);
+            return_failure_int;
+        }
+        hitboxes_layer_data[i] = json_object_get_int(tmp_obj);
     }
 
-    if(fwrite(&hitboxes_layer, sizeof(uint8_t), map_width * map_height, output_file) != (size_t)map_width * (size_t)map_height)
+    if(file_write(&hitboxes_layer_data, sizeof(*hitboxes_layer_data), (size_t)map_width * (size_t)map_height, output_file))
     {
         json_object_put(root);
-        error_printf("Failed to write to output file : %d", errno);
-        return EXIT_FAILURE;
+        return_failure_int;
     }
 
+    *asset_size += sizeof(hitboxes_layer_data);
+
+    // Entities
     json_object *entities;
 
-    if(!json_object_object_get_ex(root, "Entities", &entities))
+    if(json_get_object_of_type(root, "Entities", json_type_array, &entities))
     {
         json_object_put(root);
-        error_printf("Map file doesn't contain key \"Entities\".");
-        return EXIT_FAILURE;
+        return_failure_int;
     }
 
-    uint32_t entities_nb = json_object_array_length(entities);
+    uint16_t entities_nb = json_object_array_length(entities);
 
-    if(fwrite(&entities_nb, sizeof(entities_nb), 1, output_file) != 1)
+    if(file_write(&entities_nb, sizeof(entities_nb), 1, output_file))
     {
         json_object_put(root);
-        error_printf("Failed to write to output file : %d", errno);
-        return EXIT_FAILURE;
+        return_failure_int;
     }
+
+    *asset_size += sizeof(entities_nb);
 
     for(uint32_t i = 0; i < entities_nb; i++)
     {
         json_object *entity = json_object_array_get_idx(entities, i);
 
-        if(!json_object_object_get_ex(entity, "ID", &tmp_obj))
+        if(json_get_object_of_type(entity, "ID", json_type_int, &tmp_obj))
         {
             json_object_put(root);
-            error_printf("Entity doesn't have key \"ID\".");
-            return EXIT_FAILURE;
-        }
-
-        if(!json_object_is_type(tmp_obj, json_type_int))
-        {
-            json_object_put(root);
-            error_printf("Entity ID is not of type int.");
-            return EXIT_FAILURE;
+            return_failure_int;
         }
 
         uint32_t entity_id = json_object_get_int(tmp_obj);
 
-        if(fwrite(&entity_id, sizeof(entity_id), 1, output_file) != 1)
+        if(file_write(&entity_id, sizeof(entity_id), 1, output_file))
         {
             json_object_put(root);
-            error_printf("Failed to write to output file : %d", errno);
-            return EXIT_FAILURE;
+            return_failure_int;
         }
+
+        *asset_size += sizeof(entity_id);
 
         json_object *components;
 
-        if(!json_object_object_get_ex(entity, "Components", &components))
+        if(json_get_object_of_type(entity, "Components", json_type_array, &components))
         {
             json_object_put(root);
-            error_printf("Entity doesn't have key \"Components\".");
-            return EXIT_FAILURE;
+            return_failure_int;
         }
 
-        uint32_t components_nb = json_object_array_length(components);
+        uint16_t components_nb = json_object_array_length(components);
 
-        if(fwrite(&components_nb, sizeof(components_nb), 1, output_file) != 1)
+        if(file_write(&components_nb, sizeof(components_nb), 1, output_file))
         {
             json_object_put(root);
-            error_printf("Failed to write to output file : %d", errno);
-            return EXIT_FAILURE;
+            return_failure_int;
         }
+
+        *asset_size += sizeof(components_nb);
 
         for(uint32_t j = 0; j < components_nb; j++)
         {
-            json_object *component = json_object_array_get_idx(components, j);
+            json_object *component;
+            if(json_get_idx_of_type(components, j, json_type_object, &component))
+            {
+                json_object_put(root);
+                return_failure_int;
+            }
 
             json_object *attributes;
 
-            if(!json_object_object_get_ex(component, "Type", &tmp_obj))
+            if(json_get_object_of_type(component, "Type", json_type_string, &tmp_obj))
             {
                 json_object_put(root);
-                error_printf("Component doesn't have key \"Type\".");
-                return EXIT_FAILURE;
+                return_failure_int;
             }
 
-            if(!json_object_is_type(tmp_obj, json_type_string))
-            {
-                json_object_put(root);
-                error_printf("Component type is not of type string.");
-                return EXIT_FAILURE;
-            }
+            uint16_t component_type;
 
-            component_type_t component_type;
 #define COMPONENT(NAME, ...) \
             if(!strcmp(#NAME, json_object_get_string(tmp_obj))) \
                 component_type = NAME;
 #include "components.def"
 
-            if(fwrite(&component_type, sizeof(uint32_t), 1, output_file) != 1)
+            if(file_write(&component_type, sizeof(component_type), 1, output_file))
             {
                 json_object_put(root);
-                error_printf("Failed to write to output file : %d", errno);
-                return EXIT_FAILURE;
+                return_failure_int;
             }
 
-            if(!json_object_object_get_ex(component, "Attributes", &attributes))
+            *asset_size += sizeof(component_type);
+
+            if(json_get_object_of_type(component, "Attributes", json_type_array, &attributes))
             {
                 json_object_put(root);
-                error_printf("Component doesn't have key \"Attributes\".");
-                return EXIT_FAILURE;
+                return_failure_int;
             }
 
             uint32_t attributes_nb = json_object_array_length(attributes);
@@ -477,53 +298,54 @@ int parse_map_for_content_and_write(const char *input_file_name, FILE *output_fi
                 {
                   case json_type_int:
                   {
-                    int value = json_object_get_int(attribute);
-                    if(fwrite(&value, sizeof(value), 1, output_file) != 1)
+                    uint32_t value = json_object_get_int(attribute);
+                    if(file_write(&value, sizeof(value), 1, output_file))
                     {
                         json_object_put(root);
-                        error_printf("Failed to write to output file : %d", errno);
                         return EXIT_FAILURE;
                     }
+                    *asset_size += sizeof(value);
                     break;
                   }
 
                   case json_type_double:
                   {
                     float value = json_object_get_double(attribute);
-                    if(fwrite(&value, sizeof(value), 1, output_file) != 1)
+                    if(file_write(&value, sizeof(value), 1, output_file))
                     {
                         json_object_put(root);
-                        error_printf("Failed to write to output file : %d", errno);
-                        return EXIT_FAILURE;
+                        return_failure_int;
                     }
+                    *asset_size += sizeof(value);
                     break;
                   }
 
                   case json_type_boolean:
                   {
                     bool value = json_object_get_boolean(attribute);
-                    if(fwrite(&value, sizeof(value), 1, output_file) != 1)
+                    if(file_write(&value, sizeof(value), 1, output_file))
                     {
                         json_object_put(root);
-                        error_printf("Failed to write to output file : %d", errno);
-                        return EXIT_FAILURE;
+                        return_failure_int;
                     }
+                    *asset_size += sizeof(value);
                     break;
                   }
 
                   case json_type_string:
                   {
                     const char *str = json_object_get_string(attribute);
-                    if(fwrite(str, sizeof(char), strlen(str) + 1, output_file) != strlen(str) + 1)
+                    if(file_write(str, sizeof(*str), strlen(str) + 1, output_file))
                     {
                         json_object_put(root);
-                        error_printf("Failed to write to output file : %d", errno);
-                        return EXIT_FAILURE;
+                        return_failure_int;
                     }
+                    *asset_size += (strlen(str) + 1) * sizeof(*str);
                     break;
                   }
 
                   default:
+                    error_printf("Component attribute of type %s is not handled.", json_type_to_name(json_object_get_type(attribute)));
                     return EXIT_FAILURE;
                 }
             }

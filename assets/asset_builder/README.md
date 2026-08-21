@@ -7,42 +7,35 @@ The supported file formats are :
 
 The different files format are deduced from the extensions only.
 
-The code has some optimisation problems but here is the main idea :
+--------
 
-First calculate header wich consists of :
+To build objects files, they are analised and written in an output file wich content depend on asset type.
 
-|    Description    |                      Length                       |
-| :---------------- | :------------------------------------------------ |
-| Assets number     | unsigned int (32 bits)                            |
-| ...               |                                                   |
-| Asset name        | const char [] (variable length, ends with '\00')  |
-| Asset start index | unsigned int (32 bits)                            |
-| ...               |                                                   |
+Their structure will be :
 
-This calculation needs to analse the content of inputs files to calculate the start offsets in the file.
+|    Description    |         Length          |
+| :---------------- | :-----------------------|
+| Asset size        | unsigned int (32 bits)  |
+| Asset data        | depends on asset type   |
 
-Then write the content of each file in the same order as they were analysed for header calculations.
-
-For the moment each input file is openend and analized 2 times.
-
-## Image (.png)
+#### Image (.png)
 
 Convert png's RGBA8888 to custom RGB565 with #0001 in RGB565 as the transparent color.
 If png's alpha is null then the color of the pixel will be replaced with this.
 
-### Image asset data structure
+##### Image asset data structure
 
 |    Description    |                   Length                    |
 | :---------------- | :------------------------------------------ |
-| Image width       | unsigned int (32 bits)                      |
-| Image height      | unsigned int (32 bits)                      |
+| Image width       | unsigned short (16 bits)                    |
+| Image height      | unsigned short (16 bits)                    |
 | Image data        | depend on image size, pixel short (16 bits) |
 
-## Maps (.map)
+#### Maps (.map)
 
 Convert from json to custom format.
 
-### Maps asset data structure
+##### Maps asset data structure
 
 |         Description         |                        Length                         |
 | :-------------------------- | :---------------------------------------------------- |
@@ -58,7 +51,7 @@ Convert from json to custom format.
 | Entity ID                   | unsigned int (32 bits)                                |
 | Entity components number    | unsigned short (16 bits)                              |
 |   ...                       |                                                       |
-|   Component type            | unsigned int (32 bits)                                |
+|   Component type            | unsigned short (16 bits)                              |
 |     ...                     |                                                       |
 |     Component attributes    | depend on attribute type                              |
 |     int                     | unsigned int (32 bits)                                |
@@ -67,3 +60,19 @@ Convert from json to custom format.
 |     str                     | const char [] (variable length, ends with '\00')      |
 |     ...                     |                                                       |
 |   ...                       |                                                       |
+
+--------
+
+To build asset file :
+
+First calculate header wich consists of :
+
+|    Description    |                      Length                       |
+| :---------------- | :------------------------------------------------ |
+| Assets number     | unsigned int (32 bits)                            |
+| ...               |                                                   |
+| Asset name        | const char [] (variable length, ends with '\00')  |
+| Asset start index | unsigned int (32 bits)                            |
+| ...               |                                                   |
+
+And then write content of each input files.
