@@ -8,10 +8,6 @@
 
 - [ ] Add compression into asset builder and asset manager
 
-- [ ] Optimize asset builder file analize
-
-- [ ] Create camera
-
 - [ ] Make functionnal hitboxes between entities and map
 
 - [ ] Make triggers
@@ -19,18 +15,26 @@
 
 - [ ] Make physics component use acceleration
 
+- [ ] Make camera use acceleration
+
+- [ ] Make camera center on map
+
 ###### Bugs
 
 ### In progress
 
-- [ ] Create tilemap management and display
+### Done
+
+- [x] Create camera
+
+- [x] Optimize asset builder file analize
+
+- [x] Create tilemap management and display
   - [x] Find tilemap building format
   - [x] Add building support for tilemaps in asset builder
   - [x] Add loading support in asset manager
-  - [ ] Display tilemaps
+  - [x] Display tilemaps
     - [ ] Work on optimizations !
-
-### Done
 
 - [x] Work on entities draw order
 
