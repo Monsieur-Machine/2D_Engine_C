@@ -17,13 +17,16 @@
 
 - [ ] Make camera use acceleration
 
-- [ ] Make camera center on map
-
 ###### Bugs
+
+- [ ] Fix transparency issues
+  - [ ] Rethink export properties and platforms ?
 
 ### In progress
 
 ### Done
+
+- [x] Make camera center on map
 
 - [x] Create camera
 

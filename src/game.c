@@ -21,7 +21,7 @@ int game_init(void)
     entity_manager_init();
     if(asset_manager_init()) return_failure_int;
 
-    asset_t *map_asset = asset_manager_load_asset("dungeon_entry", ASSET_MAP);
+    asset_t *map_asset = asset_manager_load_asset("dungeon_room_1", ASSET_MAP);
     if(!map_asset) return_failure_int;
 
     game.map = map_asset->data;
@@ -45,8 +45,8 @@ int game_init(void)
             transform_component_data_t *transform_component_data = transform_component->data;
 
             transform_component_data->bounds = (frect_t) {
-                .x = 100.0f,
-                .y = 100.0f,
+                .x = 96.0f,
+                .y = 176.0f,
                 .w = 32.0f,
                 .h = 32.0f
             };
