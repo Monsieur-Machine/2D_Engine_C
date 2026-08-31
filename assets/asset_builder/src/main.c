@@ -48,13 +48,7 @@ int main(int argc, char *argv[])
 
         const char *input_file_path = argv[3];
 
-        if(build_object(input_file_path, output_file))
-        {
-            if(fclose(output_file))
-                error_printf("Failed to close output file : %d", errno);
-
-            return_failure_int;
-        }
+        if(build_object(input_file_path, output_file)) goto_failure;
     }
     else if(build_function == BUILD_ASSET_FILE)
     {
@@ -62,13 +56,7 @@ int main(int argc, char *argv[])
 
         const int nb_input_object_files = argc - 2;
 
-        if(file_write(&nb_input_object_files, sizeof(nb_input_object_files), 1, output_file))
-        {
-            if(fclose(output_file))
-                error_printf("Failed to close output file : %d", errno);
-
-            return_failure_int;
-        }
+        if(file_write(&nb_input_object_files, sizeof(nb_input_object_files), 1, output_file)) goto_failure;
         header_size += sizeof(nb_input_object_files);
 
         FILE *input_object_files[nb_input_object_files];
@@ -90,10 +78,7 @@ int main(int argc, char *argv[])
                     if(fclose(input_object_files[i]))
                         error_printf("Failed to close input object file : %d", errno);
 
-                if(fclose(output_file))
-                    error_printf("Failed to close output file : %d", errno);
-
-                return EXIT_FAILURE;
+                goto_failure;
             }
 
             if(file_read(&input_object_files_sizes[i], sizeof(*input_object_files_sizes), 1, input_object_files[i]))
@@ -102,10 +87,7 @@ int main(int argc, char *argv[])
                     if(fclose(input_object_files[i]))
                         error_printf("Failed to close input object file : %d", errno);
 
-                if(fclose(output_file))
-                    error_printf("Failed to close output file : %d", errno);
-
-                return_failure_int
+                goto_failure;
             }
 
             const char *input_object_file_slash = strrchr(input_object_file_path, '/');
@@ -136,10 +118,7 @@ int main(int argc, char *argv[])
                     if(fclose(input_object_files[i]))
                         error_printf("Failed to close input object file : %d", errno);
 
-                if(fclose(output_file))
-                    error_printf("Failed to close output file : %d", errno);
-
-                return_failure_int;
+                goto_failure;
             }
 
             if(file_write(&input_object_files_offsets[i], sizeof(*input_object_files_offsets), 1, output_file))
@@ -148,10 +127,7 @@ int main(int argc, char *argv[])
                     if(fclose(input_object_files[i]))
                         error_printf("Failed to close input object file : %d", errno);
 
-                if(fclose(output_file))
-                    error_printf("Failed to close output file : %d", errno);
-
-                return_failure_int;
+                goto_failure;
             }
         }
 
@@ -165,10 +141,7 @@ int main(int argc, char *argv[])
                     if(fclose(input_object_files[i]))
                         error_printf("Failed to close input object file : %d", errno);
 
-                if(fclose(output_file))
-                    error_printf("Failed to close output file : %d", errno);
-
-                return_failure_int;
+                goto_failure;
             }
 
             if(file_write(buffer, sizeof(*buffer), input_object_files_sizes[i], output_file))
@@ -177,10 +150,7 @@ int main(int argc, char *argv[])
                     if(fclose(input_object_files[i]))
                         error_printf("Failed to close input object file : %d", errno);
 
-                if(fclose(output_file))
-                    error_printf("Failed to close output file : %d", errno);
-
-                return_failure_int;
+                goto_failure;
             }
         }
 
@@ -194,10 +164,7 @@ int main(int argc, char *argv[])
                     if(fclose(input_object_files[i]))
                         error_printf("Failed to close input object file : %d", errno);
 
-                if(fclose(output_file))
-                    error_printf("Failed to close output file : %d", errno);
-
-                return EXIT_FAILURE;
+                goto_failure;
             }
         }
     }
@@ -209,4 +176,10 @@ int main(int argc, char *argv[])
     }
 
     return EXIT_SUCCESS;
+
+failure:
+    if(fclose(output_file))
+        error_printf("Failed to close output file : %d", errno);
+
+    return EXIT_FAILURE;
 }

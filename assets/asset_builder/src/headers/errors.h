@@ -27,11 +27,18 @@
         fprintf(stderr, "\tin %s:%d:%s()\n", __FILE__, __LINE__, __func__); \
         return NULL; \
     } while (0);
-#else
+#define goto_failure \
+    do { \
+        fprintf(stderr, "\tin %s:%d:%s()\n", __FILE__, __LINE__, __func__); \
+        goto failure; \
+    } while (0);
+
+    #else
 #define debug_printf(...)
 
 #define return_failure_int return EXIT_FAILURE;
 #define return_failure_ptr return NULL;
+#define goto_failure goto failure;
 #endif
 
 #define warning_printf(...) \
