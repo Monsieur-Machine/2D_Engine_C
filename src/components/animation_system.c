@@ -98,21 +98,29 @@ inline int animation_system_apply_changes(component_t *system)
 
     if(linked_list_clear(&system_data->frames)) return_failure_int;
 
-    for(size_t current_frame_nb = 0; current_frame_nb < system_data->nb_frames; current_frame_nb++)
+    for(size_t i = 0; i < system_data->nb_frames; i++)
     {
-        elem_t *frame = create_elem(&system_data->frames);
-        if(!frame) return_failure_int;
+        elem_t *frame_elem = create_elem(&system_data->frames);
+        if(!frame_elem) return_failure_int;
 
-        ((rect_t *)frame->data)->x = sprite_component_data->src_rect.w * current_frame_nb;
-        ((rect_t *)frame->data)->y = 0;
-        ((rect_t *)frame->data)->w = sprite_component_data->src_rect.w;
-        ((rect_t *)frame->data)->h = sprite_component_data->src_rect.h;
+        rect_t *frame = (rect_t *)frame_elem->data;
 
-        linked_list_push_back(&system_data->frames, frame);
+        frame->x = sprite_component_data->src_rect.w * i;
+        frame->y = 0;
+        frame->w = sprite_component_data->src_rect.w;
+        frame->h = sprite_component_data->src_rect.h;
+
+        linked_list_push_back(&system_data->frames, frame_elem);
+
+        if(system_data->current_frame_nb == i)
+            system_data->current_frame = frame_elem;
     }
 
-    system_data->current_frame = linked_list_get(&system_data->frames, system_data->current_frame_nb);
-    if(!system_data->current_frame) return_failure_int;
+    if(!system_data->current_frame)
+    {
+        error_printf("Current frame number out of range.");
+        return EXIT_FAILURE;
+    }
 
     sprite_component_data->src_rect = *(rect_t *)system_data->current_frame->data;
 
