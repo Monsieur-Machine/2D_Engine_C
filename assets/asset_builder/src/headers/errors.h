@@ -33,7 +33,7 @@
         goto failure; \
     } while (0);
 
-    #else
+#else
 #define debug_printf(...)
 
 #define return_failure_int return EXIT_FAILURE;

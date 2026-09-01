@@ -107,7 +107,14 @@ int game_init(void)
             };
         }
 
-        if(!entity_new_component(player_entity, PHYSICS_SYSTEM)) return_failure_int;
+        {
+            component_t *physics_component = entity_new_component(player_entity, PHYSICS_SYSTEM);
+            if(!physics_component) return_failure_int;
+
+            physics_system_data_t *physics_system_data = physics_component->data;
+
+            physics_system_data->smoothing_factor = 0.0005;
+        }
 
         if(!entity_new_component(player_entity, PLAYER_SYSTEM))  return_failure_int;
     }
