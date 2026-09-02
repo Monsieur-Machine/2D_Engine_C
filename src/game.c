@@ -51,8 +51,8 @@ int game_init(void)
                 .h = 32.0f
             };
 
-            game.camera.tracking_pos = (fvector2d_t *)&transform_component_data->bounds;
-            game.camera.tracking_center_offset = (fvector2d_t) {
+            game.camera.tracking_pos = (fvector2d_t *)&transform_component_data->bounds; // dangerous if fvector2d_t or frect_t change definition
+            game.camera.tracking_center_offset = (vector2d_t) {
                 .x = transform_component_data->bounds.w / 2,
                 .y = transform_component_data->bounds.h / 2
             };

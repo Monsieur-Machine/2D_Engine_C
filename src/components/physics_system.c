@@ -50,7 +50,7 @@ int physics_system_update(component_t *component)
 {
     physics_system_data_t *system_data = component->data;
     transform_component_data_t *transform_component_data = system_data->transform_component->data;
-    hitbox_component_data_t *hitbox_component_data = system_data->hitbox_component->data;
+    const hitbox_component_data_t *hitbox_component_data = system_data->hitbox_component->data;
 
     system_data->velocity.x = lerp_time(system_data->velocity.x, system_data->target_velocity.x * system_data->speed, system_data->smoothing_factor, game.delta_time_ms);
     system_data->velocity.y = lerp_time(system_data->velocity.y, system_data->target_velocity.y * system_data->speed, system_data->smoothing_factor, game.delta_time_ms);
@@ -78,7 +78,7 @@ static inline int action_detect_solve_entities_collision(elem_t *elem, void *arg
 
     physics_system_data_t *system_data = physics_system->data;
     transform_component_data_t * transform_component_data = system_data->transform_component->data;
-    hitbox_component_data_t *hitbox_component_data = system_data->hitbox_component->data;
+    const hitbox_component_data_t *hitbox_component_data = system_data->hitbox_component->data;
 
     const entity_t *target_entity = elem->data;
 

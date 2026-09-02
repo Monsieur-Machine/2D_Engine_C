@@ -177,7 +177,7 @@ static inline int action_detect_activate_interact(elem_t *elem, void *arg)
 {
     entity_t *target_entity = elem->data;
 
-    const player_system_data_t *system_data = arg;
+    player_system_data_t *system_data = arg;
     physics_system_data_t *physics_system_data = system_data->physics_system->data;
 
     component_t *target_interact_component = entity_get_component(target_entity, INTERACT_COMPONENT);
