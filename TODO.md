@@ -24,6 +24,8 @@
 
 ### In progress
 
+- [ ] Create lua component
+
 ### Done
 
 - [x] Make camera center on map

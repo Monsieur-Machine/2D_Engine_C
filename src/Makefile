@@ -9,7 +9,8 @@ SOURCES := \
   components/animation_system.c \
   components/player_system.c \
   components/lever_component.c \
-  components/door_component.c
+  components/door_component.c \
+  components/lua_component.c
 
 # Compiler and flags
 SRC_CC = gcc

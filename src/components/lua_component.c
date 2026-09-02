@@ -1,0 +1,6 @@
+#ifndef LUA_COMPONENT_H
+#define LUA_COMPONENT_H
+
+
+
+#endif // LUA_COMPONENT_H
