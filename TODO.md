@@ -22,6 +22,8 @@
 - [ ] Fix transparency issues
   - [ ] Rethink export properties and platforms ?
 
+- [ ] Fix door component and other components (?) loading from map
+
 ### In progress
 
 ### Done
