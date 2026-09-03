@@ -10,6 +10,7 @@
 #include "player_system.h"
 #include "lever_component.h"
 #include "door_component.h"
+#include "lua_component.h"
 // Add new components header file here
 
 #endif // COMPONENTS_H
