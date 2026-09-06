@@ -3,13 +3,9 @@ SHELL = /usr/bin/env bash
 # Build folder
 BUILD_DIR = build
 
-# Source output target name
+# Outputs target name and path
 SOURCE_OUTPUT = $(BUILD_DIR)/2D_Engine
-
-# Core output target name
 CORE_OUTPUT = $(BUILD_DIR)/libcore.a
-
-# Assets output
 ASSET_OUTPUT = $(BUILD_DIR)/game.data
 
 # Verbosity
@@ -19,20 +15,20 @@ Q :=
 endif
 
 # Colors
-GREEN  := \033[32m
-YELLOW := \033[33m
-RESET  := \033[m
+export GREEN  := \033[32m
+export YELLOW := \033[33m
+export RESET  := \033[m
 
 # Default targets
-all: build_core build_src build_assets
+all: $(SOURCE_OUTPUT)
 
 # Sub Makefiles
 SOURCE_DIR = src
-CORE_DIR = SDL3_Core/src
+CORE_DIR = core/src
 ASSETS_DIR = assets
 
-include $(CORE_DIR)/Makefile
 include $(SOURCE_DIR)/Makefile
+include $(CORE_DIR)/Makefile
 include $(ASSETS_DIR)/Makefile
 
 # Clean

@@ -25,7 +25,7 @@ ASSET_BUILDER_CFLAGS = --std=c17 --pedantic -O1 -DDEBUG=1 -g $(shell pkg-config 
 ASSET_BUILDER_LDFLAGS = -O1 $(shell pkg-config --libs libpng json-c)
 endif
 
-ASSET_BUILDER_INCLUDE_DIRS = $(ASSET_BUILDER_DIR)/headers $(SOURCE_DIR)/components/headers
+ASSET_BUILDER_INCLUDE_DIRS = $(SOURCE_DIR)/components $(ASSET_BUILDER_DIR)
 ASSET_BUILDER_INCLUDE_DIRS := $(addprefix -I, $(ASSET_BUILDER_INCLUDE_DIRS))
 
 # Deduce objects

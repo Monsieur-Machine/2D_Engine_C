@@ -1,7 +1,7 @@
 gcc
 # Headers
--Isrc/components/headers
--ISDL3_Core/src/headers
+-Isrc/components
+-Icore/src
 
 # Macros
 -DDEBUG=2

@@ -1,0 +1,145 @@
+#!/usr/bin/env bash
+
+#
+# Configuration script to build the 2D_Engine for different platforms.
+#
+# Creates makefile configuration to build for target host.
+#
+
+#
+# Project settings no matter current and target hosts
+#
+
+#CACHE_DIR=".cache"
+#LIB_DIR="lib"
+#CONFIG_FILE=".config"
+
+#LUA_VERSION="5.5.1"
+#LUA_CHECKSUM="1c4b4068d67061f2a2231ad2b5422e77acea1487ea9890f6320af614f4373dce"
+
+#
+# Main
+#
+
+### Setup dirs and logs
+#
+## Cache dir
+#mkdir -p "${CACHE_DIR}"
+
+print_error()
+{
+    echo -e "\033[31merror\033[m: $1"
+    exit 0
+}
+
+## Parse args
+TARGET_HOST="guess"
+
+for i in "$@"; do
+    case $i in
+      --target-host=*)
+        TARGET_HOST="${i#*=}"
+        shift # past argument=value
+        ;;
+      --clean)
+        CLEAN=1
+        EXIT_AFTER_CLEAN=1
+        shift # past argument=value
+        ;;
+      --reconfigure)
+        CLEAN=1
+        shift # past argument=value
+        ;;
+      -h|--help)
+        echo "Usage : ./configure [OPTION]..."
+        echo "Add submodules depending on target host platform and"
+        echo "create makefile configuration to build for target host"
+        echo
+        echo -e "\033[1m  --target-host=\033[mHOST"
+        echo -e "\tselect target host platform, default is \"guess\" and"
+        echo -e "\twill try to configure for your current OS"
+        echo -e "\033[1m  --clean\033[m"
+        echo -e "\tclean build, config, cache, etc, and exit"
+        echo -e "\033[1m  --reconfigure\033[m"
+        echo -e "\tcall clean, and configure"
+        echo -e "\033[1m  -h, --help\033[m"
+        echo -e "\tshow help and exit"
+        exit 0
+        ;;
+      -*)
+        print_error "Unknown option $i"
+        ;;
+      *)
+        ;;
+    esac
+done
+
+## Clean
+if [ -n "${CLEAN}" ]; then
+    make clean
+    rm -rf .config .cache lib
+    echo "Cleaned project."
+fi
+
+if [ -n "${EXIT_AFTER_CLEAN}" ]; then
+    exit 0
+fi
+
+## Deduce current and target hosts
+case "${OSTYPE}" in
+  linux*)
+    CURRENT_HOST="linux"
+    ;;
+#  msys*|cygwin*)
+#    CURRENT_HOST="windows"
+#    ;;
+#  darwin*)
+#    CURRENT_HOST="macos"
+#    ;;
+  *)
+    print_error "Current detected os is unsuppoted to build from: ${OSTYPE}\nUse --help for more informations."
+    ;;
+esac
+
+echo "Detected current host: ${CURRENT_HOST}"
+
+if [ "${TARGET_HOST}" = "guess" ]; then
+    TARGET_HOST=${CURRENT_HOST}
+fi
+
+case "${TARGET_HOST}" in
+  linux|fxcg50)
+    echo "Configuring for target: ${TARGET_HOST}"
+    ;;
+  *)
+    print_error "Unsupported target host: ${TARGET_HOST}"
+    ;;
+esac
+
+echo
+
+#
+### Download libs
+#echo "===== downloading lua ====="
+#
+#LUA_TAR_GZ="${CACHE_DIR}/lua-${LUA_VERSION}.tar.gz"
+#if [ ! -e "${LUA_TAR_GZ}" ]; then
+#    echo "Downloading lua source..."
+#    if ! curl --output "${LUA_TAR_GZ}" "https://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz"; then
+#        print_error "Failed to download lua source."
+#    fi
+#fi
+#
+#echo "Checking lua source sum..."
+#if ! echo "${LUA_CHECKSUM} ${LUA_TAR_GZ}" | sha256sum -c; then
+#    CHECKSUM="$(sha256sum "${LUA_TAR_GZ}" | cut -d " " -f 1)"
+#    rm "${LUA_TAR_GZ}"
+#    print_error "Lua zip checksum not valid.\nExpected: \"${LUA_CHECKSUM}\"\nGot: \"${CHECKSUM}\"\nPlease rerun command to retry downloading."
+#fi
+#
+#echo "Extracting lua source"
+#if ! tar -xzf "${LUA_TAR_GZ}" --directory "${LIB_DIR}"; then
+#    print_error "Failed to extract lua source."
+#fi
+#
+

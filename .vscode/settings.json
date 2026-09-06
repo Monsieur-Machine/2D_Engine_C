@@ -1,5 +1,11 @@
 {
     "nixEnvSelector.suggestion": false,
     "nixEnvSelector.nixFile": "${workspaceFolder}/shell.nix",
-    "nixEnvSelector.useFlakes": false
+    "nixEnvSelector.useFlakes": false,
+
+    "files.associations": {
+        "*.tsx": "xml",
+        "*.map": "json",
+        "configure": "shellscript"
+    }
 }

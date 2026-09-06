@@ -31,7 +31,7 @@ SRC_CFLAGS = --std=c17 --pedantic -O1 -g -DDEBUG=2 \
 SRC_LDFLAGS = -O1
 endif
 
-SRC_INCLUDE_DIRS = $(SOURCE_DIR)/components/headers $(CORE_DIR)/headers
+SRC_INCLUDE_DIRS = $(SOURCE_DIR)/components $(CORE_DIR)
 SRC_INCLUDE_DIRS := $(addprefix -I, $(SRC_INCLUDE_DIRS))
 
 # Deduce objects
