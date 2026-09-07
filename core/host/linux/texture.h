@@ -7,6 +7,9 @@
 
 typedef SDL_Texture texture_t;
 
+#define get_width(T) T->w
+#define get_height(T) T->h
+
 texture_t *load_texture(void);
 void destroy_texture(texture_t *texture);
 

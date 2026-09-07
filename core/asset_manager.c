@@ -102,10 +102,13 @@ int asset_manager_exit(void)
     if(linked_list_exit(&game.asset_manager.assets_header_defs)) return_failure_int;
     if(linked_list_exit(&game.asset_manager.assets)) return_failure_int;
 
-    if(fclose(game.asset_manager.asset_file))
+    if(game.asset_manager.asset_file)
     {
-        error_printf("Failed to close asset file : %d", errno);
-        return EXIT_FAILURE;
+        if(fclose(game.asset_manager.asset_file))
+        {
+            error_printf("Failed to close asset file : %d", errno);
+            return EXIT_FAILURE;
+        }
     }
 
     debug_printf("Exited asset manager.");

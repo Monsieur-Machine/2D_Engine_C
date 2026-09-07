@@ -96,11 +96,11 @@ static inline int action_detect_solve_entities_collision(elem_t *elem, void *arg
 
     const frect_t *hitbox_bounds = &hitbox_component_data->bounds;
     const frect_t *target_hitbox_bounds = &target_hitbox_component_data->bounds;
-    frect_t intersect_frect;
+    frect_t intersect;
 
-    if(intersect_frect(hitbox_bounds, target_hitbox_bounds, &intersect_frect))
+    if(intersect_frect(hitbox_bounds, target_hitbox_bounds, &intersect))
     {
-        if(intersect_frect.w < intersect_frect.h)
+        if(intersect.w < intersect.h)
         {
             const float left_correction = hitbox_bounds->x + hitbox_bounds->w - target_hitbox_bounds->x;
             const float right_correction = target_hitbox_bounds->x + target_hitbox_bounds->w - hitbox_bounds->x;

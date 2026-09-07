@@ -13,7 +13,6 @@ ASSETS := $(addprefix $(ASSETS_DIR)/,$(ASSETS))
 
 ASSETS_OBJECTS = $(ASSETS:%=$(BUILD_DIR)/%.o)
 
-
 ASSET_BUILDER_DIR = $(ASSETS_DIR)/asset_builder/src
 ASSET_BUILDER_OUTPUT = $(BUILD_DIR)/$(ASSETS_DIR)/asset_builder/asset_builder
 include $(ASSET_BUILDER_DIR)/Makefile

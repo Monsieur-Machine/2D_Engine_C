@@ -1,7 +1,5 @@
 gcc
 # Headers
 -Isrc/components
--Icore/src
-
-# Macros
--DDEBUG=2
+-Icore
+-Icore/host/generic

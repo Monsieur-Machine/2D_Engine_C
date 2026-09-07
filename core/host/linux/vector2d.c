@@ -1,13 +1,5 @@
 #include "vector2d.h"
 
-void rect_to_frect(const rect_t *rect, frect_t *frect)
-{
-    frect->x = (float)rect->x;
-    frect->y = (float)rect->y;
-    frect->w = (float)rect->w;
-    frect->h = (float)rect->h;
-}
-
 void frect_to_rect(const frect_t *frect, rect_t *rect)
 {
     rect->x = (int)frect->x;

@@ -1,8 +1,0 @@
-gcc
-# Headers
--Icore/src
--Isrc/components
-
-# Macros
--DDEBUG=2
--DASSET_FILE_NAME="$(make print-ASSET_OUTPUT)"

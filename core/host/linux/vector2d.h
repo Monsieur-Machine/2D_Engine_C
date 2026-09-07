@@ -40,13 +40,13 @@ typedef SDL_Rect rect_t;
 */
 typedef SDL_FRect frect_t;
 
-#define EPSILON 0.000001f
+#define EPSILON 0.0f
 
 #define f_is_zero(X) (fabsf(X) <= EPSILON)
 
 #define f_is_not_zero(X) (fabsf(X) > EPSILON)
 
-void rect_to_frect(const rect_t *rect, frect_t *frect);
+#define rect_to_frect(R, FR) SDL_RectToFRect(R, FR)
 
 void frect_to_rect(const frect_t *frect, rect_t *rect);
 

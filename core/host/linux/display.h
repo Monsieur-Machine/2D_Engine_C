@@ -2,7 +2,6 @@
 #define DISPLAY_H
 
 #include <SDL3/SDL_render.h>
-#include "asset_manager.h"
 #include "texture.h"
 #include "vector2d.h"
 

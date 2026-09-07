@@ -1,7 +1,7 @@
 gcc
 # Headers
 -Iassets/asset_builder/src/headers
--Isrc/components/headers
+-Isrc/components
 
 # Macros
 -DDEBUG=2

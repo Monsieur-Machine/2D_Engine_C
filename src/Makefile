@@ -1,5 +1,4 @@
-# Source files
-SOURCES := \
+SOURCES += \
   game.c \
   components/transform_component.c \
   components/sprite_component.c \
@@ -12,61 +11,21 @@ SOURCES := \
   components/door_component.c \
   components/lua_component.c
 
-# Compiler and flags
-SRC_CC = gcc
-ifeq ($(RELEASE), 1)
-SRC_CFLAGS = --std=c17 --pedantic -O3 # RELEASE
+INCLUDES += \
+  $(SOURCE_DIR)/components \
+  $(CORE_DIR) \
+  $(CORE_DIR)/$(HOST_DIR)/$(HOST)
 
-SRC_LDFLAGS = -O3
-else
-SRC_CFLAGS = --std=c17 --pedantic -O1 -g -DDEBUG=2 \
-	-Wall -Wno-missing-braces -Wextra -Wno-missing-field-initializers \
-    -Wformat=2 -Wswitch-default -Wswitch -Wcast-align \
-    -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \
-    -Wstrict-prototypes -Winline -Wundef -Wnested-externs \
-    -Wcast-qual -Wshadow -Wunreachable-code -Wlogical-op \
-    -Wfloat-equal -Wstrict-aliasing=2 -Wredundant-decls \
-    -Wold-style-definition # DEVELOPEMENT
+OBJECTS := $(SOURCES:%=$(BUILD_DIR)/$(SOURCE_DIR)/%.o)
 
-SRC_LDFLAGS = -O1
-endif
+$(BUILD_DIR)/$(OUTPUT): $(BUILD_DIR)/$(LIBCORE) $(OBJECTS)
+	@echo -e "[100%] $(YELLOW)Linking $(OUTPUT)$(RESET)"
+	$(Q)$(CC) $(CFLAGS) $(LDFLAGS) $(OBJECTS) $(BUILD_DIR)/$(LIBCORE) -o $@
 
-SRC_INCLUDE_DIRS = $(SOURCE_DIR)/components $(CORE_DIR)
-SRC_INCLUDE_DIRS := $(addprefix -I, $(SRC_INCLUDE_DIRS))
-
-# Deduce objects
-SOURCE_OBJECTS = $(SOURCES:%.c=$(BUILD_DIR)/$(SOURCE_DIR)/%.o)
-
-# Current file nb to process
-CURRENT_SRC_FILE := 0
-
-# Build src target
-build_src: src_setup count_src_build src_end
-
-# Source build directories
-src_setup:
-	@echo "Building $(notdir $(SOURCE_OUTPUT))"
-	$(Q)mkdir -p $(dir $(SOURCE_OBJECTS))
-
-# Count nb of files to build
-count_src_build:
-	$(eval export TOTAL_SRC_FILES := $(shell echo $$(($$(make -n $(SOURCE_OBJECTS) 2>/dev/null | grep -c "Building") + 1))))
-
-# Link game target
-$(SOURCE_OUTPUT): $(SOURCE_OBJECTS) $(CORE_OUTPUT)
-	@echo -e "[100%] $(YELLOW)Linking $(notdir $(SOURCE_OUTPUT))$(RESET)"
-	$(Q)$(SRC_CC) $(SOURCE_OBJECTS) -L./$(BUILD_DIR) $(CORE_OUTPUT) -o $@ $(SRC_LDFLAGS) $(CORE_DEPS_FLAGS)
-
-# Build .o files
-$(BUILD_DIR)/$(SOURCE_DIR)/%.o: $(SOURCE_DIR)/%.c
-	$(eval CURRENT_SRC_FILE := $(shell echo $$(($(CURRENT_SRC_FILE)+1))))
-	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_SRC_FILE)*100/$(TOTAL_SRC_FILES)))))
+$(BUILD_DIR)/$(SOURCE_DIR)/%.c.o: $(ROOT)/$(SOURCE_DIR)/%.c
+	$(eval CURRENT_FILE := $(shell echo $$(($(CURRENT_FILE) + 1))))
+	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_FILE) * 100 / $(TOTAL_BUILD_FILES)))))
 	@echo -e "[$(PERCENTAGE)%] $(GREEN)Building C object $@$(RESET)"
-	$(Q)$(SRC_CC) $(SRC_CFLAGS) $(SRC_INCLUDE_DIRS) -MMD -MP -c $< -o $@
+	$(Q)$(CC) $(CFLAGS) $(INCLUDES:%=-I%) -MMD -MP -c $< -o $@
 
-# Print ending message
-src_end: $(SOURCE_OUTPUT)
-	@echo "Built target $(notdir $(SOURCE_OUTPUT))"
-
-# Source files dependencies
--include $(SOURCE_OBJECTS:.o=.d)
+-include $(OBJECTS:.o=.d)

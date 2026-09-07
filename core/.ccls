@@ -1,0 +1,8 @@
+gcc
+# Headers
+-Icore
+-Icore/host/generic
+-Isrc/components
+
+# Macros
+-DASSET_FILE_NAME="$(make print-var-ASSET_OUTPUT)"

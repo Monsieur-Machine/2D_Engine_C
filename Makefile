@@ -1,12 +1,41 @@
 SHELL = /usr/bin/env bash
 
-# Build folder
-BUILD_DIR = build
+ROOT := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
-# Outputs target name and path
-SOURCE_OUTPUT = $(BUILD_DIR)/2D_Engine
-CORE_OUTPUT = $(BUILD_DIR)/libcore.a
-ASSET_OUTPUT = $(BUILD_DIR)/game.data
+ifneq ($(realpath $(ROOT)/config.mk), $(ROOT)/config.mk)
+$(error ERROR: Please run the configure script before building.)
+endif
+
+include $(ROOT)/config.mk
+
+#
+# User config
+#
+
+BUILD_DIR_NAME = build
+
+SOURCE_DIR = src
+CORE_DIR = core
+HOST_DIR = host
+
+OUTPUT = 2D_Engine
+ASSET_OUTPUT = game.data
+
+ifneq ($(DEBUG),)
+CFLAGS += -O1 -g -DDEBUG=$(DEBUG) -Wextra -Wall --pedantic -Wno-missing-braces \
+	-Wno-missing-field-initializers -Wformat=2 -Wswitch-default -Wswitch \
+	-Wcast-align -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \
+    -Wstrict-prototypes -Winline -Wundef -Wnested-externs -Wcast-qual \
+	-Wshadow -Wunreachable-code -Wlogical-op -Wfloat-equal -Wstrict-aliasing=2 \
+	-Wredundant-decls -Wold-style-definition
+endif
+
+#
+# End
+#
+
+# Relocate build dir
+BUILD_DIR := $(ROOT)/$(BUILD_DIR_NAME)/$(HOST)
 
 # Verbosity
 Q := @
@@ -15,33 +44,26 @@ Q :=
 endif
 
 # Colors
-export GREEN  := \033[32m
-export YELLOW := \033[33m
-export RESET  := \033[m
+GREEN  := \033[32m
+YELLOW := \033[33m
+RESET  := \033[m
 
 # Default targets
-all: $(SOURCE_OUTPUT)
+all: setup $(BUILD_DIR)/$(OUTPUT)
 
-# Sub Makefiles
-SOURCE_DIR = src
-CORE_DIR = core/src
-ASSETS_DIR = assets
+include $(ROOT)/$(SOURCE_DIR)/Makefile
+include $(ROOT)/$(CORE_DIR)/Makefile
 
-include $(SOURCE_DIR)/Makefile
-include $(CORE_DIR)/Makefile
-include $(ASSETS_DIR)/Makefile
+setup:
+	$(eval export TOTAL_BUILD_FILES := $(shell echo $$(($$(make -n $(OBJECTS) $(CORE_OBJECTS) 2>/dev/null | grep -c $(CC)) + 2))))
+	$(Q)mkdir -p $(dir $(OBJECTS) $(CORE_OBJECTS))
 
-# Clean
-.PHONY: clean
+.PHONY: clean run print-var-%
 clean:
-	$(Q)rm -rf $(BUILD_DIR)
-	@echo "Build dir cleaned"
+	$(Q)rm -rf $(dir $(BUILD_DIR))
 
-# Run executable
-.PHONY: run
 run: all
-	$(Q)cd $(BUILD_DIR) && ./$(notdir $(SOURCE_OUTPUT))
+	$(Q)cd $(BUILD_DIR) && ./$(OUTPUT)
 
-.PHONY: print-%
-print-%  :
+print-var-%  :
 	@echo $($*)
