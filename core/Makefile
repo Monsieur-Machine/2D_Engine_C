@@ -1,4 +1,4 @@
-CORE_SOURCES += \
+SOURCES += \
   main.c \
   camera.c \
   linked_list.c \
@@ -8,24 +8,30 @@ CORE_SOURCES += \
   inputs.c \
   map.c
 
-CORE_INCLUDES += \
+INCLUDES += \
   $(CORE_DIR) \
-  $(CORE_DIR)/$(HOST_DIR)/$(HOST) \
+  $(CORE_DIR)/host/$(TARGET_HOST) \
   $(SOURCE_DIR)/components
 
-include $(ROOT)/$(CORE_DIR)/$(HOST_DIR)/$(HOST)/Makefile
-CORE_OBJECTS := $(CORE_SOURCES:%=$(BUILD_DIR)/$(CORE_DIR)/%.o)
+include $(CORE_DIR)/host/$(TARGET_HOST)/Makefile
 
-$(BUILD_DIR)/$(LIBCORE): $(CORE_OBJECTS)
+OBJECTS := $(SOURCES:%=$(BUILD_DIR)/$(notdir $(CORE_DIR))/%.o)
+
+ifeq ($(TOTAL_BUILD_FILES),)
+TOTAL_BUILD_FILES := $(shell echo $$(($$($(MAKE) -n $(OBJECTS) TOTAL_BUILD_FILES=1 2>/dev/null | grep -c Building) + 1)))
+endif
+
+$(LIBCORE): $(OBJECTS)
 	$(eval CURRENT_FILE := $(shell echo $$(($(CURRENT_FILE) + 1))))
 	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_FILE) * 100 / $(TOTAL_BUILD_FILES)))))
 	@echo -e "[$(PERCENTAGE)%] $(YELLOW)Creating Static Lib $@$(RESET)"
-	$(Q)$(AR) rcs $@ $(CORE_OBJECTS)
+	$(Q)$(TARGET_HOST_AR) rcs $@ $(OBJECTS)
 
-$(BUILD_DIR)/$(CORE_DIR)/%.c.o: $(ROOT)/$(CORE_DIR)/%.c
+$(BUILD_DIR)/$(notdir $(CORE_DIR))/%.o: $(CORE_DIR)/%
+	$(Q)mkdir -p $(dir $@)
 	$(eval CURRENT_FILE := $(shell echo $$(($(CURRENT_FILE) + 1))))
 	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_FILE) * 100 / $(TOTAL_BUILD_FILES)))))
 	@echo -e "[$(PERCENTAGE)%] $(GREEN)Building C object $@$(RESET)"
-	$(Q)$(CC) $(CFLAGS) $(CORE_INCLUDES:%=-I%) -MMD -MP -c $< -o $@
+	$(Q)$(TARGET_HOST_CC) $(TARGET_HOST_CFLAGS) $(INCLUDES:%=-I%) -MMD -MP -c $< -o $@
 
--include $(CORE_OBJECTS:.o=.d)
+-include $(OBJECTS:.o=.d)

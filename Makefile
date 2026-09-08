@@ -1,3 +1,5 @@
+export
+
 SHELL = /usr/bin/env bash
 
 ROOT := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
@@ -9,20 +11,22 @@ endif
 include $(ROOT)/config.mk
 
 #
-# User config
+# User settings
 #
 
-BUILD_DIR_NAME = build
+BUILD_DIR = build
 
 SOURCE_DIR = src
 CORE_DIR = core
-HOST_DIR = host
+ASSETS_DIR = assets
+ASSET_BUILDER_DIR = asset_builder
 
 OUTPUT = 2D_Engine
 ASSET_OUTPUT = game.data
+ASSET_BUILDER_OUTPUT = asset_builder/asset_builder
 
 ifneq ($(DEBUG),)
-CFLAGS += -O1 -g -DDEBUG=$(DEBUG) -Wextra -Wall --pedantic -Wno-missing-braces \
+TARGET_HOST_CFLAGS += -O1 -g -DDEBUG=$(DEBUG) -Wextra -Wall --pedantic -Wno-missing-braces \
 	-Wno-missing-field-initializers -Wformat=2 -Wswitch-default -Wswitch \
 	-Wcast-align -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \
     -Wstrict-prototypes -Winline -Wundef -Wnested-externs -Wcast-qual \
@@ -34,11 +38,21 @@ endif
 # End
 #
 
-# Relocate build dir
-BUILD_DIR := $(ROOT)/$(BUILD_DIR_NAME)/$(HOST)
+# Relocate vars
+BUILD_DIR := $(ROOT)/$(BUILD_DIR)/$(TARGET_HOST)
+
+SOURCE_DIR := $(ROOT)/$(SOURCE_DIR)
+CORE_DIR := $(ROOT)/$(CORE_DIR)
+ASSETS_DIR := $(ROOT)/$(ASSETS_DIR)
+ASSET_BUILDER_DIR := $(ROOT)/$(ASSET_BUILDER_DIR)
+
+OUTPUT := $(BUILD_DIR)/$(OUTPUT)
+LIBCORE := $(BUILD_DIR)/$(LIBCORE)
+ASSET_OUTPUT := $(BUILD_DIR)/$(ASSET_OUTPUT)
+ASSET_BUILDER_OUTPUT := $(BUILD_DIR)/$(ASSET_BUILDER_OUTPUT)
 
 # Verbosity
-Q := @
+export Q := @
 ifeq ($(VERBOSE), 1)
 Q :=
 endif
@@ -49,21 +63,20 @@ YELLOW := \033[33m
 RESET  := \033[m
 
 # Default targets
-all: setup $(BUILD_DIR)/$(OUTPUT)
+all: $(OUTPUT) $(ASSET_OUTPUT)
 
-include $(ROOT)/$(SOURCE_DIR)/Makefile
-include $(ROOT)/$(CORE_DIR)/Makefile
+$(OUTPUT):
+	$(Q)cd $(SOURCE_DIR) && $(MAKE) $@
 
-setup:
-	$(eval export TOTAL_BUILD_FILES := $(shell echo $$(($$(make -n $(OBJECTS) $(CORE_OBJECTS) 2>/dev/null | grep -c $(CC)) + 2))))
-	$(Q)mkdir -p $(dir $(OBJECTS) $(CORE_OBJECTS))
+$(ASSET_OUTPUT):
+	$(Q)cd $(ASSETS_DIR) && $(MAKE) $@
 
 .PHONY: clean run print-var-%
 clean:
 	$(Q)rm -rf $(dir $(BUILD_DIR))
 
 run: all
-	$(Q)cd $(BUILD_DIR) && ./$(OUTPUT)
+	$(Q)cd $(BUILD_DIR) && ./$(notdir $(OUTPUT))
 
 print-var-%  :
 	@echo $($*)
