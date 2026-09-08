@@ -1,7 +1,5 @@
-CORE_SOURCES += \
-  $(HOST_DIR)/$(HOST)/display.c \
-  $(HOST_DIR)/$(HOST)/vector2d.c \
-  $(HOST_DIR)/$(HOST)/texture.c
-
-CORE_INCLUDES += \
-  $(CORE_DIRE)
+SOURCES += $(addprefix host/$(TARGET_HOST)/, \
+  display.c \
+  vector2d.c \
+  texture.c \
+)

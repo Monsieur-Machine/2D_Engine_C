@@ -14,18 +14,26 @@ SOURCES += \
 INCLUDES += \
   $(SOURCE_DIR)/components \
   $(CORE_DIR) \
-  $(CORE_DIR)/$(HOST_DIR)/$(HOST)
+  $(CORE_DIR)/host/$(TARGET_HOST)
 
-OBJECTS := $(SOURCES:%=$(BUILD_DIR)/$(SOURCE_DIR)/%.o)
+OBJECTS := $(SOURCES:%=$(BUILD_DIR)/$(notdir $(SOURCE_DIR))/%.o)
 
-$(BUILD_DIR)/$(OUTPUT): $(BUILD_DIR)/$(LIBCORE) $(OBJECTS)
-	@echo -e "[100%] $(YELLOW)Linking $(OUTPUT)$(RESET)"
-	$(Q)$(CC) $(CFLAGS) $(LDFLAGS) $(OBJECTS) $(BUILD_DIR)/$(LIBCORE) -o $@
+ifeq ($(TOTAL_BUILD_FILES),)
+TOTAL_BUILD_FILES := $(shell echo $$(($$($(MAKE) -n $(OBJECTS) TOTAL_BUILD_FILES=1 2>/dev/null | grep -c Building) + 1)))
+endif
 
-$(BUILD_DIR)/$(SOURCE_DIR)/%.c.o: $(ROOT)/$(SOURCE_DIR)/%.c
+$(OUTPUT): $(OBJECTS) $(LIBCORE)
+	@echo -e "[100%] $(YELLOW)Linking $(notdir $(OUTPUT))$(RESET)"
+	$(Q)$(TARGET_HOST_CC) $(TARGET_HOST_CFLAGS) $(TARGET_HOST_LDFLAGS) $(OBJECTS) -L$(BUILD_DIR) -lcore -o $@
+
+$(BUILD_DIR)/$(notdir $(SOURCE_DIR))/%.o: $(SOURCE_DIR)/%
+	$(Q)mkdir -p $(dir $@)
 	$(eval CURRENT_FILE := $(shell echo $$(($(CURRENT_FILE) + 1))))
 	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_FILE) * 100 / $(TOTAL_BUILD_FILES)))))
 	@echo -e "[$(PERCENTAGE)%] $(GREEN)Building C object $@$(RESET)"
-	$(Q)$(CC) $(CFLAGS) $(INCLUDES:%=-I%) -MMD -MP -c $< -o $@
+	$(Q)$(TARGET_HOST_CC) $(TARGET_HOST_CFLAGS) $(INCLUDES:%=-I%) -MMD -MP -c $< -o $@
+
+$(LIBCORE):
+	$(Q)cd $(CORE_DIR) && $(MAKE) $@
 
 -include $(OBJECTS:.o=.d)
