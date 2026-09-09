@@ -407,7 +407,7 @@ static inline int draw_tile(uint16_t tile_x, uint16_t tile_y, uint16_t tile_id)
 
     rect_t src_frect = {
         .x = tile_id * TILE_SIZE % get_width(game.map->tileset),
-        .y = tile_id * TILE_SIZE / get_height(game.map->tileset) * TILE_SIZE,
+        .y = tile_id * TILE_SIZE / get_width(game.map->tileset) * TILE_SIZE,
         .w = TILE_SIZE,
         .h = TILE_SIZE
     };
