@@ -4,11 +4,13 @@ SHELL = /usr/bin/env bash
 
 ROOT := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
+ifeq ($(filter clean-all,$(MAKECMDGOALS)),)
 ifneq ($(realpath $(ROOT)/config.mk), $(ROOT)/config.mk)
-$(error ERROR: Please run the configure script before building.)
+$(error ERROR: Please run the configure script before building)
 endif
 
 include $(ROOT)/config.mk
+endif
 
 #
 # User settings
@@ -65,14 +67,19 @@ RESET  := \033[m
 # Default targets
 all: $(OUTPUT) $(ASSET_OUTPUT)
 
-$(OUTPUT):
+$(OUTPUT): FORCE
 	$(Q)cd $(SOURCE_DIR) && $(MAKE) $@
 
-$(ASSET_OUTPUT):
+$(ASSET_OUTPUT): FORCE
 	$(Q)cd $(ASSETS_DIR) && $(MAKE) $@
 
-.PHONY: clean run print-var-%
+FORCE:
+
+.PHONY: clean clean-all run print-var-%
 clean:
+	$(Q)rm -rf $(BUILD_DIR)
+
+clean-all:
 	$(Q)rm -rf $(dir $(BUILD_DIR))
 
 run: all

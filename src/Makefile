@@ -33,7 +33,9 @@ $(BUILD_DIR)/$(notdir $(SOURCE_DIR))/%.o: $(SOURCE_DIR)/%
 	@echo -e "[$(PERCENTAGE)%] $(GREEN)Building C object $@$(RESET)"
 	$(Q)$(TARGET_HOST_CC) $(TARGET_HOST_CFLAGS) $(INCLUDES:%=-I%) -MMD -MP -c $< -o $@
 
-$(LIBCORE):
+$(LIBCORE): FORCE
 	$(Q)cd $(CORE_DIR) && $(MAKE) $@
+
+FORCE:
 
 -include $(OBJECTS:.o=.d)

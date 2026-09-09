@@ -26,5 +26,7 @@ $(BUILD_DIR)/$(notdir $(ASSETS_DIR))/%.o: $(ASSETS_DIR)/% $(ASSET_BUILDER_OUTPUT
 	@echo -e "[$(PERCENTAGE)%] $(GREEN)Building ASSET object $@$(RESET)"
 	$(Q)$(ASSET_BUILDER_OUTPUT) $@ -c $<
 
-$(ASSET_BUILDER_OUTPUT):
+$(ASSET_BUILDER_OUTPUT): FORCE
 	$(Q)cd $(ASSET_BUILDER_DIR) && $(MAKE) $@
+
+FORCE:

@@ -69,7 +69,7 @@ done
 
 ## Clean
 if [ -n "${CLEAN}" ]; then
-    make clean
+    make clean-all
     rm -rf ${CONFIG_FILE}
 fi
 
