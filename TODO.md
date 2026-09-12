@@ -28,9 +28,9 @@
 
 - [ ] Create lua component
 
-- [ ] Rethink makefile structure
-
 ### Done
+
+- [x] Rethink makefile structure
 
 - [x] Make camera center on map
 
