@@ -21,7 +21,7 @@ int game_init(void)
     entity_manager_init();
     if(asset_manager_init()) return_failure_int;
 
-    asset_t *map_asset = asset_manager_load_asset("dungeon_room_1", ASSET_MAP);
+    asset_t *map_asset = asset_manager_load_asset("dungeon_entry", ASSET_MAP);
     if(!map_asset) return_failure_int;
 
     game.map = map_asset->data;
@@ -117,6 +117,14 @@ int game_init(void)
         }
 
         if(!entity_new_component(player_entity, PLAYER_SYSTEM))  return_failure_int;
+    }
+
+    /* ======== Enemy ======== */
+    {
+        entity_t *enemy_entity = entity_manager_new_entity(1);
+        if(!enemy_entity) return_failure_int;
+
+        if(!entity_new_component(enemy_entity, LUA_COMPONENT))  return_failure_int;
     }
 
     game.is_running = true;

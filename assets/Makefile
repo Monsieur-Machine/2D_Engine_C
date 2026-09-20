@@ -9,6 +9,9 @@ ASSETS := \
   maps/dungeon_entry.map \
   maps/dungeon_room_1.map
 
+LUA_SOURCES := \
+  enemy_system.lua
+
 OBJECTS := $(ASSETS:%=$(BUILD_DIR)/$(notdir $(ASSETS_DIR))/%.o)
 
 ifeq ($(TOTAL_BUILD_FILES),)
