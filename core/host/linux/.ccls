@@ -1,5 +1,0 @@
-gcc
-# Headers
--Icore
--Icore/host/linux
--Isrc/components

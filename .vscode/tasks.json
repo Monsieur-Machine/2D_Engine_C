@@ -55,12 +55,50 @@
             }
         },
         {
+            "label": "Run",
+            "detail": "Build project and run",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "-j$(nproc)",
+                "run"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        },
+        {
             "label": "Build Verbose",
             "detail": "Build project with verbosity on",
             "type": "shell",
             "command": "make",
             "args": [
                 "VERBOSE=1"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        },
+        {
+            "label": "Build Debug",
+            "detail": "Build project in debug mode",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "-j$(nproc)",
+                "DEBUG=2"
             ],
             "group": "build",
             "presentation": {
@@ -81,25 +119,6 @@
                 "-j$(nproc)",
                 "DEBUG=2",
                 "run"
-            ],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": true,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": true
-            }
-        },
-        {
-            "label": "Build Debug",
-            "detail": "Build project in debug mode",
-            "type": "shell",
-            "command": "make",
-            "args": [
-                "-j$(nproc)",
-                "DEBUG=2"
             ],
             "group": "build",
             "presentation": {

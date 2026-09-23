@@ -1,0 +1,33 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "intelliSenseMode": "linux-gcc-arm",
+            "includePath": [
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/src/components",
+                "${workspaceFolder}/core",
+                "${workspaceFolder}/core/host/generic",
+                "/usr/include/lua5.4",
+                "/usr/include/pipewire-0.3",
+                "/usr/include/spa-0.2",
+                "/usr/include/libdrm",
+                "/usr/include/libdecor-0",
+                "/usr/include/x86_64-linux-gnu"
+            ],
+            "compilerPath": "/usr/bin/gcc",
+            "defines": [
+                "-D_REENTRANT"
+            ],
+            "cStandard": "c17",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
+        }
+    ],
+    "version": 4
+}
