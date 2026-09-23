@@ -34,6 +34,13 @@ TARGET_HOST_CFLAGS += -O1 -g -DDEBUG=$(DEBUG) -Wextra -Wall --pedantic -Wno-miss
     -Wstrict-prototypes -Winline -Wundef -Wnested-externs -Wcast-qual \
 	-Wshadow -Wunreachable-code -Wlogical-op -Wfloat-equal -Wstrict-aliasing=2 \
 	-Wredundant-decls -Wold-style-definition
+
+ASSET_BUILDER_CFLAGS += -O1 -g -DDEBUG=$(DEBUG) -Wextra -Wall --pedantic -Wno-missing-braces \
+	-Wno-missing-field-initializers -Wformat=2 -Wswitch-default -Wswitch \
+	-Wcast-align -Wpointer-arith -Wbad-function-cast -Wstrict-overflow=5 \
+    -Wstrict-prototypes -Winline -Wundef -Wnested-externs -Wcast-qual \
+	-Wshadow -Wunreachable-code -Wlogical-op -Wfloat-equal -Wstrict-aliasing=2 \
+	-Wredundant-decls -Wold-style-definition
 endif
 
 #
@@ -85,5 +92,5 @@ clean-all:
 run: all
 	$(Q)cd $(BUILD_DIR) && ./$(notdir $(OUTPUT))
 
-print-var-%  :
+print-var-% :
 	@echo $($*)

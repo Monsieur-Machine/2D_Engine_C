@@ -28,14 +28,19 @@ inline int display_init(void)
         return EXIT_FAILURE;
     }
 
+#ifdef DRIVERS
     debug_printf("Listing available render drivers.");
     const int NB_DRIVERS = SDL_GetNumRenderDrivers();
     for(int i = 0; i < NB_DRIVERS; i++)
         debug_printf("%d : %s", i, SDL_GetRenderDriver(i));
 
-    if(DRIVERS) warning_printf("This build of 2D_Engine_C only support the following drivers : %s", DRIVERS);
+    warning_printf("This build of 2D_Engine_C only support the following drivers : %s", DRIVERS);
 
     game.display.renderer = SDL_CreateRenderer(game.display.window, DRIVERS);
+#else
+    game.display.renderer = SDL_CreateRenderer(game.display.window, NULL);
+#endif // DRIVERS
+
     if(!game.display.renderer)
     {
         error_printf("Failed to create renderer : %s", SDL_GetError());
@@ -53,13 +58,13 @@ inline int display_init(void)
         error_printf("Failed to set renderer draw blend mode : %s", SDL_GetError());
         return EXIT_FAILURE;
     }
-
+/*
     if(!SDL_SetDefaultTextureScaleMode(game.display.renderer, SDL_SCALEMODE_NEAREST))
     {
         error_printf("Failed to set default texture scale mode : %s", SDL_GetError());
         return EXIT_FAILURE;
     }
-
+*/
     debug_printf("Initialized display.");
 
     return EXIT_SUCCESS;

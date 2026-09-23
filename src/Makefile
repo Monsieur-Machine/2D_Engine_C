@@ -23,14 +23,14 @@ TOTAL_BUILD_FILES := $(shell echo $$(($$($(MAKE) -n $(OBJECTS) TOTAL_BUILD_FILES
 endif
 
 $(OUTPUT): $(OBJECTS) $(LIBCORE)
-	@echo -e "[100%] $(YELLOW)Linking $(notdir $(OUTPUT))$(RESET)"
-	$(Q)$(TARGET_HOST_CC) $(TARGET_HOST_CFLAGS) $(TARGET_HOST_LDFLAGS) $(OBJECTS) -L$(BUILD_DIR) -lcore -o $@
+	@echo "[100%] $(YELLOW)Linking $(notdir $(OUTPUT))$(RESET)"
+	$(Q)$(TARGET_HOST_CC) $(TARGET_HOST_CFLAGS) $(OBJECTS) -o $@ -L$(BUILD_DIR) -lcore $(TARGET_HOST_LDFLAGS)
 
 $(BUILD_DIR)/$(notdir $(SOURCE_DIR))/%.o: $(SOURCE_DIR)/%
 	$(Q)mkdir -p $(dir $@)
 	$(eval CURRENT_FILE := $(shell echo $$(($(CURRENT_FILE) + 1))))
 	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_FILE) * 100 / $(TOTAL_BUILD_FILES)))))
-	@echo -e "[$(PERCENTAGE)%] $(GREEN)Building C object $@$(RESET)"
+	@echo "[$(PERCENTAGE)%] $(GREEN)Building C object $@$(RESET)"
 	$(Q)$(TARGET_HOST_CC) $(TARGET_HOST_CFLAGS) $(INCLUDES:%=-I%) -MMD -MP -c $< -o $@
 
 $(LIBCORE): FORCE

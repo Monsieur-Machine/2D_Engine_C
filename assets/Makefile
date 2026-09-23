@@ -19,14 +19,14 @@ TOTAL_BUILD_FILES := $(shell echo $$(($$($(MAKE) -n $(OBJECTS) TOTAL_BUILD_FILES
 endif
 
 $(ASSET_OUTPUT): $(OBJECTS) $(ASSET_BUILDER_OUTPUT)
-	@echo -e "[100%] $(YELLOW)Building $(notdir $(ASSET_OUTPUT))$(RESET)"
+	@echo "[100%] $(YELLOW)Building $(notdir $(ASSET_OUTPUT))$(RESET)"
 	$(Q)$(ASSET_BUILDER_OUTPUT) $@ $(OBJECTS)
 
 $(BUILD_DIR)/$(notdir $(ASSETS_DIR))/%.o: $(ASSETS_DIR)/% $(ASSET_BUILDER_OUTPUT)
 	$(Q)mkdir -p $(dir $@)
 	$(eval CURRENT_FILE := $(shell echo $$(($(CURRENT_FILE) + 1))))
 	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_FILE) * 100 / $(TOTAL_BUILD_FILES)))))
-	@echo -e "[$(PERCENTAGE)%] $(GREEN)Building ASSET object $@$(RESET)"
+	@echo "[$(PERCENTAGE)%] $(GREEN)Building ASSET object $@$(RESET)"
 	$(Q)$(ASSET_BUILDER_OUTPUT) $@ -c $<
 
 $(ASSET_BUILDER_OUTPUT): FORCE

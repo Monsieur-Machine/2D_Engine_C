@@ -125,8 +125,8 @@ case "${TARGET_HOST}" in
 
     TARGET_CC="gcc"
     TARGET_AR="ar"
-    TARGET_CFLAGS="--std=c17 -Os -DASSET_FILE_NAME=\\\"\$(notdir \$(ASSET_OUTPUT))\\\" -D_GNU_SOURCE=1 \$(shell pkg-config --cflags sdl3)"
-    TARGET_LDFLAGS="\$(shell pkg-config --libs sdl3) -lm"
+    TARGET_CFLAGS="--std=c17 -Os -DASSET_FILE_NAME=\\\"\$(notdir \$(ASSET_OUTPUT))\\\" -D_GNU_SOURCE=1 \$(shell pkg-config --cflags sdl3 lua)"
+    TARGET_LDFLAGS="\$(shell pkg-config --libs sdl3 lua) -lm"
     TARGET_LIBCORE="libcore.a"
     ;;
 

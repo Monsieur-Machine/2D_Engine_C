@@ -1,8 +1,8 @@
 #ifndef LUA_COMPONENT_H
 #define LUA_COMPONENT_H
 
+#include <lua.h>
 #include "ecs.h"
-#include "lua.h"
 #include "errors.h"
 
 typedef struct lua_component_data_t {

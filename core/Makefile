@@ -24,14 +24,14 @@ endif
 $(LIBCORE): $(OBJECTS)
 	$(eval CURRENT_FILE := $(shell echo $$(($(CURRENT_FILE) + 1))))
 	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_FILE) * 100 / $(TOTAL_BUILD_FILES)))))
-	@echo -e "[$(PERCENTAGE)%] $(YELLOW)Creating Static Lib $@$(RESET)"
+	@echo "[$(PERCENTAGE)%] $(YELLOW)Creating Static Lib $@$(RESET)"
 	$(Q)$(TARGET_HOST_AR) rcs $@ $(OBJECTS)
 
 $(BUILD_DIR)/$(notdir $(CORE_DIR))/%.o: $(CORE_DIR)/%
 	$(Q)mkdir -p $(dir $@)
 	$(eval CURRENT_FILE := $(shell echo $$(($(CURRENT_FILE) + 1))))
 	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_FILE) * 100 / $(TOTAL_BUILD_FILES)))))
-	@echo -e "[$(PERCENTAGE)%] $(GREEN)Building C object $@$(RESET)"
+	@echo "[$(PERCENTAGE)%] $(GREEN)Building C object $@$(RESET)"
 	$(Q)$(TARGET_HOST_CC) $(TARGET_HOST_CFLAGS) $(INCLUDES:%=-I%) -MMD -MP -c $< -o $@
 
 -include $(OBJECTS:.o=.d)

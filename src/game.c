@@ -118,15 +118,15 @@ int game_init(void)
 
         if(!entity_new_component(player_entity, PLAYER_SYSTEM))  return_failure_int;
     }
-
     /* ======== Enemy ======== */
+/*
     {
         entity_t *enemy_entity = entity_manager_new_entity(1);
         if(!enemy_entity) return_failure_int;
 
         if(!entity_new_component(enemy_entity, LUA_COMPONENT))  return_failure_int;
     }
-
+*/
     game.is_running = true;
 
     return EXIT_SUCCESS;
