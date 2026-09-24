@@ -17,14 +17,14 @@ endif
 
 $(ASSET_BUILDER_OUTPUT): $(OBJECTS)
 	$(Q)mkdir -p $(dir $@)
+	@echo $(ECHO_OPTION) "[100%] $(YELLOW)Linking $(notdir $(ASSET_BUILDER_OUTPUT))$(RESET)"
 	$(Q)$(HOST_CC) $(ASSET_BUILDER_CFLAGS) $(OBJECTS) -o $@  $(ASSET_BUILDER_LDFLAGS)
-	@echo "[100%] $(YELLOW)Linking $(notdir $(ASSET_BUILDER_OUTPUT))$(RESET)"
 
 $(BUILD_DIR)/$(notdir $(ASSET_BUILDER_DIR))/%.o: $(ASSET_BUILDER_DIR)/%
 	$(Q)mkdir -p $(dir $@)
 	$(eval CURRENT_FILE := $(shell echo $$(($(CURRENT_FILE)+1))))
 	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_FILE)*100/$(TOTAL_BUILD_FILES)))))
+	@echo $(ECHO_OPTION) "[$(PERCENTAGE)%] $(GREEN)Building C object $@$(RESET)"
 	$(Q)$(HOST_CC) $(ASSET_BUILDER_CFLAGS) $(INCLUDES:%=-I%) -MMD -MP -c $< -o $@
-	@echo "[$(PERCENTAGE)%] $(GREEN)Building C object $@$(RESET)"
 
 -include $(ASSET_BUILDER_OBJECTS:.o=.d)

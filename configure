@@ -91,9 +91,9 @@ if [ "${CURRENT_HOST}" = "guess" ]; then
       linux*)
         CURRENT_HOST="linux"
         ;;
-#      msys*|cygwin*)
-#        CURRENT_HOST="windows"
-#        ;;
+      msys*|cygwin*)
+        CURRENT_HOST="windows"
+        ;;
 #      darwin*)
 #        CURRENT_HOST="macos"
 #        ;;
@@ -116,6 +116,12 @@ case "${CURRENT_HOST}" in
     ASSET_BUILDER_CFLAGS="--std=c17 -O2 \$(shell pkg-config --cflags libpng json-c)"
     ASSET_BUILDER_LDFLAGS="\$(shell pkg-config --libs libpng json-c)"
     ;;
+  windows)
+    HOST_CC="x86_64-w64-mingw32-gcc"
+    HOST_AR="x86_64-w64-mingw32-ar"
+    ASSET_BUILDER_CFLAGS="--std=c17 -O2 \$(shell x86_64-w64-mingw32-pkg-config --cflags libpng json-c)"
+    ASSET_BUILDER_LDFLAGS="\$(shell x86_64-w64-mingw32-pkg-config --libs libpng json-c)"
+    ;;
   *)
     print_error "Compiling from ${CURRENT_HOST} is not supported yet."
     ;;
@@ -133,6 +139,24 @@ case "${TARGET_HOST}" in
         TARGET_HOST_LDFLAGS="\$(shell pkg-config --libs sdl3 lua) -lm"
         TARGET_HOST_LIBCORE="libcore.a"
         ;;
+      *)
+        print_error "Cross compiling from ${CURRENT_HOST} for ${TARGET_HOST} is not supported yet."
+        ;;
+    esac
+    ;;
+
+  windows)
+    echo "Configuring for target: ${TARGET_HOST}"
+
+    case "${CURRENT_HOST}" in
+      windows)
+        TARGET_HOST_CC="x86_64-w64-mingw32-gcc"
+        TARGET_HOST_AR="x86_64-w64-mingw32-ar"
+        TARGET_HOST_CFLAGS="--std=c17 -Os -DASSET_FILE_NAME=\\\"\$(notdir \$(ASSET_OUTPUT))\\\" -D_GNU_SOURCE=1 \$(shell x86_64-w64-mingw32-pkg-config --cflags sdl3 lua)"
+        TARGET_HOST_LDFLAGS="\$(shell x86_64-w64-mingw32-pkg-config --libs sdl3 lua) -lm"
+        TARGET_HOST_LIBCORE="libcore.dll"
+        ;;
+
       *)
         print_error "Cross compiling from ${CURRENT_HOST} for ${TARGET_HOST} is not supported yet."
         ;;
@@ -180,6 +204,14 @@ HOST_CC = ${HOST_CC}
 ASSET_BUILDER_CFLAGS = ${ASSET_BUILDER_CFLAGS}
 ASSET_BUILDER_LDFLAGS = ${ASSET_BUILDER_LDFLAGS}
 EOF
+
+if [ "${CURRENT_HOST}" = "windows" ]; then
+tee -a "${CONFIG_FILE}" <<EOF
+
+# OS specific options
+ECHO_OPTION = -e
+EOF
+fi
 
 echo "\`\`\`"
 
