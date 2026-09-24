@@ -4,6 +4,15 @@ SHELL = /usr/bin/env bash
 
 ROOT := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
+# Import config
+ifeq ($(filter clean-all,$(MAKECMDGOALS)),)
+ifneq ($(realpath $(ROOT)/config.mk), $(ROOT)/config.mk)
+$(error ERROR: Please run the configure script before building)
+endif
+
+include $(ROOT)/config.mk
+endif
+
 #
 # User settings
 #
@@ -38,15 +47,6 @@ endif
 #
 # End
 #
-
-# Import config
-ifeq ($(filter clean-all,$(MAKECMDGOALS)),)
-ifneq ($(realpath $(ROOT)/config.mk), $(ROOT)/config.mk)
-$(error ERROR: Please run the configure script before building)
-endif
-
-include $(ROOT)/config.mk
-endif
 
 # Relocate vars
 BUILD_DIR := $(ROOT)/$(BUILD_DIR)/$(TARGET_HOST)
