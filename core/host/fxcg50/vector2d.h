@@ -1,7 +1,7 @@
 #ifndef VECTOR2D_H
 #define VECTOR2D_H
 
-#include <SDL3/SDL_rect.h>
+#include <stdbool.h>
 #include <math.h>
 
 /**

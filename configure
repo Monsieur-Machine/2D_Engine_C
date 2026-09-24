@@ -146,8 +146,8 @@ case "${TARGET_HOST}" in
       linux)
         TARGET_HOST_CC="sh-elf-gcc"
         TARGET_HOST_AR="sh-elf-ar"
-        TARGET_HOST_CFLAGS="--std=c17 -Os"
-        TARGET_HOST_LDFLAGS=""
+        TARGET_HOST_CFLAGS="--std=c17 -Os -DASSET_FILE_NAME=\\\"\$(notdir \$(ASSET_OUTPUT))\\\" -mb -ffreestanding -nostdlib -fstrict-volatile-bitfields -DFXCG50 -DTARGET_FXCG50 -m4-nofpu"
+        TARGET_HOST_LDFLAGS="-T fxcg50.ld -lgint-cg -lgcc"
         TARGET_HOST_LIBCORE="libcore.a"
         ;;
       *)

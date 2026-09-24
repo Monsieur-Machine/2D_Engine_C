@@ -13,9 +13,6 @@
 #define DISPLAY_WIDTH 720
 #define DISPLAY_HEIGHT 480
 
-//#define DRIVERS NULL
-#define DRIVERS "vulkan,gpu,software"
-
 typedef struct display_t {
 } display_t;
 
