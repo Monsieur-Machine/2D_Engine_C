@@ -11,22 +11,23 @@
 #
 
 CONFIG_FILE="config.mk"
-
-#LUA_VERSION="5.5.1"
-#LUA_CHECKSUM="1c4b4068d67061f2a2231ad2b5422e77acea1487ea9890f6320af614f4373dce"
+CACHE_DIR="cache"
+LIB_DIR="lib"
 
 #
 # Main
 #
 
-print_error()
+set -e
+
+exit_error_message()
 {
     echo -e "\033[31merror\033[m: $1"
     exit 0
 }
 
 ## Parse args
-CURRENT_HOST="guess"
+HOST="guess"
 TARGET_HOST="guess"
 
 for i in "$@"; do
@@ -36,7 +37,7 @@ for i in "$@"; do
         shift
         ;;
       --current-host=*)
-        CURRENT_HOST="${i#*=}"
+        HOST="${i#*=}"
         shift
         ;;
       --clean)
@@ -68,7 +69,7 @@ for i in "$@"; do
         exit 0
         ;;
       -*)
-        print_error "Unknown option $i"
+        exit_error_message "Unknown option $i"
         ;;
       *)
         ;;
@@ -78,7 +79,7 @@ done
 ## Clean
 if [ -n "${CLEAN}" ]; then
     make clean-all
-    rm -rf ${CONFIG_FILE}
+    rm -rf ${CONFIG_FILE} ${CACHE_DIR} ${LIB_DIR}
 fi
 
 if [ -n "${EXIT_AFTER_CLEAN}" ]; then
@@ -86,10 +87,10 @@ if [ -n "${EXIT_AFTER_CLEAN}" ]; then
 fi
 
 ## Deduce current and target hosts
-if [ "${CURRENT_HOST}" = "guess" ]; then
+if [ "${HOST}" = "guess" ]; then
     case "${OSTYPE}" in
       linux*)
-        CURRENT_HOST="linux"
+        HOST="linux"
         ;;
 #      msys*|cygwin*)
 #        CURRENT_HOST="windows"
@@ -98,66 +99,211 @@ if [ "${CURRENT_HOST}" = "guess" ]; then
 #        CURRENT_HOST="macos"
 #        ;;
     *)
-        print_error "Current detected os is unsuppoted to build from: ${OSTYPE}\nUse --help for more informations."
+        exit_error_message "Current detected os is unsuppoted to build from: ${OSTYPE}\nUse --help for more informations."
         ;;
     esac
 fi
 
-echo "Configuring for current host: ${CURRENT_HOST}"
+echo "Configuring for current host: ${HOST}"
 
+# If target host is guess then configure for host
 if [ "${TARGET_HOST}" = "guess" ]; then
-    TARGET_HOST=${CURRENT_HOST}
+    TARGET_HOST=${HOST}
 fi
 
-case "${CURRENT_HOST}" in
+# Set host compiler and asset builder flags
+case "${HOST}" in
   linux)
-    HOST_CC="gcc"
-    HOST_AR="ar"
-    ASSET_BUILDER_CFLAGS="--std=c17 -O2 \$(shell pkg-config --cflags libpng json-c)"
-    ASSET_BUILDER_LDFLAGS="\$(shell pkg-config --libs libpng json-c)"
+    HOST_CC=gcc
+    ASSET_BUILDER_CFLAGS=(
+        "--std=c17"
+        "-O2"
+    )
+    ASSET_BUILDER_LDFLAGS=()
+    ASSET_BUILDER_LIBS=(
+        "libpng|1.6.48"
+        "json-c|0.18"
+        )
     ;;
   *)
-    print_error "Compiling from ${CURRENT_HOST} is not supported yet."
+    exit_error_message "Compiling from ${HOST} is not supported yet."
     ;;
 esac
 
+# Set target host compiler, outputs extensions and flags
 case "${TARGET_HOST}" in
   linux)
     echo "Configuring for target: ${TARGET_HOST}"
 
-    case "${CURRENT_HOST}" in
+    case "${HOST}" in
       linux)
-        TARGET_HOST_CC="gcc"
-        TARGET_HOST_AR="ar"
-        TARGET_HOST_CFLAGS="--std=c17 -Os -DASSET_FILE_NAME=\\\"\$(notdir \$(ASSET_OUTPUT))\\\" -D_GNU_SOURCE=1 \$(shell pkg-config --cflags sdl3 lua)"
-        TARGET_HOST_LDFLAGS="\$(shell pkg-config --libs sdl3 lua) -lm"
-        TARGET_HOST_LIBCORE="libcore.a"
+        TARGET_HOST_CC=gcc
+        TARGET_HOST_AR=ar
+        TARGET_HOST_CFLAGS=(
+            "--std=c17" "-Os"
+            "-DASSET_FILE_NAME=\\\"\$(notdir \$(ASSET_OUTPUT))\\\"" "-D_GNU_SOURCE=1"
+        )
+        TARGET_HOST_LDFLAGS=()
+        OUTPUT_EXT=""
+        LIB_OUTPUT_EXT=".a"
         ;;
       *)
-        print_error "Cross compiling from ${CURRENT_HOST} for ${TARGET_HOST} is not supported yet."
+        exit_error_message "Cross compiling from ${HOST} for ${TARGET_HOST} is not supported yet."
         ;;
     esac
+
+    TARGET_HOST_LIBS=(
+        "sdl3|3.2.10"
+        "lua|5.4.7"
+    )
     ;;
 
   fxcg50)
     echo "Configuring for target: ${TARGET_HOST}"
 
-    case "${CURRENT_HOST}" in
+    case "${HOST}" in
       linux)
-        TARGET_HOST_CC="sh-elf-gcc"
-        TARGET_HOST_AR="sh-elf-ar"
-        TARGET_HOST_CFLAGS="--std=c17 -Os -DASSET_FILE_NAME=\\\"\$(notdir \$(ASSET_OUTPUT))\\\" -mb -ffreestanding -nostdlib -fstrict-volatile-bitfields -DFXCG50 -DTARGET_FXCG50 -m4-nofpu"
-        TARGET_HOST_LDFLAGS="-T fxcg50.ld -lgint-cg -lgcc"
-        TARGET_HOST_LIBCORE="libcore.a"
+        TARGET_HOST_CC=sh-elf-gcc
+        TARGET_HOST_AR=sh-elf-ar
+        TARGET_HOST_CFLAGS=(
+            "--std=c17" "-Os"
+            "-DASSET_FILE_NAME=\\\"\$(notdir \$(ASSET_OUTPUT))\\\"" "-DFXCG50" "-DTARGET_FXCG50"
+            "-mb" "-m4-nofpu"
+            "-ffreestanding" "-nostdlib" "-fstrict-volatile-bitfields"
+        )
+        TARGET_HOST_LDFLAGS="-T fxcg50.ld"
+        OUTPUT_EXT=""
+        LIB_OUTPUT_EXT=".a"
         ;;
       *)
-        print_error "Cross compiling from ${CURRENT_HOST} for ${TARGET_HOST} is not supported yet."
+        exit_error_message "Cross compiling from ${HOST} for ${TARGET_HOST} is not supported yet."
         ;;
     esac
     ;;
   *)
-    print_error "Unsupported target host: ${TARGET_HOST}"
+    exit_error_message "Unsupported target host: ${TARGET_HOST}"
 esac
+
+#
+# Checks
+#
+
+echo
+
+echo "Checking host compiler \"${HOST_CC}\"."
+if ${HOST_CC} --version &> /dev/null; then
+    echo "  ${HOST_CC} OK."
+else
+    exit_error_message "Compiler not working."
+fi
+
+echo "Checking asset builder libs."
+for LIB in ${ASSET_BUILDER_LIBS[@]}; do
+    LIB_NAME="$(echo ${LIB} | cut -d "|" -f 1)"
+    LIB_MIN_VERSION="$(echo ${LIB} | cut -d "|" -f 2)"
+
+    if pkg-config --atleast-version "${LIB_MIN_VERSION}" "${LIB_NAME}"; then
+        echo "  ${LIB_NAME} OK."
+    else
+        LIB_URL=$(echo $LIB | cut -d "|" -f 3)
+
+        if [ "${LIB_URL}" = "" ]; then
+            exit_error_message "Library ${LIB_NAME} version >= ${LIB_MIN_VERSION} was not found and no precompiled binaries are available."
+        else
+            LIB_DOWNLOAD_CHECKSUM=$(echo $LIB | cut -d "|" -f 4)
+            LIB_DOWNLOAD_FILENAME="$(echo ${LIB_URL} | rev | cut -d "/" -f 1 | rev)"
+            LIB_DOWNLOAD_PATH="${CACHE_DIR}/${TARGET_HOST}/${LIB_DOWNLOAD_FILENAME}"
+
+            case "${LIB_DOWNLOAD_FILENAME}" in
+            *.txz)
+                LIB_FOLDER_NAME="${LIB_DOWNLOAD_FILENAME%.txz}"
+                ;;
+            *)
+                exit_error_message "File ${LIB_DOWNLOAD_FILENAME} extension substitution is not supported."
+            esac
+            LIB_PATH="${LIB_DIR}/${TARGET_HOST}/${LIB_FOLDER_NAME}"
+
+            echo "  ${LIB_NAME} version >= ${LIB_MIN_VERSION} was not found but precompiled binaries are available."
+
+            if [ ! -f "${LIB_DOWNLOAD_PATH}" ]; then
+                echo "    downloading from ${LIB_URL}."
+                mkdir -p "$(dirname "${LIB_DOWNLOAD_PATH}")"
+                wget -q -O"${LIB_DOWNLOAD_PATH}" "${LIB_URL}"
+            fi
+
+            if echo "${LIB_DOWNLOAD_CHECKSUM} ${LIB_DOWNLOAD_PATH}" | md5sum --check &> /dev/null; then
+                echo "    ${LIB_DOWNLOAD_PATH} OK."
+            else
+                rm -rf "${LIB_DOWNLOAD_PATH}"
+                exit_error_message "Failed to verify checksum of ${LIB_DOWNLOAD_PATH}."
+            fi
+
+            mkdir -p "${LIB_PATH}"
+            tar -xf "${LIB_DOWNLOAD_PATH}" -C "${LIB_PATH}"
+        fi
+    fi
+done
+
+echo "Checking target host compiler \"${TARGET_HOST_CC}\"."
+if ${TARGET_HOST_CC} --version &> /dev/null; then
+    echo "  ${TARGET_HOST_CC} OK."
+else
+    exit_error_message "Compiler not working."
+fi
+
+echo "Checking target host archiver \"${TARGET_HOST_AR}\"."
+if ${TARGET_HOST_AR} --version &> /dev/null; then
+    echo "  ${TARGET_HOST_AR} OK."
+else
+    exit_error_message "Compiler not working."
+fi
+
+echo "Checking target host libs."
+for LIB in ${TARGET_HOST_LIBS[@]}; do
+    LIB_NAME="$(echo ${LIB} | cut -d "|" -f 1)"
+    LIB_MIN_VERSION="$(echo ${LIB} | cut -d "|" -f 2)"
+
+    if pkg-config --atleast-version "${LIB_MIN_VERSION}" "${LIB_NAME}"; then
+        echo "  ${LIB_NAME} OK."
+    else
+        LIB_URL=$(echo $LIB | cut -d "|" -f 3)
+
+        if [ "${LIB_URL}" = "" ]; then
+            exit_error_message "Library ${LIB_NAME} version >= ${LIB_MIN_VERSION} was not found and no precompiled binaries are available."
+        else
+            LIB_DOWNLOAD_CHECKSUM=$(echo $LIB | cut -d "|" -f 4)
+            LIB_DOWNLOAD_FILENAME="$(echo ${LIB_URL} | rev | cut -d "/" -f 1 | rev)"
+            LIB_DOWNLOAD_PATH="${CACHE_DIR}/${TARGET_HOST}/${LIB_DOWNLOAD_FILENAME}"
+
+            case "${LIB_DOWNLOAD_FILENAME}" in
+            *.txz)
+                LIB_FOLDER_NAME="${LIB_DOWNLOAD_FILENAME%.txz}"
+                ;;
+            *)
+                exit_error_message "File ${LIB_DOWNLOAD_FILENAME} extension substitution is not supported."
+            esac
+            LIB_PATH="${LIB_DIR}/${TARGET_HOST}/${LIB_FOLDER_NAME}"
+
+            echo "  ${LIB_NAME} version >= ${LIB_MIN_VERSION} was not found but precompiled binaries are available."
+
+            if [ ! -f "${LIB_DOWNLOAD_PATH}" ]; then
+                echo "    downloading from ${LIB_URL}."
+                mkdir -p "$(dirname "${LIB_DOWNLOAD_PATH}")"
+                wget -q -O"${LIB_DOWNLOAD_PATH}" "${LIB_URL}"
+            fi
+
+            if echo "${LIB_DOWNLOAD_CHECKSUM} ${LIB_DOWNLOAD_PATH}" | md5sum --check &> /dev/null; then
+                echo "    ${LIB_DOWNLOAD_PATH} OK."
+            else
+                rm -rf "${LIB_DOWNLOAD_PATH}"
+                exit_error_message "Failed to verify checksum of ${LIB_DOWNLOAD_PATH}."
+            fi
+
+            mkdir -p "${LIB_PATH}"
+            tar -xf "${LIB_DOWNLOAD_PATH}" -C "${LIB_PATH}"
+        fi
+    fi
+done
 
 echo "Writing config file."
 echo
@@ -168,43 +314,17 @@ tee "${CONFIG_FILE}" <<EOF
 # This file was generated by the configure script.
 
 TARGET_HOST = ${TARGET_HOST}
-LIBCORE = ${TARGET_HOST_LIBCORE}
+LIB_OUTPUT_EXT = ${LIB_OUTPUT_EXT}
 
 TARGET_HOST_CC = ${TARGET_HOST_CC}
 TARGET_HOST_AR = ${TARGET_HOST_AR}
-TARGET_HOST_CFLAGS = ${TARGET_HOST_CFLAGS}
-TARGET_HOST_LDFLAGS = ${TARGET_HOST_LDFLAGS}
+TARGET_HOST_CFLAGS = ${TARGET_HOST_CFLAGS[@]}
+TARGET_HOST_LDFLAGS = ${TARGET_HOST_LDFLAGS[@]}
 
 HOST_CC = ${HOST_CC}
 
-ASSET_BUILDER_CFLAGS = ${ASSET_BUILDER_CFLAGS}
-ASSET_BUILDER_LDFLAGS = ${ASSET_BUILDER_LDFLAGS}
+ASSET_BUILDER_CFLAGS = ${ASSET_BUILDER_CFLAGS[@]}
+ASSET_BUILDER_LDFLAGS = ${ASSET_BUILDER_LDFLAGS[@]}
 EOF
 
 echo "\`\`\`"
-
-#
-### Download libs
-#echo "===== downloading lua ====="
-#
-#LUA_TAR_GZ="${CACHE_DIR}/lua-${LUA_VERSION}.tar.gz"
-#if [ ! -e "${LUA_TAR_GZ}" ]; then
-#    echo "Downloading lua source..."
-#    if ! curl --output "${LUA_TAR_GZ}" "https://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz"; then
-#        print_error "Failed to download lua source."
-#    fi
-#fi
-#
-#echo "Checking lua source sum..."
-#if ! echo "${LUA_CHECKSUM} ${LUA_TAR_GZ}" | sha256sum -c; then
-#    CHECKSUM="$(sha256sum "${LUA_TAR_GZ}" | cut -d " " -f 1)"
-#    rm "${LUA_TAR_GZ}"
-#    print_error "Lua zip checksum not valid.\nExpected: \"${LUA_CHECKSUM}\"\nGot: \"${CHECKSUM}\"\nPlease rerun command to retry downloading."
-#fi
-#
-#echo "Extracting lua source"
-#if ! tar -xzf "${LUA_TAR_GZ}" --directory "${LIB_DIR}"; then
-#    print_error "Failed to extract lua source."
-#fi
-#
-

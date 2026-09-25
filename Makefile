@@ -26,7 +26,6 @@ ASSET_BUILDER_DIR = asset_builder
 
 OUTPUT = 2D_Engine
 ASSET_OUTPUT = game.data
-ASSET_BUILDER_OUTPUT = asset_builder/asset_builder
 
 ifneq ($(DEBUG),)
 TARGET_HOST_CFLAGS += -O1 -g -DDEBUG=$(DEBUG) -Wextra -Wall --pedantic -Wno-missing-braces \
@@ -56,10 +55,10 @@ CORE_DIR := $(ROOT)/$(CORE_DIR)
 ASSETS_DIR := $(ROOT)/$(ASSETS_DIR)
 ASSET_BUILDER_DIR := $(ROOT)/$(ASSET_BUILDER_DIR)
 
-OUTPUT := $(BUILD_DIR)/$(OUTPUT)
-LIBCORE := $(BUILD_DIR)/$(LIBCORE)
+OUTPUT := $(BUILD_DIR)/$(OUTPUT)$(OUTPUT_EXT)
+LIBCORE := $(BUILD_DIR)/libcore$(LIB_OUTPUT_EXT)
 ASSET_OUTPUT := $(BUILD_DIR)/$(ASSET_OUTPUT)
-ASSET_BUILDER_OUTPUT := $(BUILD_DIR)/$(ASSET_BUILDER_OUTPUT)
+ASSET_BUILDER_OUTPUT := $(BUILD_DIR)/asset_builder/asset_builder$(OUTPUT_EXT)
 
 # Verbosity
 export Q := @
