@@ -5,7 +5,6 @@ SOURCES += \
   event_bus.c \
   ecs.c \
   asset_manager.c \
-  inputs.c \
   map.c
 
 INCLUDES += \

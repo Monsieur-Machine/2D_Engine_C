@@ -21,7 +21,7 @@ int game_init(void)
     entity_manager_init();
     if(asset_manager_init()) return_failure_int;
 
-    asset_t *map_asset = asset_manager_load_asset("dungeon_entry", ASSET_MAP);
+    asset_t *map_asset = asset_manager_load_asset("dungeon_room_1", ASSET_MAP);
     if(!map_asset) return_failure_int;
 
     game.map = map_asset->data;
