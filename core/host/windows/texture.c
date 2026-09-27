@@ -11,13 +11,13 @@ texture_t *load_texture(void)
 
     if(fread(&width, sizeof(width), 1, game.asset_manager.asset_file) != 1)
     {
-        error_printf("Failed to read in asset file.");
+        error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
         return NULL;
     }
 
     if(fread(&height, sizeof(height), 1, game.asset_manager.asset_file) != 1)
     {
-        error_printf("Failed to read in asset file.");
+        error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
         return NULL;
     }
 
@@ -36,7 +36,7 @@ texture_t *load_texture(void)
 
     if(fread(tmp_surface->pixels, sizeof(uint16_t), width * height, game.asset_manager.asset_file) != (size_t)width * (size_t)height)
     {
-        error_printf("Failed to read asset file.");
+        error_printf("Failed to read asset file : %d", ferror(game.asset_manager.asset_file));
         goto_failure;
     }
 

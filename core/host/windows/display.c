@@ -46,25 +46,25 @@ inline int display_init(void)
         error_printf("Failed to create renderer : %s", SDL_GetError());
         return EXIT_FAILURE;
     }
-
+/*
     if(!SDL_SetRenderVSync(game.display.renderer, SDL_RENDERER_VSYNC_ADAPTIVE))
     {
         error_printf("Failed to activate adaptative vsync : %s", SDL_GetError());
         return EXIT_FAILURE;
     }
-
+*/
     if(!SDL_SetRenderDrawBlendMode(game.display.renderer, SDL_BLENDMODE_BLEND))
     {
         error_printf("Failed to set renderer draw blend mode : %s", SDL_GetError());
         return EXIT_FAILURE;
     }
-/*
+
     if(!SDL_SetDefaultTextureScaleMode(game.display.renderer, SDL_SCALEMODE_NEAREST))
     {
         error_printf("Failed to set default texture scale mode : %s", SDL_GetError());
         return EXIT_FAILURE;
     }
-*/
+
     debug_printf("Initialized display.");
 
     return EXIT_SUCCESS;
