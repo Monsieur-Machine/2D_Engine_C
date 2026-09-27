@@ -14,8 +14,6 @@
 #define DISPLAY_WIDTH 720
 #define DISPLAY_HEIGHT 480
 
-#define DRIVERS "vulkan,gpu,software"
-
 typedef struct display_t {
     SDL_Window *window;
     SDL_Renderer *renderer;

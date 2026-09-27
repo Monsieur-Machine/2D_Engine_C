@@ -7,6 +7,8 @@
 #include "texture.h"
 #include "errors.h"
 
+#define DRIVERS "vulkan,gpu,software"
+
 inline int display_init(void)
 {
     if(!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS))
@@ -29,12 +31,12 @@ inline int display_init(void)
     }
 
 #ifdef DRIVERS
+    warning_printf("This build of 2D_Engine_C only innitialize for the following drivers : %s", DRIVERS);
+
     debug_printf("Listing available render drivers.");
     const int NB_DRIVERS = SDL_GetNumRenderDrivers();
     for(int i = 0; i < NB_DRIVERS; i++)
         debug_printf("%d : %s", i, SDL_GetRenderDriver(i));
-
-    warning_printf("This build of 2D_Engine_C only support the following drivers : %s", DRIVERS);
 
     game.display.renderer = SDL_CreateRenderer(game.display.window, DRIVERS);
 #else

@@ -15,19 +15,19 @@ map_t *load_map(void)
 
     if(fread(&map->width, sizeof(map->width), 1, game.asset_manager.asset_file) != 1)
     {
-        error_printf("Failed to read in asset file : %d", errno);
+        error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
         return NULL;
     }
 
     if(fread(&map->height, sizeof(map->height), 1, game.asset_manager.asset_file) != 1)
     {
-        error_printf("Failed to read in asset file : %d", errno);
+        error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
         return NULL;
     }
 
     if(fread(&map->backgroundlayernb, sizeof(map->backgroundlayernb), 1, game.asset_manager.asset_file) != 1)
     {
-        error_printf("Failed to read in asset file : %d", errno);
+        error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
         return NULL;
     }
 
@@ -42,7 +42,7 @@ map_t *load_map(void)
         uint16_t *backgroundlayer = backgroundlayer_elem->data;
         if(fread(backgroundlayer, sizeof(*backgroundlayer), map->width * map->height, game.asset_manager.asset_file) != (size_t)map->width * (size_t)map->height)
         {
-            error_printf("Failed to read in asset file : %d", errno);
+            error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
             return NULL;
         }
 
@@ -52,20 +52,20 @@ map_t *load_map(void)
     map->foregroundlayer = malloc(map->width * map->height * sizeof(*map->foregroundlayer));
     if(fread(map->foregroundlayer, sizeof(*map->foregroundlayer), map->width * map->height, game.asset_manager.asset_file) != (size_t)map->width * (size_t)map->height)
     {
-        error_printf("Failed to read in asset file : %d", errno);
+        error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
         return NULL;
     }
 
     map->hitboxes = malloc(map->width * map->height * sizeof(*map->hitboxes));
     if(fread(map->hitboxes, sizeof(*map->hitboxes), map->width * map->height, game.asset_manager.asset_file) != (size_t)map->width * (size_t)map->height)
     {
-        error_printf("Failed to read in asset file : %d", errno);
+        error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
         return NULL;
     }
 
     if(fread(&map->entities_nb, sizeof(map->entities_nb), 1, game.asset_manager.asset_file) != 1)
     {
-        error_printf("Failed to read in asset file : %d", errno);
+        error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
         return NULL;
     }
 
@@ -77,13 +77,13 @@ map_t *load_map(void)
 
         if(fread(&entity_def->id, sizeof(entity_def->id), 1, game.asset_manager.asset_file) != 1)
         {
-            error_printf("Failed to read in asset file : %d", errno);
+            error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
             return NULL;
         }
 
         if(fread(&entity_def->components_nb, sizeof(entity_def->components_nb), 1, game.asset_manager.asset_file) != 1)
         {
-            error_printf("Failed to read in asset file : %d", errno);
+            error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
             return NULL;
         }
 
@@ -95,7 +95,7 @@ map_t *load_map(void)
 
             if(fread(&component_def->type, sizeof(component_def->type), 1, game.asset_manager.asset_file) != 1)
             {
-                error_printf("Failed to read in asset file : %d", errno);
+                error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
                 return NULL;
             }
 
@@ -109,19 +109,35 @@ map_t *load_map(void)
                 component_def->attributes = malloc(data_size);
                 if(fread(component_def->attributes, data_size, 1, game.asset_manager.asset_file) != 1)
                 {
-                    error_printf("Failed to read in asset file : %d", errno);
+                    error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
                     return NULL;
                 }
                 break;
 
               case SPRITE_COMPONENT:
               {
-                size_t cap = 0;
-                if(getdelim((char **)&component_def->attributes, &cap, '\0', game.asset_manager.asset_file) == -1)
+                size_t name_size = 0;
+                int ch = EOF;
+
+                do
                 {
-                    error_printf("Failed to read in asset file : %d", errno);
-                    return NULL;
+                    name_size++;
+
+                    component_def->attributes = realloc(component_def->attributes, name_size);
+
+                    ch = fgetc(game.asset_manager.asset_file);
+                    if(ch == EOF)
+                    {
+                        error_printf("Failed to read asset file : %d", ferror(game.asset_manager.asset_file));
+                        return NULL;
+                    }
+
+                    ((uint8_t *)component_def->attributes)[name_size - 1] = ch;
                 }
+                while(ch != '\0');
+
+                ((uint8_t *)component_def->attributes)[name_size] = '\0';
+
                 break;
               }
 
@@ -130,7 +146,7 @@ map_t *load_map(void)
                 component_def->attributes = malloc(data_size);
                 if(fread(component_def->attributes, data_size, 1, game.asset_manager.asset_file) != 1)
                 {
-                    error_printf("Failed to read in asset file : %d", errno);
+                    error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
                     return NULL;
                 }
                 break;
@@ -140,7 +156,7 @@ map_t *load_map(void)
                 component_def->attributes = malloc(data_size);
                 if(fread(component_def->attributes, data_size, 1, game.asset_manager.asset_file) != 1)
                 {
-                    error_printf("Failed to read in asset file : %d", errno);
+                    error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
                     return NULL;
                 }
                 break;
@@ -150,7 +166,7 @@ map_t *load_map(void)
                 component_def->attributes = malloc(data_size);
                 if(fread(component_def->attributes, data_size, 1, game.asset_manager.asset_file) != 1)
                 {
-                    error_printf("Failed to read in asset file : %d", errno);
+                    error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
                     return NULL;
                 }
                 break;
@@ -160,7 +176,7 @@ map_t *load_map(void)
                 component_def->attributes = malloc(data_size);
                 if(fread(component_def->attributes, data_size, 1, game.asset_manager.asset_file) != 1)
                 {
-                    error_printf("Failed to read in asset file : %d", errno);
+                    error_printf("Failed to read in asset file : %d", ferror(game.asset_manager.asset_file));
                     return NULL;
                 }
                 break;
@@ -406,8 +422,8 @@ static inline int draw_tile(uint16_t tile_x, uint16_t tile_y, uint16_t tile_id)
     if(!tile_id) return EXIT_SUCCESS;
 
     rect_t src_frect = {
-        .x = tile_id * TILE_SIZE % get_width(game.map->tileset),
-        .y = tile_id * TILE_SIZE / get_width(game.map->tileset) * TILE_SIZE,
+        .x = tile_id * TILE_SIZE % texture_get_width(game.map->tileset),
+        .y = tile_id * TILE_SIZE / texture_get_width(game.map->tileset) * TILE_SIZE,
         .w = TILE_SIZE,
         .h = TILE_SIZE
     };

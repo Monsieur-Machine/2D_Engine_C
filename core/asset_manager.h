@@ -29,6 +29,7 @@ typedef struct asset_header_def_t {
     uint32_t start;
 } asset_header_def_t;
 
+int create_asset_header_def(asset_header_def_t *asset_header_def, va_list args);
 int destroy_asset_header_def(asset_header_def_t *asset_header_def);
 
 typedef struct asset_manager_t {

@@ -42,6 +42,14 @@ int destroy_asset(asset_t *asset)
     return EXIT_SUCCESS;
 }
 
+// No args
+int create_asset_header_def(asset_header_def_t *asset_header_def, va_list args)
+{
+    asset_header_def->name = NULL;
+
+    return EXIT_SUCCESS;
+}
+
 int destroy_asset_header_def(asset_header_def_t *asset_header_def)
 {
     free(asset_header_def->name);
@@ -52,7 +60,7 @@ int destroy_asset_header_def(asset_header_def_t *asset_header_def)
 int asset_manager_init(void)
 {
     linked_list_init(&game.asset_manager.assets, sizeof(asset_t), (allocator_t)create_asset, (deleter_t)destroy_asset);
-    linked_list_init(&game.asset_manager.assets_header_defs, sizeof(asset_header_def_t), NULL, (deleter_t)destroy_asset_header_def);
+    linked_list_init(&game.asset_manager.assets_header_defs, sizeof(asset_header_def_t), (allocator_t)create_asset_header_def, (deleter_t)destroy_asset_header_def);
 
     game.asset_manager.asset_file = fopen(ASSET_FILE_NAME, "rb");
     if(!game.asset_manager.asset_file)
@@ -64,7 +72,7 @@ int asset_manager_init(void)
     uint32_t nb_assets;
     if(fread(&nb_assets, sizeof(nb_assets), 1, game.asset_manager.asset_file) != 1)
     {
-        error_printf("Failed to read asset file.");
+        error_printf("Failed to read asset file : %d", ferror(game.asset_manager.asset_file));
         return EXIT_FAILURE;
     }
 
@@ -76,17 +84,33 @@ int asset_manager_init(void)
         if(!asset_header_def_elem) return_failure_int;
         asset_header_def_t *asset_header_def = asset_header_def_elem->data;
 
-        size_t cap = 0;
-
-        if(getdelim(&asset_header_def->name, &cap, '\0', game.asset_manager.asset_file) == -1)
         {
-            error_printf("Failed to read asset file.");
-            return EXIT_FAILURE;
+            size_t name_size = 0;
+            int ch = EOF;
+
+            do
+            {
+                name_size++;
+
+                asset_header_def->name = realloc(asset_header_def->name, name_size);
+
+                ch = fgetc(game.asset_manager.asset_file);
+                if(ch == EOF)
+                {
+                    error_printf("Failed to read asset file : %d", ferror(game.asset_manager.asset_file));
+                    return EXIT_FAILURE;
+                }
+
+                asset_header_def->name[name_size - 1] = ch;
+            }
+            while(ch != '\0');
+
+            asset_header_def->name[name_size] = '\0';
         }
 
         if(fread(&asset_header_def->start, sizeof(asset_header_def->start), 1, game.asset_manager.asset_file) != 1)
         {
-            error_printf("Failed to read asset file.");
+            error_printf("Failed to read asset file : %d", ferror(game.asset_manager.asset_file));
             return EXIT_FAILURE;
         }
 
