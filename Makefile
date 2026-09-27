@@ -82,7 +82,6 @@ $(ASSET_OUTPUT): FORCE
 
 FORCE:
 
-.PHONY: clean clean-all run print-var-%
 clean:
 	$(Q)rm -rf $(BUILD_DIR)
 
@@ -94,3 +93,5 @@ run: all
 
 print-var-% :
 	@echo $($*)
+
+.PHONY: clean clean-all run print-var-%

@@ -7,7 +7,7 @@
 #
 
 #
-# Project settings no matter current and target hosts
+# Project settings
 #
 
 CONFIG_FILE="config.mk"
@@ -34,19 +34,23 @@ for i in "$@"; do
         TARGET_HOST="${i#*=}"
         shift
         ;;
+
       --current-host=*)
         HOST="${i#*=}"
         shift
         ;;
+
       --clean)
         CLEAN=1
         EXIT_AFTER_CLEAN=1
         shift
         ;;
+
       --reconfigure)
         CLEAN=1
         shift
         ;;
+
       -h|--help)
         echo "Usage : ./configure [OPTION]..."
         echo "Add submodules depending on target host platform and"
@@ -66,9 +70,11 @@ for i in "$@"; do
         echo -e "\tshow help and exit"
         exit 0
         ;;
+
       -*)
         exit_error_message "Unknown option $i"
         ;;
+
       *)
         ;;
     esac
@@ -102,7 +108,7 @@ if [ "${HOST}" = "guess" ]; then
     esac
 fi
 
-echo "Configuring for current host: ${HOST}"
+echo "Configuring for host: ${HOST}"
 
 # If target host is guess then configure for host
 if [ "${TARGET_HOST}" = "guess" ]; then
@@ -154,13 +160,16 @@ case "${TARGET_HOST}" in
         TARGET_HOST_PKG_CONFIG=pkg-config
         TARGET_HOST_CFLAGS=(
             "--std=c17" "-Os"
-            "-DASSET_FILE_NAME=\\\"\$(notdir \$(ASSET_OUTPUT))\\\"" "-D_GNU_SOURCE=1"
+            "-DASSET_FILE_NAME=\\\"\$(notdir \$(ASSET_OUTPUT))\\\""
         )
-        TARGET_HOST_LDFLAGS=()
+        TARGET_HOST_LDFLAGS=(
+            "-lm"
+        )
         OUTPUT_EXT=""
         DYNAMIC_LIB_OUTPUT_EXT=".so"
         STATIC_LIB_OUTPUT_EXT=".a"
         ;;
+
       *)
         exit_error_message "Cross compiling from ${HOST} for ${TARGET_HOST} is not supported yet."
         ;;
@@ -168,7 +177,6 @@ case "${TARGET_HOST}" in
 
     TARGET_HOST_LIBS=(
         "sdl3|3.2.10"
-        "lua|5.4.7"
     )
     ;;
 
@@ -176,7 +184,7 @@ case "${TARGET_HOST}" in
     echo "Configuring for target: ${TARGET_HOST}"
 
     case "${HOST}" in
-      windows)
+      windows|linux)
         TARGET_HOST_CC=x86_64-w64-mingw32-gcc
         TARGET_HOST_AR=x86_64-w64-mingw32-gcc-ar
         TARGET_HOST_PKG_CONFIG=x86_64-w64-mingw32-pkg-config
@@ -197,7 +205,6 @@ case "${TARGET_HOST}" in
 
     TARGET_HOST_LIBS=(
         "sdl3|3.3.4"
-        "lua|5.4.7"
     )
     ;;
 
