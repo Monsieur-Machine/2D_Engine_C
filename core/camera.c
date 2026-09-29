@@ -23,15 +23,15 @@ void camera_update(void)
 {
     if(game.camera.tracking_pos)
     {
-        game.camera.view_rect.x = game.camera.tracking_pos->x + game.camera.tracking_center_offset.x - game.camera.view_rect.w / 2;
-        game.camera.view_rect.y = game.camera.tracking_pos->y + game.camera.tracking_center_offset.y - game.camera.view_rect.h / 2;
+        game.camera.view_rect.x = (int)game.camera.tracking_pos->x + game.camera.tracking_center_offset.x - game.camera.view_rect.w / 2;
+        game.camera.view_rect.y = (int)game.camera.tracking_pos->y + game.camera.tracking_center_offset.y - game.camera.view_rect.h / 2;
     }
 
     if(game.map)
     {
         if(game.camera.view_rect.w > game.map->width * TILE_SIZE)
         {
-            game.camera.view_rect.x = game.map->width * TILE_SIZE / 2 - game.camera.view_rect.w / 2;
+            game.camera.view_rect.x = (game.map->width * TILE_SIZE - game.camera.view_rect.w) / 2;
         }
         else
         {
@@ -47,7 +47,7 @@ void camera_update(void)
 
         if(game.camera.view_rect.h > game.map->height * TILE_SIZE)
         {
-            game.camera.view_rect.y = game.map->height * TILE_SIZE / 2 - game.camera.view_rect.h / 2;
+            game.camera.view_rect.y = (game.map->height * TILE_SIZE - game.camera.view_rect.h) / 2;
         }
         else
         {
