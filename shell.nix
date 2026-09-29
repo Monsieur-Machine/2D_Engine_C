@@ -12,8 +12,6 @@ pkgs.mkShell {
     libpng
     json_c
     sdl3
-    lua
-    ncurses
   ];
 
   shellHook = ''
