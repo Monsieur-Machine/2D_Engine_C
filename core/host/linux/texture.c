@@ -54,6 +54,13 @@ texture_t *load_texture(void)
     }
 
     SDL_DestroySurface(tmp_surface);
+
+    if(!SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST))
+    {
+        error_printf("Failed to set texture scale mode.");
+        return NULL;
+    }
+
     return texture;
 
 failure:
