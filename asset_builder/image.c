@@ -15,42 +15,42 @@ int build_image(const char *input_file_name, FILE *output_file, uint32_t *asset_
         return EXIT_FAILURE;
     }
 
-    png_structp png_ptr = NULL;
-    png_infop info_ptr = NULL;
+    png_struct *img = NULL;
+    png_info *img_info = NULL;
 
     // Check png autenticity.
-    png_byte sig[8];
-    if(file_read(sig, sizeof(png_byte), sizeof(sig), input_file)) goto_failure;
+    uint8_t sig[8];
+    if(file_read(sig, sizeof(*sig), sizeof(sig), input_file)) goto_failure;
     if(!png_check_sig(sig, 8))
     {
         error_printf("Png file is not valid.");
-        goto_failure;
+        goto failure;
     }
 
     // PNG structs.
-    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-    if(!png_ptr)
+    img = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    if(!img)
     {
         error_printf("Failed to allocate png ptr.");
-        goto_failure;
+        goto failure;
     }
 
-    info_ptr = png_create_info_struct(png_ptr);
-    if(!info_ptr)
+    img_info = png_create_info_struct(img);
+    if(!img_info)
     {
         error_printf("Failed to allocate png info.");
-        goto_failure;
+        goto failure;
     }
 
     // Fill structs and load data.
-    png_init_io(png_ptr, input_file);
-    png_set_sig_bytes(png_ptr, 8);
-    png_read_info(png_ptr, info_ptr);
+    png_init_io(img, input_file);
+    png_set_sig_bytes(img, 8);
+    png_read_info(img, img_info);
 
     {
-        uint16_t width = png_get_image_width(png_ptr, info_ptr);
-        uint16_t height = png_get_image_height(png_ptr, info_ptr);
-        size_t row_length = png_get_rowbytes(png_ptr, info_ptr);
+        uint16_t width = png_get_image_width(img, img_info);
+        uint16_t height = png_get_image_height(img, img_info);
+        size_t row_length = png_get_rowbytes(img, img_info);
 
         // Write image size.
         if(file_write(&width, sizeof(width), 1, output_file)) goto_failure;
@@ -60,15 +60,37 @@ int build_image(const char *input_file_name, FILE *output_file, uint32_t *asset_
         *asset_size += sizeof(height);
 
         // Prepare storage.
-        png_byte src_pixels[height * row_length];
-        png_bytep src_row_ptrs[height];
-        for(png_uint_32 i = 0; i < height; i++)
+        uint8_t *src_pixels = calloc(height * row_length, sizeof(*src_pixels));
+        if(!src_pixels)
+        {
+            error_printf("Failed to alloc memory : %d", errno);
+            goto failure;
+        }
+
+        uint8_t **src_row_ptrs = calloc(height, sizeof(*src_row_ptrs));
+        if(!src_row_ptrs)
+        {
+            error_printf("Failed to alloc memory : %d", errno);
+            free(src_pixels);
+            goto failure;
+        }
+
+        for(uint16_t i = 0; i < height; i++)
             src_row_ptrs[i] = &src_pixels[i * row_length];
 
         // Read pixels.
-        png_read_image(png_ptr, src_row_ptrs);
+        png_read_image(img, src_row_ptrs);
 
-        uint16_t dst_pixels[width * height];
+        free(src_row_ptrs);
+        png_destroy_read_struct(&img, &img_info, NULL);
+
+        uint16_t *dst_pixels = calloc(width * height, sizeof(*dst_pixels));
+        if(!dst_pixels)
+        {
+            error_printf("Failed to alloc memory : %d", errno);
+            free(src_pixels);
+            goto failure;
+        }
 
         for(uint16_t i = 0; i < height; i++)
         {
@@ -89,11 +111,18 @@ int build_image(const char *input_file_name, FILE *output_file, uint32_t *asset_
             }
         }
 
-        if(file_write(&dst_pixels, sizeof(*dst_pixels), width * height, output_file)) goto_failure;
-        *asset_size += sizeof(dst_pixels);
-    }
+        free(src_pixels);
 
-    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+        if(file_write(dst_pixels, sizeof(*dst_pixels), width * height, output_file))
+        {
+            free(dst_pixels);
+            goto_failure;
+        }
+
+        *asset_size += width * height * sizeof(*dst_pixels);
+
+        free(dst_pixels);
+    }
 
     if(fclose(input_file))
     {
@@ -104,8 +133,6 @@ int build_image(const char *input_file_name, FILE *output_file, uint32_t *asset_
     return EXIT_SUCCESS;
 
 failure:
-    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-
     if(fclose(input_file))
         error_printf("Failed to close input file : %d", errno);
 

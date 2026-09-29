@@ -7,7 +7,7 @@
 #include "utils.h"
 #include "errors.h"
 
-static int json_get_object_of_type(const json_object *obj, const char *key, json_type type, json_object **result)
+static int json_get_object_of_type(json_object *obj, const char *key, json_type type, json_object **result)
 {
     if(!json_object_object_get_ex(obj, key, result))
     {
@@ -24,7 +24,7 @@ static int json_get_object_of_type(const json_object *obj, const char *key, json
     return EXIT_SUCCESS;
 }
 
-static inline int json_get_idx_of_type(const json_object *obj, size_t idx, json_type type, json_object **result)
+static inline int json_get_idx_of_type(json_object *obj, size_t idx, json_type type, json_object **result)
 {
     *result = json_object_array_get_idx(obj, idx);
 

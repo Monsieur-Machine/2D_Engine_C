@@ -31,26 +31,26 @@ texture_t *load_texture(void)
     if(!SDL_LockSurface(tmp_surface))
     {
         error_printf("Failed to lock temporary surface : %s", SDL_GetError());
-        goto_failure;
+        goto failure;
     }
 
     if(fread(tmp_surface->pixels, sizeof(uint16_t), width * height, game.asset_manager.asset_file) != (size_t)width * (size_t)height)
     {
         error_printf("Failed to read asset file : %d", ferror(game.asset_manager.asset_file));
-        goto_failure;
+        goto failure;
     }
 
     if(!SDL_SetSurfaceColorKey(tmp_surface, true, TEXTURE_TRANSPARENT_COLOR))
     {
         error_printf("Failed to set color key of temporary surface : %s", SDL_GetError());
-        goto_failure;
+        goto failure;
     }
 
     texture_t *texture = SDL_CreateTextureFromSurface(game.display.renderer, tmp_surface);
     if(!texture)
     {
         error_printf("Failed to create texture from temporary surface : %s", SDL_GetError());
-        goto_failure;
+        goto failure;
     }
 
     SDL_DestroySurface(tmp_surface);
