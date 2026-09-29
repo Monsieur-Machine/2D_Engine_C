@@ -49,7 +49,7 @@ inline int display_init(void)
         return EXIT_FAILURE;
     }
 
-    if(!SDL_SetRenderVSync(game.display.renderer, SDL_RENDERER_VSYNC_ADAPTIVE))
+    if(!SDL_SetRenderVSync(game.display.renderer, 1))
     {
         error_printf("Failed to activate adaptative vsync : %s", SDL_GetError());
         return EXIT_FAILURE;
