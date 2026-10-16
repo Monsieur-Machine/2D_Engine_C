@@ -8,14 +8,12 @@
 
 - [ ] Add compression into asset builder and asset manager
 
-- [ ] Make functionnal hitboxes between entities and map
-
 - [ ] Make triggers
   - [ ] Add triggers into map loading
 
-- [ ] Make physics component use acceleration
-
 - [ ] Make camera use acceleration
+
+- [ ] Create lua component
 
 ###### Bugs
 
@@ -26,9 +24,11 @@
 
 ### In progress
 
-- [ ] Create lua component
+- [ ] Make functionnal hitboxes between entities and map
 
 ### Done
+
+- [x] Make physics component use acceleration
 
 - [x] Rethink makefile structure
 
