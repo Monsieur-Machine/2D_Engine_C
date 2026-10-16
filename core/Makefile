@@ -23,7 +23,7 @@ endif
 $(LIBCORE): $(OBJECTS)
 	$(eval CURRENT_FILE := $(shell echo $$(($(CURRENT_FILE) + 1))))
 	$(eval PERCENTAGE := $(shell echo $$(($(CURRENT_FILE) * 100 / $(TOTAL_BUILD_FILES)))))
-	@echo $(ECHO_OPTION) "[$(PERCENTAGE)%] $(YELLOW)Creating Static Lib $@$(RESET)"
+	@echo $(ECHO_OPTION) "[$(PERCENTAGE)%] $(YELLOW)Linking Static Lib $@$(RESET)"
 	$(Q)$(TARGET_HOST_AR) rcs $@ $(OBJECTS)
 
 $(BUILD_DIR)/$(notdir $(CORE_DIR))/%.o: $(CORE_DIR)/%
