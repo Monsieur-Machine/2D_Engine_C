@@ -24,9 +24,9 @@
 
 ### In progress
 
-- [ ] Make functionnal hitboxes between entities and map
-
 ### Done
+
+- [x] Make functionnal hitboxes between entities and map
 
 - [x] Make physics component use acceleration
 

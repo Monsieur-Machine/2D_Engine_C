@@ -499,3 +499,42 @@ int map_display_foreground(void)
 
     return EXIT_SUCCESS;
 }
+
+#if DEBUG > 1
+int map_display_hitboxes(void)
+{
+    uint32_t left_tile = 0;
+    if(game.camera.view_rect.x / TILE_SIZE > 0)
+        left_tile = game.camera.view_rect.x / TILE_SIZE;
+
+    uint32_t right_tile = game.map->width;
+    if((game.camera.view_rect.x + game.camera.view_rect.w) / TILE_SIZE + 1 < (int)game.map->width)
+        right_tile = (game.camera.view_rect.x + game.camera.view_rect.w) / TILE_SIZE + 1;
+
+    uint32_t top_tile = 0;
+    if(game.camera.view_rect.y / TILE_SIZE > 0)
+        top_tile = game.camera.view_rect.y / TILE_SIZE;
+
+    uint32_t bottom_tile = game.map->height;
+    if((game.camera.view_rect.y + game.camera.view_rect.h) / TILE_SIZE + 1 < (int)game.map->height)
+        bottom_tile = (game.camera.view_rect.y + game.camera.view_rect.h) / TILE_SIZE + 1;
+
+    for(uint32_t tile_y = top_tile; tile_y < bottom_tile; tile_y++)
+    for(uint32_t tile_x = left_tile; tile_x < right_tile; tile_x++)
+    {
+        if(game.map->hitboxes[tile_y * game.map->width + tile_x] == 1)
+        {
+            frect_t draw_frect = {
+                .x = tile_x * TILE_SIZE,
+                .y = tile_y * TILE_SIZE,
+                .w = TILE_SIZE,
+                .h = TILE_SIZE
+            };
+
+            if(display_draw_frect(&draw_frect, C_RED, 128)) return_failure_int;
+        }
+    }
+
+    return EXIT_SUCCESS;
+}
+#endif // DEBUG > 1

@@ -41,4 +41,8 @@ int map_display_background(void);
 
 int map_display_foreground(void);
 
+#if DEBUG > 1
+int map_display_hitboxes(void);
+#endif // DEBUG > 1
+
 #endif // MAP_H

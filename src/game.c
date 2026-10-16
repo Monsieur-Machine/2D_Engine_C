@@ -186,6 +186,14 @@ int game_render(void)
         return_failure_int;
     }
 
+#if DEBUG > 1
+    if(map_display_hitboxes())
+    {
+        game.is_running = false;
+        return_failure_int;
+    }
+#endif // DEBUG > 1
+
     if(display_update())
     {
         game.is_running = false;
