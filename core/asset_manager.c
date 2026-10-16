@@ -43,7 +43,7 @@ int destroy_asset(asset_t *asset)
 }
 
 // No args
-int create_asset_header_def(asset_header_def_t *asset_header_def, va_list args)
+int create_asset_header_def(asset_header_def_t *asset_header_def, va_list args __attribute__((unused)))
 {
     asset_header_def->name = NULL;
 
